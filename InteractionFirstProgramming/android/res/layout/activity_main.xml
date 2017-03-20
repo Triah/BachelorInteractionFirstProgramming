@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="bachelor.project.nije214.thhym14.MainActivity">
+
+    <Button
+        android:text="Assemble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:id="@+id/assembleButton"
+        android:onClick="assembleButtonClick"
+        />
+
+    <Button
+        android:text="Update Scripts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="79dp"
+        android:id="@+id/updateButton"
+        android:layout_below="@+id/assembleButton"
+        android:layout_centerHorizontal="true"
+        android:onClick="updateButtonClick"
+        />
+
+    <Button
+        android:text="Options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/updateButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:id="@+id/optionsButton"
+        android:onClick="optionsButtonClick"
+        />
+</RelativeLayout>
