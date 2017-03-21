@@ -43,14 +43,16 @@ public class MainActivity extends Activity {
     public void updateButtonClick(View view){
         //MoveFilesToStorage mfts = new MoveFilesToStorage();
         //mfts.addFileToSdCard();
-        FileGetterClient fgc = new FileGetterClient();
+        /*FileGetterClient fgc = new FileGetterClient();
         fgc.ConnectAndSendMessage();
         InterpretCode ic = new InterpretCode();
         try {
             System.out.println(ic.getText());
         } catch (Exception ex){
             ex.printStackTrace();
-        }
+        }*/
+        Intent gameLaunch = new Intent(view.getContext(), AndroidLauncher.class);
+        startActivityForResult(gameLaunch,0);
         //FindNewScriptFiles findNewScriptFiles = new FindNewScriptFiles();
         //findNewScriptFiles.recursiveSearch();
     }
