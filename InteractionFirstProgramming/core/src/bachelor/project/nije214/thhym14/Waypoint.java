@@ -81,12 +81,13 @@ public class Waypoint implements Screen {
 
         //enemy.setPosition(250, 0);
         enemy.setCenter(250,0);
-        enemy.setOriginCenter();
+        //enemy.setOriginCenter();
         //enemy2.setPosition(800, 1000);
 
 
         enemies.add(enemy);
         //enemies.add(enemy2);
+
 
 
     }

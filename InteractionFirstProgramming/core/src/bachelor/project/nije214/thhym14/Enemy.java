@@ -32,8 +32,7 @@ public class Enemy extends Sprite {
 
     public void update(float delta) {
         //Vinklen mellem nuværende position og næste waypoint
-        //@@@BUG@@@ vinklen bliver udregnet fra spritens x,y(0,0) i stedet for midten af spriten hvilket giver en anelse forkert vinkel.. hmmm
-        float angle = (float) Math.atan2(path.get(waypoint).y - getY(), path.get(waypoint).x - getX());
+        float angle = (float) Math.atan2(path.get(waypoint).y - getY() - getHeight()/2, path.get(waypoint).x - getX()-getWidth()/2);
         //Hastighed på x og y aksen
         velocity.set((float) Math.cos(angle) * speed, (float) Math.sin(angle) * speed);
         //Position i forhold til tid
@@ -55,8 +54,7 @@ public class Enemy extends Sprite {
 
     public boolean isWaypointReached() {
         //Afstand til waypoint i forhold maks afstand enemy kan flytte sig på 1 frame
-        System.out.println((path.get(waypoint).x - getX()));
-        return Math.abs(path.get(waypoint).x - getX()) <= speed * Gdx.graphics.getDeltaTime() && Math.abs(path.get(waypoint).y - getY()) <= speed * Gdx.graphics.getDeltaTime();
+        return Math.abs(path.get(waypoint).x - getX()-getHeight()/2) <= speed * Gdx.graphics.getDeltaTime() && Math.abs(path.get(waypoint).y - getY()-getWidth()/2) <= speed * Gdx.graphics.getDeltaTime();
     }
 
     public Array<Vector2> getPath() {
