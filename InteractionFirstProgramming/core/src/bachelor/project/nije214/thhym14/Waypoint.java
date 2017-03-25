@@ -12,118 +12,147 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-public class Waypoint implements Screen {
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
+
+public class Waypoint {
 
     private ShapeRenderer sr;
-    private SpriteBatch batch;
     private Array<Enemy> enemies;
-
     private Sprite sprite;
+    private Enemy enemy;
+    Array<Vector2> path;
 
-    @Override
-    public void render(float delta) {
+    public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        drawWayPoints();
+        drawRoute();
+        drawRouteFromEnemy();
+    }
 
-        batch.begin();
-        for(Enemy enemy : enemies)
-            enemy.draw(batch);
-        batch.end();
+    private void drawRouteFromEnemy(){
+        setShapeRendererColor(Color.CYAN);
+        getShapeRenderer().begin();
+        for(int i = 0; i<getEnemyArray().size; i++){
+            System.out.println(i);
+            System.out.println(getEnemyArray().get(i));
+            getShapeRenderer().line(new Vector2(
+                    getEnemyArray().get(i).getX() + getEnemyArray().get(i).getWidth()/2,
+                    getEnemyArray().get(i).getY() + getEnemyArray().get(i).getHeight()/2),
+                    getPath().get(getEnemyArray().get(i).getWaypoint()));
+        }
+        getShapeRenderer().end();
+    }
 
-        //Tegn rute mellem waypoints som hvid linje
-        sr.setColor(Color.WHITE);
-        sr.begin(ShapeType.Line);
+    private void drawRoute(){
+        setShapeRendererColor(Color.WHITE);
+        getShapeRenderer().begin(ShapeType.Line);
         for(Enemy enemy : enemies) {
-            Vector2 previous = enemy.getPath().first();
-            for(Vector2 waypoint : enemy.getPath()) {
-                sr.line(previous, waypoint);
+            Vector2 previous = getPath().first();
+            for(Vector2 waypoint : getPath()) {
+                getShapeRenderer().line(previous, waypoint);
                 previous = waypoint;
             }
         }
-        sr.end();
-
-        //Tegn waypoints
-        sr.begin(ShapeType.Filled);
-        for(Enemy enemy : enemies)
-            for(Vector2 waypoint : enemy.getPath())
-                sr.circle(waypoint.x, waypoint.y, 10);
-        sr.end();
-
-
-        // /Tegn rute fra Enemy til nærmeste waypoint
-        sr.setColor(Color.CYAN);
-        sr.begin(ShapeType.Line);
-        for(Enemy enemy : enemies)
-            sr.line(new Vector2(enemy.getX() + enemy.getWidth()/2, enemy.getY() + enemy.getHeight()/2), enemy.getPath().get(enemy.getWaypoint()));
-        sr.end();
-
+        getShapeRenderer().end();
     }
 
-
-    @Override
-    public void resize(int width, int height) {
+    private void drawWayPoints(){
+        getShapeRenderer().begin(ShapeType.Filled);
+        for(Enemy enemy : getEnemyArray()) {
+            for (Vector2 waypoint : getPath()) {
+                getShapeRenderer().circle(waypoint.x, waypoint.y, 10);
+            }
+        }
+        getShapeRenderer().end();
     }
 
-    @Override
+    public void createShapeRenderer(){
+        this.sr = new ShapeRenderer();
+    }
+
+    public ShapeRenderer getShapeRenderer(){
+        return this.sr;
+    }
+
+    public void setShapeRendererColor(Color color){
+        getShapeRenderer().setColor(color);
+    }
+
     public void show() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
+        createPath(new Array<Vector2>());
+        addPathNode(new Vector2(250,500));
+        addPathNode(new Vector2(800, 500));
+        addPathNode(new Vector2(800, 1000));
+        addPathNode(new Vector2(250, 1000));
+        addPathNode(new Vector2(250, 1500));
+        addPathNode(new Vector2(800, 1500));
+        addPathNode(new Vector2(800, HEIGHT));
+        createShapeRenderer();
+        getShapeRenderer().setAutoShapeType(true);
+        createSprite(new Sprite(new Texture("badlogic.jpg")));
+        setSpriteSize(75,75);
+        setSpriteOrigin(getSprite().getHeight()/2,getSprite().getWidth()/2);
+        createEnemyArray();
+        createEnemy(new Enemy());
+        setEnemyCenter(250,0);
+        addEnemyToPath(getEnemy());
+    }
 
-        sr = new ShapeRenderer();
-        batch = new SpriteBatch();
+    public void createEnemy(Enemy enemy){
+        this.enemy = enemy;
+    }
 
-        sprite = new Sprite(new Texture("badlogic.jpg"));
-        sprite.setSize(75, 75);
-        sprite.setOrigin(sprite.getHeight()/2, sprite.getWidth()/2);
+    public Enemy getEnemy(){
+        return this.enemy;
+    }
 
+    public Sprite getSprite(){
+        return sprite;
+    }
+
+    public void setSpriteSize(float w, float h){
+        getSprite().setSize(w,h);
+    }
+
+    public void setSpriteOrigin(float h, float w){
+        getSprite().setOrigin(h,w);
+    }
+
+    public void createSprite(Sprite sprite){
+        this.sprite = sprite;
+    }
+
+    public void createEnemyArray(){
         enemies = new Array<Enemy>();
-        Enemy enemy = new Enemy(sprite, getPath());
-        //Enemy enemy2 = new Enemy(sprite, getPath2());
-
-
-        //enemy.setPosition(250, 0);
-        enemy.setCenter(250,0);
-        //enemy.setOriginCenter();
-        //enemy2.setPosition(800, 1000);
-
-
-        enemies.add(enemy);
-        //enemies.add(enemy2);
-
-
-
     }
 
-    private Array<Vector2> getPath() {
-        int height = Gdx.graphics.getHeight();
-        int width = Gdx.graphics.getWidth();
-        Array<Vector2> path = new Array<Vector2>();
-        path.add(new Vector2(250, 500));
-        path.add(new Vector2(800, 500));
-        path.add(new Vector2(800, 1000));
-        path.add(new Vector2(250, 1000));
-        path.add(new Vector2(250, 1500));
-        path.add(new Vector2(800, 1500));
-        path.add(new Vector2(800, height));
-        return path;
+    public void setEnemyCenter(float x, float y){
+        getEnemy().setCenter(x,y);
     }
 
-
-    @Override
-    public void hide() {
-        dispose();
+    public Array<Enemy> getEnemyArray(){
+        return this.enemies;
     }
 
-    @Override
-    public void pause() {
+    public void addEnemyToPath(Enemy enemy){
+        getEnemyArray().add(enemy);
     }
 
-    @Override
-    public void resume() {
+    public void createPath(Array<Vector2> path){
+        this.path = path;
     }
 
-    @Override
+    public Array<Vector2> getPath(){
+        return this.path;
+    }
+
+    public void addPathNode(Vector2 node) {
+        path.add(node);
+    }
+
     public void dispose() {
-        sr.dispose();
-        batch.dispose();
+        getShapeRenderer().dispose();
         sprite.getTexture().dispose();
     }
 

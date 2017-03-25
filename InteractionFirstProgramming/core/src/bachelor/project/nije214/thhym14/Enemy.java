@@ -5,6 +5,7 @@
 package bachelor.project.nije214.thhym14;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,14 +15,30 @@ import com.badlogic.gdx.utils.Array;
 public class Enemy extends Sprite {
 
     private Vector2 velocity = new Vector2();
-    private float speed = 100;
-
+    private float speed;
+    private Sprite sprite;
     private Array<Vector2> path;
     private int waypoint = 0;
 
-    public Enemy(Sprite sprite, Array<Vector2> path) {
-        super(sprite);
+    public void setPath(Array<Vector2> path){
         this.path = path;
+    }
+
+    public Array<Vector2> getPath(){
+        return path;
+    }
+
+    public void setSprite(Sprite sprite){
+        this.sprite = sprite;
+    }
+
+
+    public void setSpeed(float speed){
+        this.speed = speed;
+    }
+
+    public float getSpeed(){
+        return speed;
     }
 
     //@Override
@@ -34,7 +51,7 @@ public class Enemy extends Sprite {
         //Vinklen mellem nuværende position og næste waypoint
         float angle = (float) Math.atan2(path.get(waypoint).y - getY() - getHeight()/2, path.get(waypoint).x - getX()-getWidth()/2);
         //Hastighed på x og y aksen
-        velocity.set((float) Math.cos(angle) * speed, (float) Math.sin(angle) * speed);
+        velocity.set((float) Math.cos(angle) * getSpeed(), (float) Math.sin(angle) * getSpeed());
         //Position i forhold til tid
         setPosition(getX() + velocity.x * delta, getY() + velocity.y * delta);
         //setCenter(getX() + velocity.x * delta, getY() + velocity.y * delta);
@@ -54,12 +71,9 @@ public class Enemy extends Sprite {
 
     public boolean isWaypointReached() {
         //Afstand til waypoint i forhold maks afstand enemy kan flytte sig på 1 frame
-        return Math.abs(path.get(waypoint).x - getX()-getHeight()/2) <= speed * Gdx.graphics.getDeltaTime() && Math.abs(path.get(waypoint).y - getY()-getWidth()/2) <= speed * Gdx.graphics.getDeltaTime();
+        return Math.abs(path.get(waypoint).x - getX()-getHeight()/2) <= getSpeed() * Gdx.graphics.getDeltaTime() && Math.abs(path.get(waypoint).y - getY()-getWidth()/2) <= getSpeed() * Gdx.graphics.getDeltaTime();
     }
 
-    public Array<Vector2> getPath() {
-        return path;
-    }
 
     public int getWaypoint() {
         return waypoint;
