@@ -11,4 +11,5 @@ public class StaticGlobalVariables {
     public static final float HEIGHT = Gdx.app.getGraphics().getHeight();
     public static final float WIDTH = Gdx.app.getGraphics().getWidth();
 
+
 }

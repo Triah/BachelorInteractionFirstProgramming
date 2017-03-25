@@ -1,12 +1,10 @@
 package bachelor.project.nije214.thhym14;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -29,11 +27,11 @@ public class Waypoint {
         drawRouteFromEnemy();
     }
 
-    private void drawRouteFromEnemy(){
+    public void drawRouteFromEnemy(){
+        getShapeRenderer().setAutoShapeType(true);
         setShapeRendererColor(Color.CYAN);
         getShapeRenderer().begin();
         for(int i = 0; i<getEnemyArray().size; i++){
-            System.out.println(i);
             System.out.println(getEnemyArray().get(i));
             getShapeRenderer().line(new Vector2(
                     getEnemyArray().get(i).getX() + getEnemyArray().get(i).getWidth()/2,
@@ -43,7 +41,7 @@ public class Waypoint {
         getShapeRenderer().end();
     }
 
-    private void drawRoute(){
+    public void drawRoute(){
         setShapeRendererColor(Color.WHITE);
         getShapeRenderer().begin(ShapeType.Line);
         for(Enemy enemy : enemies) {
@@ -56,7 +54,7 @@ public class Waypoint {
         getShapeRenderer().end();
     }
 
-    private void drawWayPoints(){
+    public void drawWayPoints(){
         getShapeRenderer().begin(ShapeType.Filled);
         for(Enemy enemy : getEnemyArray()) {
             for (Vector2 waypoint : getPath()) {
