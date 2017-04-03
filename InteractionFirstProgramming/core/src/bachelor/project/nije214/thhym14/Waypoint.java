@@ -32,7 +32,6 @@ public class Waypoint {
         setShapeRendererColor(Color.CYAN);
         getShapeRenderer().begin();
         for(int i = 0; i<getEnemyArray().size; i++){
-            System.out.println(getEnemyArray().get(i));
             getShapeRenderer().line(new Vector2(
                     getEnemyArray().get(i).getX() + getEnemyArray().get(i).getWidth()/2,
                     getEnemyArray().get(i).getY() + getEnemyArray().get(i).getHeight()/2),

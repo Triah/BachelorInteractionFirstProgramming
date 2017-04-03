@@ -2,6 +2,7 @@ package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+
 /**
  * Created by Nicolai on 21-03-2017.
  */
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class AssemblyState extends State {
     public AssemblyState(GameStateManager gsm) {
         super(gsm);
+
     }
 
     @Override
