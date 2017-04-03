@@ -26,19 +26,6 @@ public class GameTypeMenuState extends State {
 
     }
 
-
-    public void create(){
-
-    }
-
-    public void processEnemy(){
-
-    }
-
-    public void draw(SpriteBatch batch){
-
-    }
-
     @Override
     public void handleInput() {
 
