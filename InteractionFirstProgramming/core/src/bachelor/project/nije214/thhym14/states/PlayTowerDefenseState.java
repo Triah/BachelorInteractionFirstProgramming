@@ -70,8 +70,17 @@ public class PlayTowerDefenseState extends State {
         enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
         enemy.setSpritePosition(enemy.getX(),enemy.getVelocity().x,enemy.getY(),enemy.getVelocity().y);
         enemy.setSpriteRotation(enemy.getAngle());
-        if(enemy.isWaypointReached()) {
-            enemy.incrementWaypoint();
+        for (int i = 0; i < wp.getEnemyArray().size; i++) {
+            if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
+                wp.getEnemyArray().removeIndex(i);
+                System.out.println(wp.getEnemyArray());
+                //TO DO: implement custom dispose
+                //enemy.dispose();
+            }
+            if (enemy.isWaypointReached() && !(enemy.getWaypoint() == wp.getPath().size - 1)) {
+                enemy.incrementWaypoint();
+            }
+
         }
 
     }

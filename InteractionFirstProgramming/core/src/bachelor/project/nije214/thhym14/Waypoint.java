@@ -43,23 +43,19 @@ public class Waypoint {
     public void drawRoute(){
         setShapeRendererColor(Color.WHITE);
         getShapeRenderer().begin(ShapeType.Line);
-        for(Enemy enemy : enemies) {
             Vector2 previous = getPath().first();
             for(Vector2 waypoint : getPath()) {
                 getShapeRenderer().line(previous, waypoint);
                 previous = waypoint;
             }
-        }
         getShapeRenderer().end();
     }
 
     public void drawWayPoints(){
         getShapeRenderer().begin(ShapeType.Filled);
-        for(Enemy enemy : getEnemyArray()) {
             for (Vector2 waypoint : getPath()) {
                 getShapeRenderer().circle(waypoint.x, waypoint.y, 10);
             }
-        }
         getShapeRenderer().end();
     }
 
