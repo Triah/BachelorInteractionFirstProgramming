@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -41,34 +42,65 @@ public class AssembleState extends State {
     private LinkedList<TextButton> textButtons;
     private ScrollPane scrollPane;
     private Enemy enemy;
+    private Label label;
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
-        createUIElements();
         textButtons = new LinkedList<TextButton>();
-        for(int i = 0; i <= 10; i++){
-            setButtonAttributes("Speed", 400, 200, 2.5f);
-        }
+        createInitialUIElements();
         enemy = new Enemy();
-        addButtonToTable();
         Gdx.input.setInputProcessor(stage);
     }
 
-    public void createUIElements(){
+    public void createInitialUIElements(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        table = new Table();
-        scrollPane = new ScrollPane(table,skin);
+        //table = new Table();
+        /*scrollPane = new ScrollPane(table,skin);
         scrollPane.setSize(800,HEIGHT/2);
-        scrollPane.setPosition(WIDTH/2-scrollPane.getWidth()/2,HEIGHT/2-scrollPane.getHeight()/2);
-        table.setWidth(stage.getWidth());
-        table.align(Align.left|Align.top);
-        stage.addActor(scrollPane);
+        scrollPane.setPosition(WIDTH/2-scrollPane.getWidth()/2,HEIGHT/2-scrollPane.getHeight()/2);*/
+        //table.setWidth(stage.getWidth());
+        // table.align(Align.left|Align.center);
+        //addActorToStage(table);
+        setButtonAttributes("Tower Defense",400,200,2.5f);
+        //addButtonToTable();
+        addActorToStage(textButtons.get(0));
+        textButtons.get(0).setPosition(WIDTH/2-textButtons.get(0).getWidth()/2,
+                HEIGHT/2 - textButtons.get(0).getWidth()/2);
+        createLabel("Choose Game Mode");
+        label.setPosition(0, HEIGHT-label.getHeight()-300);
+        label.setSize(WIDTH,200);
+        label.setFontScale(4f);
+        label.setAlignment(Align.center);
+        addActorToStage(label);
     }
 
-    public void chooseEnemySpeed(){
+    public void createLabel(String text){
+        this.label = new Label(text,skin);
+    }
+
+    public void clearAll(){
+        if(stage != null){
+            stage.clear();
+        }
+        if(scrollPane != null){
+            scrollPane.clear();
+        }
+        if(table != null){
+            table.clear();
+        }
+        if(!textButtons.isEmpty()){
+            textButtons.clear();
+        }
+    }
+
+    public void addActorToStage(Actor actor){
+        stage.addActor(actor);
+    }
+
+    public void buttonActions(){
         for(TextButton textButton : textButtons){
             if(textButton.getLabel().getText().toString().matches("Speed")){
                 textButton.addListener(new ChangeListener() {
@@ -77,6 +109,15 @@ public class AssembleState extends State {
                         enemy.setSpeed(150);
                     }
                 });
+            }
+            if(textButton.getLabel().getText().toString().matches("Tower Defense")){
+                textButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        clearAll();
+                    }
+                });
+
             }
         }
     }
@@ -106,7 +147,7 @@ public class AssembleState extends State {
     @Override
     public void update(float deltaTime) {
         stage.act();
-        chooseEnemySpeed();
+        buttonActions();
     }
 
     @Override
