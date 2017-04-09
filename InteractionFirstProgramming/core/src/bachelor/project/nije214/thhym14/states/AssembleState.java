@@ -57,24 +57,23 @@ public class AssembleState extends State {
     public void createInitialUIElements(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        //table = new Table();
-        /*scrollPane = new ScrollPane(table,skin);
-        scrollPane.setSize(800,HEIGHT/2);
-        scrollPane.setPosition(WIDTH/2-scrollPane.getWidth()/2,HEIGHT/2-scrollPane.getHeight()/2);*/
-        //table.setWidth(stage.getWidth());
-        // table.align(Align.left|Align.center);
-        //addActorToStage(table);
-        setButtonAttributes("Tower Defense",400,200,2.5f);
-        //addButtonToTable();
-        addActorToStage(textButtons.get(0));
-        textButtons.get(0).setPosition(WIDTH/2-textButtons.get(0).getWidth()/2,
-                HEIGHT/2 - textButtons.get(0).getWidth()/2);
-        createLabel("Choose Game Mode");
+        table = new Table(skin);
+        setButtonAttributes("Enemy",400,200,2.5f);
+        setButtonAttributes("Tower",400,200,2.5f);
+        setButtonAttributes("Bullet",400,200,2.5f);
+        setButtonAttributes("Map",400,200,2.5f);
+        addButtonToTable();
+        scrollPane = new ScrollPane(table,skin);
+        scrollPane.setSize(800,400);
+        scrollPane.setPosition(WIDTH/2 - scrollPane.getWidth()/2,
+                HEIGHT/2 - scrollPane.getHeight()/2);
+        label = new Label("Tower Defense Assembly Hub",skin);
         label.setPosition(0, HEIGHT-label.getHeight()-300);
         label.setSize(WIDTH,200);
         label.setFontScale(4f);
         label.setAlignment(Align.center);
         addActorToStage(label);
+        addActorToStage(scrollPane);
     }
 
     public void createLabel(String text){
@@ -102,7 +101,7 @@ public class AssembleState extends State {
 
     public void buttonActions(){
         for(TextButton textButton : textButtons){
-            if(textButton.getLabel().getText().toString().matches("Speed")){
+            if(textButton.getLabel().getText().toString().matches("Enemy")){
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
@@ -114,7 +113,18 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        clearAll();
+                        Thread t = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gdx.app.postRunnable(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gsm.set(new PlayTowerDefenseState(gsm));
+                                    }
+                                });
+                            }
+                        });
+                        t.start();
                     }
                 });
 
@@ -141,20 +151,19 @@ public class AssembleState extends State {
 
     @Override
     public void handleInput() {
-
+        buttonActions();
     }
 
     @Override
     public void update(float deltaTime) {
         stage.act();
-        buttonActions();
+        handleInput();
     }
 
     @Override
     public void render(SpriteBatch sb) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
-        System.out.println(enemy.getSpeed());
     }
 
     @Override

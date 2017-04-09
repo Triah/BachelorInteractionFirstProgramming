@@ -38,7 +38,7 @@ public class PlayTowerDefenseState extends State {
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
-        this.enemy = as.getEnemy();
+        this.enemy = new Enemy();
         touchPoint = new Vector3();
         runButtonTexture = new Texture("playButton.jpg");
         runButton = new Sprite(runButtonTexture);

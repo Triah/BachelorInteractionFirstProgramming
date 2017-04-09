@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import bachelor.project.nije214.thhym14.states.AssembleState;
 import bachelor.project.nije214.thhym14.states.AssemblyState;
 import bachelor.project.nije214.thhym14.states.GameStateManager;
 import bachelor.project.nije214.thhym14.states.GameTypeMenuState;
@@ -21,7 +22,7 @@ public class InteractionFirstProgramming extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
-		gsm.push(new AssemblyState(gsm));
+		gsm.push(new GameTypeMenuState(gsm));
 	}
 
 	@Override
