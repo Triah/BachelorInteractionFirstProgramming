@@ -11,10 +11,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Tower {
     private Sprite sprite;
-    private int HP;
+    private float HP;
     private Type type;
-    private int range;
-    private int fireRate;
+    private float range;
+    private float fireRate;
     //private int price
 
     enum Type {
@@ -26,16 +26,20 @@ public class Tower {
     public void setType(Type t){ this.type = t;}
     public Type getType(){return type;}
     public void setHP(int HP){this.HP = HP;}
-    public int getHP(){
+    public float getHP(){
         return HP;
     }
     public void setRange(int range){this.range = range;}
-    public int getRange(){
+    public float getRange(){
         return range;
     }
     public void setfireRate(int fireRate){this.fireRate = fireRate;}
-    public int getFireRate(){
+    public float getFireRate(){
         return fireRate;
+    }
+
+    public void setCenter(float x, float y){
+        getSprite().setCenter(x,y);
     }
 
 

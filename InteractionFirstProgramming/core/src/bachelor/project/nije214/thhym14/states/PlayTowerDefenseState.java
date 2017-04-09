@@ -1,25 +1,16 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-
+import bachelor.project.nije214.thhym14.Bullet;
 import bachelor.project.nije214.thhym14.Enemy;
+import bachelor.project.nije214.thhym14.Tower;
 import bachelor.project.nije214.thhym14.Waypoint;
-
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 
@@ -35,11 +26,18 @@ public class PlayTowerDefenseState extends State {
     private Texture runButtonTexture;
     private Sprite runButton;
 
+
+    private Bullet bullet;
+    private Tower tower;
+
+
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
         this.enemy = new Enemy();
+        this.bullet = new Bullet();
+        this.tower = new Tower();
         touchPoint = new Vector3();
-        runButtonTexture = new Texture("playButton.jpg");
+        runButtonTexture = new Texture("badlogic.jpg");
         runButton = new Sprite(runButtonTexture);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
@@ -60,21 +58,39 @@ public class PlayTowerDefenseState extends State {
         enemy.setCenter(250,0);
         enemy.setSpeed(100);
         enemy.setPath(wp.getPath());
-        enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
+        //enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
         runButton.setPosition(WIDTH - 100, HEIGHT - 100);
+
+
+
+
+        tower.createTower();
+        tower.createSprite(new Sprite(new Texture("badlogic.jpg")));
+        tower.setCenter(500,1500);
+
+
+        bullet.createBullet();
+        bullet.createSprite(new Sprite(new Texture("badlogic.jpg")));
+        bullet.setCenter(500,1500);
+        bullet.setSpeed(1000);
+
+
 
 
     }
 
     public void processEnemy(){
+        bullet.setVelocity(bullet.getTowerToEnemyAngle(enemy, tower), bullet.getSpeed());
+        bullet.setBulletPosition(bullet.getX(),bullet.getVelocity().x, bullet.getY(), bullet.getVelocity().y);
+
         enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
         enemy.setSpritePosition(enemy.getX(),enemy.getVelocity().x,enemy.getY(),enemy.getVelocity().y);
         enemy.setSpriteRotation(enemy.getAngle());
         for (int i = 0; i < wp.getEnemyArray().size; i++) {
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
                 wp.getEnemyArray().removeIndex(i);
-                System.out.println(wp.getEnemyArray());
-                //TO DO: implement custom dispose
+
+                //// TODO: 09-04-2017  implement custom dispose
                 //enemy.dispose();
             }
             if (enemy.isWaypointReached() && !(enemy.getWaypoint() == wp.getPath().size - 1)) {
@@ -89,6 +105,9 @@ public class PlayTowerDefenseState extends State {
         for(Enemy enemy : wp.getEnemyArray()){
             enemy.getSprite().draw(batch);
         }
+//// TODO: 09-04-2017 bullet loop
+        bullet.getSprite().draw(batch);
+        tower.getSprite().draw(batch);
     }
 
     @Override
