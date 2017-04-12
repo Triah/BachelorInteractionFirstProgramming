@@ -36,12 +36,7 @@ public class AssembleState extends State {
 
     private Stage stage;
     private Skin skin;
-    private TextButton button;
-    private Table table;
-    private TextButton button2;
     private LinkedList<TextButton> textButtons;
-    private ScrollPane scrollPane;
-    private Enemy enemy;
     private Label label;
 
     public AssembleState(GameStateManager gsm) {
@@ -50,48 +45,24 @@ public class AssembleState extends State {
         camera.update();
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
-        enemy = new Enemy();
         Gdx.input.setInputProcessor(stage);
     }
 
     public void createInitialUIElements(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        table = new Table(skin);
-        setButtonAttributes("Enemy",400,200,2.5f);
-        setButtonAttributes("Tower",400,200,2.5f);
-        setButtonAttributes("Bullet",400,200,2.5f);
-        setButtonAttributes("Map",400,200,2.5f);
-        addButtonToTable();
-        scrollPane = new ScrollPane(table,skin);
-        scrollPane.setSize(800,400);
-        scrollPane.setPosition(WIDTH/2 - scrollPane.getWidth()/2,
-                HEIGHT/2 - scrollPane.getHeight()/2);
+        setButtonAttributes("Bullet",400,200,2.5f, WIDTH/2 - 400,HEIGHT/2 - 125);
+        setButtonAttributes("Tower",400,200,2.5f, WIDTH/2 + 50,HEIGHT/2 + 125);
+        setButtonAttributes("Enemy",400,200,2.5f, WIDTH/2 - 400,HEIGHT/2 + 125);
+        setButtonAttributes("Map",400,200,2.5f, WIDTH/2 + 50,HEIGHT/2 - 125);
         label = new Label("Tower Defense Assembly Hub",skin);
         label.setPosition(0, HEIGHT-label.getHeight()-300);
         label.setSize(WIDTH,200);
         label.setFontScale(4f);
         label.setAlignment(Align.center);
         addActorToStage(label);
-        addActorToStage(scrollPane);
-    }
-
-    public void createLabel(String text){
-        this.label = new Label(text,skin);
-    }
-
-    public void clearAll(){
-        if(stage != null){
-            stage.clear();
-        }
-        if(scrollPane != null){
-            scrollPane.clear();
-        }
-        if(table != null){
-            table.clear();
-        }
-        if(!textButtons.isEmpty()){
-            textButtons.clear();
+        for(TextButton textButton : textButtons) {
+            addActorToStage(textButton);
         }
     }
 
@@ -105,11 +76,22 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        enemy.setSpeed(150);
+                        Thread t = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gdx.app.postRunnable(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gsm.set(new AssembleEnemy(gsm));
+                                    }
+                                });
+                            }
+                        });
+                        t.start();
                     }
                 });
             }
-            if(textButton.getLabel().getText().toString().matches("Tower Defense")){
+            if(textButton.getLabel().getText().toString().matches("Tower")){
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
@@ -119,7 +101,47 @@ public class AssembleState extends State {
                                 Gdx.app.postRunnable(new Runnable() {
                                     @Override
                                     public void run() {
-                                        gsm.set(new PlayTowerDefenseState(gsm));
+                                        gsm.set(new AssembleTower(gsm));
+                                    }
+                                });
+                            }
+                        });
+                        t.start();
+                    }
+                });
+
+            }
+            if(textButton.getLabel().getText().toString().matches("Bullet")){
+                textButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        Thread t = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gdx.app.postRunnable(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gsm.set(new AssembleBullet(gsm));
+                                    }
+                                });
+                            }
+                        });
+                        t.start();
+                    }
+                });
+
+            }
+            if(textButton.getLabel().getText().toString().matches("Map")){
+                textButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        Thread t = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gdx.app.postRunnable(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gsm.set(new AssembleMap(gsm));
                                     }
                                 });
                             }
@@ -132,21 +154,14 @@ public class AssembleState extends State {
         }
     }
 
-    public void setButtonAttributes(String buttonText, float width, float height, float fontScale){
+    public void setButtonAttributes(String buttonText, float width, float height, float fontScale, float x, float y){
         TextButton textButton = new TextButton(buttonText,skin);
         textButton.setWidth(width);
         textButton.setHeight(height);
         textButton.getLabel().setFontScale(fontScale);
+        textButton.setX(x);
+        textButton.setY(y);
         textButtons.add(textButton);
-    }
-
-    public void addButtonToTable(){
-        for(int i = 0; i<textButtons.size();i++) {
-            table.add(textButtons.get(i)).width(textButtons.get(i).getWidth()).height(textButtons.get(i).getHeight());
-            if(i%2==0 && i!=0 && i!=textButtons.size()){
-                table.row();
-            }
-        }
     }
 
     @Override

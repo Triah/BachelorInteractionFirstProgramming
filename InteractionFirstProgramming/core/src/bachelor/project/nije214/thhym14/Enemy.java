@@ -126,6 +126,7 @@ public class Enemy {
         return waypoint;
     }
 
+
     public void dispose(){
         this.dispose();
     }

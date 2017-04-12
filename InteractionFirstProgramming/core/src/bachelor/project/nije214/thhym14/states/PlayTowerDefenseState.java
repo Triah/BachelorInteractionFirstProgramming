@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.LinkedList;
+
 import bachelor.project.nije214.thhym14.Enemy;
 import bachelor.project.nije214.thhym14.Waypoint;
 
@@ -35,11 +37,15 @@ public class PlayTowerDefenseState extends State {
     private Texture runButtonTexture;
     private Sprite runButton;
     private AssemblyState as;
+    private LinkedList<Enemy> enemies;
+    private float time;
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
+        time = 0;
         this.enemy = new Enemy();
         touchPoint = new Vector3();
+        enemies = new LinkedList<Enemy>();
         runButtonTexture = new Texture("playButton.jpg");
         runButton = new Sprite(runButtonTexture);
         camera.setToOrtho(false, WIDTH, HEIGHT);
@@ -68,13 +74,12 @@ public class PlayTowerDefenseState extends State {
     }
 
     public void processEnemy(){
+        for (Enemy enemy : wp.getEnemyArray()) {
         enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
         enemy.setSpritePosition(enemy.getX(),enemy.getVelocity().x,enemy.getY(),enemy.getVelocity().y);
         enemy.setSpriteRotation(enemy.getAngle());
-        for (int i = 0; i < wp.getEnemyArray().size; i++) {
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
-                wp.getEnemyArray().removeIndex(i);
-                System.out.println(wp.getEnemyArray());
+                wp.getEnemyArray().removeValue(enemy,false);
                 //TO DO: implement custom dispose
                 //enemy.dispose();
             }
@@ -121,6 +126,14 @@ public class PlayTowerDefenseState extends State {
     public void update(float deltaTime) {
         handleInput();
         playMode();
+        time += Gdx.graphics.getDeltaTime();
+        if(time>2){
+            cloneAndAddToList();
+            time = 0;
+        }
+        for(Enemy enemy : wp.getEnemyArray()) {
+            System.out.println(wp.getEnemyArray().size);
+        }
     }
 
     @Override
@@ -138,6 +151,16 @@ public class PlayTowerDefenseState extends State {
         wp.drawRoute();
         wp.drawWayPoints();
         wp.drawRouteFromEnemy();
+    }
+
+    public void cloneAndAddToList(){
+        Enemy enemy = new Enemy();
+        enemy.createEnemy();
+        enemy.setCenter(250,0);
+        enemy.setSpeed(this.enemy.getSpeed());
+        enemy.setPath(this.wp.getPath());
+        enemy.setVelocity(this.enemy.getAngle(),enemy.getSpeed());
+        wp.getEnemyArray().add(enemy);
     }
 
     @Override
