@@ -1,6 +1,7 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -38,11 +39,18 @@ public class AssembleState extends State {
     private Skin skin;
     private LinkedList<TextButton> textButtons;
     private Label label;
+    private Preferences prefs;
+    private Enemy enemy;
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        enemy = new Enemy();
+        prefs = Gdx.app.getPreferences("Enemy Preferences");
+        if(prefs.getFloat("enemySpeed") != 0){
+            enemy.setSpeed(prefs.getFloat("enemySpeed"));
+        }
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
         Gdx.input.setInputProcessor(stage);
@@ -153,6 +161,8 @@ public class AssembleState extends State {
             }
         }
     }
+
+
 
     public void setButtonAttributes(String buttonText, float width, float height, float fontScale, float x, float y){
         TextButton textButton = new TextButton(buttonText,skin);

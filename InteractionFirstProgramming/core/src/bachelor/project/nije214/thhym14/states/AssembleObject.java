@@ -1,6 +1,7 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -33,11 +34,14 @@ public abstract class AssembleObject extends State {
     protected LinkedList<TextButton> textButtons;
     protected ScrollPane chosenScrollPane;
     protected Table chosenTable;
+    protected Preferences prefs;
+    protected TextButton finishButton;
 
     public AssembleObject(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        prefs = Gdx.app.getPreferences("Enemy Preferences");
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         table = new Table(skin);
@@ -52,24 +56,18 @@ public abstract class AssembleObject extends State {
         avaliableLabel.setFontScale(2.5f);
         avaliableLabel.setPosition(WIDTH*0.65f,HEIGHT*0.965f);
         stage.addActor(avaliableLabel);
-        for(int i = 0; i<10; i++){
-            setButtons("testbutton number:"+ "\n" + i);
-        }
         scrollPane.setWidth(WIDTH*0.45f);
-        scrollPane.setHeight(HEIGHT*0.95f);
-        scrollPane.setPosition(WIDTH*0.6f,0);
+        scrollPane.setHeight(HEIGHT*0.80f);
+        scrollPane.setPosition(WIDTH*0.6f,HEIGHT*0.15f);
         scrollPane.setFadeScrollBars(false);
         table.align(Align.top);
         createSprite("badlogic.jpg");
-        getSprite().setSize(WIDTH*0.45f,WIDTH*0.45f);
-        getSprite().setPosition(WIDTH*0.1f,HEIGHT-(getSprite().getHeight()+100));
         table.setWidth(scrollPane.getWidth());
         for(TextButton textButton : textButtons){
             table.add(textButton).width(scrollPane.getWidth()- 25).height(textButton.getHeight());
             table.row();
         }
         stage.addActor(scrollPane);
-
         chosenTable = new Table(skin);
         chosenScrollPane = new ScrollPane(chosenTable,skin);
         chosenScrollPane.setWidth(WIDTH*0.45f);
@@ -82,6 +80,16 @@ public abstract class AssembleObject extends State {
         chosenLabel.setFontScale(2.5f);
         chosenLabel.setPosition(WIDTH*0.175f,HEIGHT*0.625f);
         stage.addActor(chosenLabel);
+        finishButton();
+    }
+
+    public void finishButton(){
+        finishButton = new TextButton("Finish",skin);
+        finishButton.setHeight(HEIGHT*0.1f);
+        finishButton.setWidth(WIDTH*0.40f);
+        finishButton.setPosition(WIDTH*0.60f,0);
+        finishButton.getLabel().setFontScale(2.5f);
+        stage.addActor(finishButton);
     }
 
     protected void setButtons(String text){
@@ -93,6 +101,8 @@ public abstract class AssembleObject extends State {
 
     protected void createSprite(String textForPicture){
         this.sprite = new Sprite(new Texture(textForPicture));
+        sprite.setSize(WIDTH*0.45f,WIDTH*0.45f);
+        sprite.setPosition(WIDTH*0.1f,HEIGHT-(getSprite().getHeight()+100));
     }
 
     protected Sprite getSprite(){

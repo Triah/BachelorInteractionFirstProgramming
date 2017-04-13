@@ -21,6 +21,7 @@ public class Enemy {
     private Sprite sprite;
     private Array<Vector2> path;
     private int waypoint = 0;
+    private float health;
 
     public void createEnemy(){
         createSprite(new Sprite(new Texture("badlogic.jpg")));
@@ -30,6 +31,13 @@ public class Enemy {
         getSprite().setCenter(x,y);
     }
 
+    public void setHealth(float health){
+        this.health = health;
+    }
+
+    public float getHealth(){
+        return health;
+    }
 
     public float getWidth(){
         return getSprite().getWidth();
