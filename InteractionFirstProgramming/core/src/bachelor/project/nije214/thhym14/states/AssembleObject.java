@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -30,6 +31,8 @@ public abstract class AssembleObject extends State {
     protected Sprite sprite;
     protected ScrollPane scrollPane;
     protected LinkedList<TextButton> textButtons;
+    protected ScrollPane chosenScrollPane;
+    protected Table chosenTable;
 
     public AssembleObject(GameStateManager gsm) {
         super(gsm);
@@ -45,28 +48,45 @@ public abstract class AssembleObject extends State {
     protected void setUpStage(){
         scrollPane = new ScrollPane(table,skin);
         this.textButtons = new LinkedList<TextButton>();
+        Label avaliableLabel = new Label("Avaliable Attributes", skin);
+        avaliableLabel.setFontScale(2.5f);
+        avaliableLabel.setPosition(WIDTH*0.65f,HEIGHT*0.965f);
+        stage.addActor(avaliableLabel);
         for(int i = 0; i<10; i++){
             setButtons("testbutton number:"+ "\n" + i);
         }
-        scrollPane.setWidth(400);
-        scrollPane.setHeight(HEIGHT - 200);
-        scrollPane.setPosition(WIDTH/2 +100,100);
+        scrollPane.setWidth(WIDTH*0.45f);
+        scrollPane.setHeight(HEIGHT*0.95f);
+        scrollPane.setPosition(WIDTH*0.6f,0);
         scrollPane.setFadeScrollBars(false);
         table.align(Align.top);
         createSprite("badlogic.jpg");
-        getSprite().setSize(500,500);
-        getSprite().setPosition(100,HEIGHT-(getSprite().getHeight()+100));
+        getSprite().setSize(WIDTH*0.45f,WIDTH*0.45f);
+        getSprite().setPosition(WIDTH*0.1f,HEIGHT-(getSprite().getHeight()+100));
         table.setWidth(scrollPane.getWidth());
         for(TextButton textButton : textButtons){
             table.add(textButton).width(scrollPane.getWidth()- 25).height(textButton.getHeight());
             table.row();
         }
         stage.addActor(scrollPane);
+
+        chosenTable = new Table(skin);
+        chosenScrollPane = new ScrollPane(chosenTable,skin);
+        chosenScrollPane.setWidth(WIDTH*0.45f);
+        chosenScrollPane.setHeight(HEIGHT*0.6f);
+        chosenTable.align(Align.top);
+        chosenTable.setWidth(chosenScrollPane.getWidth());
+        chosenScrollPane.setPosition(WIDTH*0.1f,HEIGHT*0f);
+        stage.addActor(chosenScrollPane);
+        Label chosenLabel = new Label("Chosen Attributes", skin);
+        chosenLabel.setFontScale(2.5f);
+        chosenLabel.setPosition(WIDTH*0.175f,HEIGHT*0.625f);
+        stage.addActor(chosenLabel);
     }
 
     protected void setButtons(String text){
         TextButton textButton = new TextButton(text,skin);
-        textButton.setHeight(200);
+        textButton.setHeight(HEIGHT*0.1f);
         textButton.getLabel().setFontScale(2.5f);
         textButtons.add(textButton);
     }

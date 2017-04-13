@@ -36,7 +36,6 @@ public class PlayTowerDefenseState extends State {
     private boolean playMode;
     private Texture runButtonTexture;
     private Sprite runButton;
-    private AssemblyState as;
     private LinkedList<Enemy> enemies;
     private float time;
 

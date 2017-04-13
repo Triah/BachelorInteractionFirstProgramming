@@ -50,14 +50,14 @@ public class GameTypeMenuState extends State {
     public void createInitialUIElements(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        setButtonAttributes("Tower Defense",400,200,2.5f);
+        setButtonAttributes("Tower Defense");
         addActorToStage(textButtons.get(0));
         textButtons.get(0).setPosition(WIDTH/2-textButtons.get(0).getWidth()/2,
                 HEIGHT/2 - textButtons.get(0).getWidth()/2);
         this.label = new Label("Choose Game Mode",skin);
         label.setPosition(0, HEIGHT-label.getHeight()-300);
         label.setSize(WIDTH,200);
-        label.setFontScale(4f);
+        label.setFontScale(2.5f);
         label.setAlignment(Align.center);
         addActorToStage(label);
     }
@@ -93,11 +93,11 @@ public class GameTypeMenuState extends State {
         }
     }
 
-    public void setButtonAttributes(String buttonText, float width, float height, float fontScale){
+    public void setButtonAttributes(String buttonText){
         TextButton textButton = new TextButton(buttonText,skin);
-        textButton.setWidth(width);
-        textButton.setHeight(height);
-        textButton.getLabel().setFontScale(fontScale);
+        textButton.setWidth(WIDTH*0.40f);
+        textButton.setHeight(HEIGHT*0.1f);
+        textButton.getLabel().setFontScale(2.5f);
         textButtons.add(textButton);
     }
 

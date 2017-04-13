@@ -51,14 +51,14 @@ public class AssembleState extends State {
     public void createInitialUIElements(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        setButtonAttributes("Bullet",400,200,2.5f, WIDTH/2 - 400,HEIGHT/2 - 125);
-        setButtonAttributes("Tower",400,200,2.5f, WIDTH/2 + 50,HEIGHT/2 + 125);
-        setButtonAttributes("Enemy",400,200,2.5f, WIDTH/2 - 400,HEIGHT/2 + 125);
-        setButtonAttributes("Map",400,200,2.5f, WIDTH/2 + 50,HEIGHT/2 - 125);
+        setButtonAttributes("Bullet",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.25f,HEIGHT*0.57f);
+        setButtonAttributes("Tower",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.25f,HEIGHT*0.43f);
+        setButtonAttributes("Enemy",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.55f,HEIGHT*0.57f);
+        setButtonAttributes("Map",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.55f,HEIGHT*0.43f);
         label = new Label("Tower Defense Assembly Hub",skin);
         label.setPosition(0, HEIGHT-label.getHeight()-300);
         label.setSize(WIDTH,200);
-        label.setFontScale(4f);
+        label.setFontScale(2.5f);
         label.setAlignment(Align.center);
         addActorToStage(label);
         for(TextButton textButton : textButtons) {
