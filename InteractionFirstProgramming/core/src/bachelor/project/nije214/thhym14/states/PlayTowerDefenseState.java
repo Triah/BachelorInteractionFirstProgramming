@@ -25,6 +25,7 @@ public class PlayTowerDefenseState extends State {
     private boolean playMode;
     private Texture runButtonTexture;
     private Sprite runButton;
+    private float time;
 
 
     private Bullet bullet;
@@ -34,13 +35,15 @@ public class PlayTowerDefenseState extends State {
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
         this.enemy = new Enemy();
-        this.bullet = new Bullet();
+        //this.bullet = new Bullet();
         this.tower = new Tower();
         touchPoint = new Vector3();
         runButtonTexture = new Texture("badlogic.jpg");
         runButton = new Sprite(runButtonTexture);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+
+        bullet = new Bullet();
         wp = new Waypoint();
         create();
     }
@@ -69,28 +72,34 @@ public class PlayTowerDefenseState extends State {
         tower.setCenter(500,1500);
 
 
+        cloneAndAddToListBullet();
+
+        /*
         bullet.createBullet();
+        bullet.createBulletArray();
         bullet.createSprite(new Sprite(new Texture("badlogic.jpg")));
         bullet.setCenter(500,1500);
         bullet.setSpeed(1000);
-
+        */
 
 
 
     }
 
     public void processEnemy(){
-        bullet.setVelocity(bullet.getTowerToEnemyAngle(enemy, tower), bullet.getSpeed());
-        bullet.setBulletPosition(bullet.getX(),bullet.getVelocity().x, bullet.getY(), bullet.getVelocity().y);
 
-        enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
-        enemy.setSpritePosition(enemy.getX(),enemy.getVelocity().x,enemy.getY(),enemy.getVelocity().y);
-        enemy.setSpriteRotation(enemy.getAngle());
-        for (int i = 0; i < wp.getEnemyArray().size; i++) {
+        for (Bullet b : bullet.getBulletArray()) {
+            b.setVelocity(b.getTowerToEnemyAngle(enemy, tower), b.getSpeed());
+            b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
+        }
+
+        for (Enemy enemy : wp.getEnemyArray()) {
+            enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
+            enemy.setSpritePosition(enemy.getX(),enemy.getVelocity().x,enemy.getY(),enemy.getVelocity().y);
+            enemy.setSpriteRotation(enemy.getAngle());
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
-                wp.getEnemyArray().removeIndex(i);
-
-                //// TODO: 09-04-2017  implement custom dispose
+                wp.getEnemyArray().removeValue(enemy,false);
+                //TO DO: implement custom dispose
                 //enemy.dispose();
             }
             if (enemy.isWaypointReached() && !(enemy.getWaypoint() == wp.getPath().size - 1)) {
@@ -101,12 +110,15 @@ public class PlayTowerDefenseState extends State {
 
     }
 
+
     public void draw(SpriteBatch batch){
         for(Enemy enemy : wp.getEnemyArray()){
             enemy.getSprite().draw(batch);
         }
-//// TODO: 09-04-2017 bullet loop
-        bullet.getSprite().draw(batch);
+
+        for(Bullet b : bullet.getBulletArray()){
+            b.getSprite().draw(batch);
+        }
         tower.getSprite().draw(batch);
     }
 
@@ -139,6 +151,13 @@ public class PlayTowerDefenseState extends State {
     public void update(float deltaTime) {
         handleInput();
         playMode();
+
+        time += Gdx.graphics.getDeltaTime();
+        if(time>2){
+            cloneAndAddToList();
+            cloneAndAddToListBullet();
+            time = 0;
+        }
     }
 
     @Override
@@ -157,6 +176,30 @@ public class PlayTowerDefenseState extends State {
         wp.drawWayPoints();
         wp.drawRouteFromEnemy();
     }
+
+
+    public void cloneAndAddToList(){
+        Enemy enemy = new Enemy();
+        enemy.createEnemy();
+        enemy.setCenter(250,0);
+        enemy.setSpeed(this.enemy.getSpeed());
+        enemy.setPath(this.wp.getPath());
+        enemy.setVelocity(this.enemy.getAngle(),enemy.getSpeed());
+        wp.getEnemyArray().add(enemy);
+    }
+
+    public void cloneAndAddToListBullet(){
+        Bullet b = new Bullet();
+        bullet.createBulletArray();
+        b.createBullet();
+        b.createSprite(new Sprite(new Texture("badlogic.jpg")));
+        b.setCenter(500,1500);
+        b.setSpeed(1000);
+        bullet.getBulletArray().add(b);
+
+    }
+
+
 
     @Override
     public void dispose() {

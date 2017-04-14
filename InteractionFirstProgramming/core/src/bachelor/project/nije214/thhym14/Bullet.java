@@ -12,12 +12,9 @@ import com.badlogic.gdx.utils.Array;
  */
 
 public class Bullet {
-    private Enemy enemy; //dependency til enemy
-    private Tower tower; //dependency til tower
-    /*
-    man kunne muligvis udregne det i PlayTowerDefenseState i stedet
-    eller.. hmm.. så længe enemy og tower er initialiseret er det vel ok.
-    */
+    private Enemy enemy;
+    private Tower tower;
+
     private Vector2 velocity = new Vector2();
     private float speed;
     private Sprite sprite;
@@ -47,6 +44,13 @@ public class Bullet {
     public float getSpeed(){
         return speed;
     }
+    public void createBulletArray(){
+        bullets = new Array<Bullet>();
+    }
+    public Array<Bullet> getBulletArray(){
+        return this.bullets;
+    }
+
 
 
     public void setVelocity(float angle, float speed){
@@ -73,9 +77,5 @@ public class Bullet {
     ////TODO: 09-04-2017  implement laser bullet
     */
 
-
-    /*
-    potentielt kunne man refactor nogle ting sammen til en shoot() metode, ville muligvis være nemmere at arbejde med.. an på hvordan vi bruger bullet hm hm hm hm
-    */
 
     }
