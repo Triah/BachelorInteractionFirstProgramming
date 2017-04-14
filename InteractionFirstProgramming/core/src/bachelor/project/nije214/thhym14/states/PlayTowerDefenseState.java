@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import bachelor.project.nije214.thhym14.Bullet;
+import java.util.LinkedList;
 import bachelor.project.nije214.thhym14.Enemy;
 import bachelor.project.nije214.thhym14.Tower;
 import bachelor.project.nije214.thhym14.Waypoint;
@@ -32,13 +33,18 @@ public class PlayTowerDefenseState extends State {
     private Tower tower;
 
 
+    private LinkedList<Enemy> enemies;
+
+
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
+        time = 0;
         this.enemy = new Enemy();
         //this.bullet = new Bullet();
         this.tower = new Tower();
         touchPoint = new Vector3();
-        runButtonTexture = new Texture("badlogic.jpg");
+        enemies = new LinkedList<Enemy>();
+        runButtonTexture = new Texture("playButton.jpg");
         runButton = new Sprite(runButtonTexture);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
@@ -88,6 +94,7 @@ public class PlayTowerDefenseState extends State {
 
     public void processEnemy(){
 
+
         for (Bullet b : bullet.getBulletArray()) {
             b.setVelocity(b.getTowerToEnemyAngle(enemy, tower), b.getSpeed());
             b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
@@ -97,6 +104,7 @@ public class PlayTowerDefenseState extends State {
             enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
             enemy.setSpritePosition(enemy.getX(),enemy.getVelocity().x,enemy.getY(),enemy.getVelocity().y);
             enemy.setSpriteRotation(enemy.getAngle());
+
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
                 wp.getEnemyArray().removeValue(enemy,false);
                 //TO DO: implement custom dispose
@@ -151,13 +159,13 @@ public class PlayTowerDefenseState extends State {
     public void update(float deltaTime) {
         handleInput();
         playMode();
-
         time += Gdx.graphics.getDeltaTime();
         if(time>2){
             cloneAndAddToList();
             cloneAndAddToListBullet();
             time = 0;
         }
+
     }
 
     @Override
@@ -177,7 +185,6 @@ public class PlayTowerDefenseState extends State {
         wp.drawRouteFromEnemy();
     }
 
-
     public void cloneAndAddToList(){
         Enemy enemy = new Enemy();
         enemy.createEnemy();
@@ -187,6 +194,7 @@ public class PlayTowerDefenseState extends State {
         enemy.setVelocity(this.enemy.getAngle(),enemy.getSpeed());
         wp.getEnemyArray().add(enemy);
     }
+
 
     public void cloneAndAddToListBullet(){
         Bullet b = new Bullet();
@@ -198,8 +206,6 @@ public class PlayTowerDefenseState extends State {
         bullet.getBulletArray().add(b);
 
     }
-
-
 
     @Override
     public void dispose() {
