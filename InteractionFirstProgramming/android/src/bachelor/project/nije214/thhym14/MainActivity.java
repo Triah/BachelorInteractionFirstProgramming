@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
     }
 
     public void updateButtonClick(View view){
+        System.out.println("REEEEEEEE");
         //MoveFilesToStorage mfts = new MoveFilesToStorage();
         //mfts.addFileToSdCard();
         /*FileGetterClient fgc = new FileGetterClient();
