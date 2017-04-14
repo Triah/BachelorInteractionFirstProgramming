@@ -39,18 +39,11 @@ public class AssembleState extends State {
     private Skin skin;
     private LinkedList<TextButton> textButtons;
     private Label label;
-    private Preferences prefs;
-    private Enemy enemy;
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
-        enemy = new Enemy();
-        prefs = Gdx.app.getPreferences("Enemy Preferences");
-        if(prefs.getFloat("enemySpeed") != 0){
-            enemy.setSpeed(prefs.getFloat("enemySpeed"));
-        }
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
         Gdx.input.setInputProcessor(stage);
@@ -84,6 +77,7 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -103,6 +97,7 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -123,6 +118,7 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -143,6 +139,7 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -193,6 +190,9 @@ public class AssembleState extends State {
 
     @Override
     public void dispose() {
-
+        skin.dispose();
+        for(Actor stageActor : stage.getActors()) {
+            stage.getActors().removeValue(stageActor,true);
+        }
     }
 }

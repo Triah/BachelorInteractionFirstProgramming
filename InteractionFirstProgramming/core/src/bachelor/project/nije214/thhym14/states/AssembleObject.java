@@ -34,14 +34,18 @@ public abstract class AssembleObject extends State {
     protected LinkedList<TextButton> textButtons;
     protected ScrollPane chosenScrollPane;
     protected Table chosenTable;
-    protected Preferences prefs;
+    protected Preferences enemyPrefs;
+    protected Preferences bulletPrefs;
+    protected Preferences towerPrefs;
     protected TextButton finishButton;
 
     public AssembleObject(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
-        prefs = Gdx.app.getPreferences("Enemy Preferences");
+        enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
+        towerPrefs = Gdx.app.getPreferences("towerPrefs");
+        bulletPrefs = Gdx.app.getPreferences("towerPrefs");
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         table = new Table(skin);

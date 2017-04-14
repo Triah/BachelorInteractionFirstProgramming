@@ -63,7 +63,7 @@ public class AssembleEnemy extends AssembleObject {
                         public void changed(ChangeEvent event, Actor actor) {
                             enemy.setSpeed(100);
                             labelOptions(speedLabel,"Low Speed");
-                            prefs.putFloat("enemySpeed", enemy.getSpeed());
+                            enemyPrefs.putFloat("enemySpeed", enemy.getSpeed());
                         }
                     });
                 }
@@ -73,7 +73,7 @@ public class AssembleEnemy extends AssembleObject {
                         public void changed(ChangeEvent event, Actor actor) {
                             enemy.setSpeed(250);
                             labelOptions(speedLabel,"Medium Speed");
-                            prefs.putFloat("enemySpeed", enemy.getSpeed());
+                            enemyPrefs.putFloat("enemySpeed", enemy.getSpeed());
                         }
                     });
                 }
@@ -83,7 +83,7 @@ public class AssembleEnemy extends AssembleObject {
                         public void changed(ChangeEvent event, Actor actor) {
                             enemy.setSpeed(500);
                             labelOptions(speedLabel,"High Speed");
-                            prefs.putFloat("enemySpeed", enemy.getSpeed());
+                            enemyPrefs.putFloat("enemySpeed", enemy.getSpeed());
                         }
                     });
                 }
@@ -95,7 +95,7 @@ public class AssembleEnemy extends AssembleObject {
                         public void changed(ChangeEvent event, Actor actor) {
                             enemy.setHealth(1);
                             labelOptions(healthLabel,"Low Health");
-                            prefs.putFloat("enemyHealth", enemy.getHealth());
+                            enemyPrefs.putFloat("enemyHealth", enemy.getHealth());
                         }
                     });
                 }
@@ -105,7 +105,7 @@ public class AssembleEnemy extends AssembleObject {
                         public void changed(ChangeEvent event, Actor actor) {
                             enemy.setHealth(5);
                             labelOptions(healthLabel,"Medium Health");
-                            prefs.putFloat("enemyHealth", enemy.getHealth());
+                            enemyPrefs.putFloat("enemyHealth", enemy.getHealth());
                         }
                     });
                 }
@@ -115,7 +115,7 @@ public class AssembleEnemy extends AssembleObject {
                         public void changed(ChangeEvent event, Actor actor) {
                             enemy.setHealth(10);
                             labelOptions(healthLabel,"High Health");
-                            prefs.putFloat("enemyHealth", enemy.getHealth());
+                            enemyPrefs.putFloat("enemyHealth", enemy.getHealth());
                         }
                     });
                 }
@@ -124,7 +124,8 @@ public class AssembleEnemy extends AssembleObject {
         finishButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                prefs.flush();
+                enemyPrefs.flush();
+                dispose();
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -147,6 +148,12 @@ public class AssembleEnemy extends AssembleObject {
             chosenTable.add(label);
             chosenTable.row();
         }
+    }
+
+    @Override
+    public void dispose(){
+        stage.dispose();
+        skin.dispose();
     }
 }
 

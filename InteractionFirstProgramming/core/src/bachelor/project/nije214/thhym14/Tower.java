@@ -17,7 +17,7 @@ public class Tower {
     private float fireRate;
     //private int price
 
-    enum Type {
+    public enum Type {
         BASIC, //standard tower
         LASER, //laser projectiles
         FROST //slows movement speed of enemy
