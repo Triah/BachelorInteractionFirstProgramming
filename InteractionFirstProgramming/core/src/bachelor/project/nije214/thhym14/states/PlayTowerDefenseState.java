@@ -33,22 +33,16 @@ public class PlayTowerDefenseState extends State {
     private Tower tower;
 
 
-    private LinkedList<Enemy> enemies;
-
-
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
-        time = 0;
-        this.enemy = new Enemy();
-        //this.bullet = new Bullet();
-        this.tower = new Tower();
-        touchPoint = new Vector3();
-        enemies = new LinkedList<Enemy>();
-        runButtonTexture = new Texture("playButton.jpg");
-        runButton = new Sprite(runButtonTexture);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
-
+        time = 0;
+        this.enemy = new Enemy();
+        this.tower = new Tower();
+        touchPoint = new Vector3();
+        runButtonTexture = new Texture("playButton.jpg");
+        runButton = new Sprite(runButtonTexture);
         bullet = new Bullet();
         wp = new Waypoint();
         create();
@@ -67,34 +61,15 @@ public class PlayTowerDefenseState extends State {
         enemy.setCenter(250,0);
         enemy.setSpeed(100);
         enemy.setPath(wp.getPath());
-        //enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
         runButton.setPosition(WIDTH - 100, HEIGHT - 100);
-
-
-
-
         tower.createTower();
         tower.createSprite(new Sprite(new Texture("badlogic.jpg")));
         tower.setCenter(500,1500);
-
-
-        cloneAndAddToListBullet();
-
-        /*
-        bullet.createBullet();
         bullet.createBulletArray();
-        bullet.createSprite(new Sprite(new Texture("badlogic.jpg")));
-        bullet.setCenter(500,1500);
-        bullet.setSpeed(1000);
-        */
-
-
-
+        cloneAndAddToListBullet();
     }
 
     public void processEnemy(){
-
-
         for (Bullet b : bullet.getBulletArray()) {
             b.setVelocity(b.getTowerToEnemyAngle(enemy, tower), b.getSpeed());
             b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
@@ -117,7 +92,6 @@ public class PlayTowerDefenseState extends State {
         }
 
     }
-
 
     public void draw(SpriteBatch batch){
         for(Enemy enemy : wp.getEnemyArray()){
@@ -198,7 +172,6 @@ public class PlayTowerDefenseState extends State {
 
     public void cloneAndAddToListBullet(){
         Bullet b = new Bullet();
-        bullet.createBulletArray();
         b.createBullet();
         b.createSprite(new Sprite(new Texture("badlogic.jpg")));
         b.setCenter(500,1500);

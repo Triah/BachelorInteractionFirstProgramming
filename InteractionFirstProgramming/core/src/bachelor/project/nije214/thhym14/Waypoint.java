@@ -71,27 +71,6 @@ public class Waypoint {
         getShapeRenderer().setColor(color);
     }
 
-    public void show() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        createPath(new Array<Vector2>());
-        addPathNode(new Vector2(250,500));
-        addPathNode(new Vector2(800, 500));
-        addPathNode(new Vector2(800, 1000));
-        addPathNode(new Vector2(250, 1000));
-        addPathNode(new Vector2(250, 1500));
-        addPathNode(new Vector2(800, 1500));
-        addPathNode(new Vector2(800, HEIGHT));
-        createShapeRenderer();
-        getShapeRenderer().setAutoShapeType(true);
-        createSprite(new Sprite(new Texture("badlogic.jpg")));
-        setSpriteSize(75,75);
-        setSpriteOrigin(getSprite().getHeight()/2,getSprite().getWidth()/2);
-        createEnemyArray();
-        createEnemy(new Enemy());
-        setEnemyCenter(250,0);
-        addEnemyToPath(getEnemy());
-    }
-
     public void createEnemy(Enemy enemy){
         this.enemy = enemy;
     }

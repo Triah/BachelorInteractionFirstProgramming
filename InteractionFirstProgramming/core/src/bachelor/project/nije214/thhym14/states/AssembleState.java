@@ -39,11 +39,13 @@ public class AssembleState extends State {
     private Skin skin;
     private LinkedList<TextButton> textButtons;
     private Label label;
+    private Preferences mapPrefs;
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        mapPrefs = Gdx.app.getPreferences("mapPrefs");
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
         Gdx.input.setInputProcessor(stage);
@@ -56,6 +58,7 @@ public class AssembleState extends State {
         setButtonAttributes("Tower",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.25f,HEIGHT*0.43f);
         setButtonAttributes("Enemy",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.55f,HEIGHT*0.57f);
         setButtonAttributes("Map",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.55f,HEIGHT*0.43f);
+        setButtonAttributes("Play Game", WIDTH*0.55f,HEIGHT*0.1f,2.5f,WIDTH*0.25f,HEIGHT*0.25f);
         label = new Label("Tower Defense Assembly Hub",skin);
         label.setPosition(0, HEIGHT-label.getHeight()-300);
         label.setSize(WIDTH,200);
@@ -155,6 +158,26 @@ public class AssembleState extends State {
                     }
                 });
 
+            }
+            if(textButton.getLabel().getText().toString().matches("Play Game")){
+                textButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
+                        Thread t = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gdx.app.postRunnable(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gsm.set(new PlayTowerDefenseState(gsm));
+                                    }
+                                });
+                            }
+                        });
+                        t.start();
+                    }
+                });
             }
         }
     }

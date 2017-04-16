@@ -45,7 +45,7 @@ public abstract class AssembleObject extends State {
         camera.update();
         enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
         towerPrefs = Gdx.app.getPreferences("towerPrefs");
-        bulletPrefs = Gdx.app.getPreferences("towerPrefs");
+        bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         table = new Table(skin);
