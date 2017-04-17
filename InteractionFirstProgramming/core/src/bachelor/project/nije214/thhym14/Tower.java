@@ -17,7 +17,7 @@ public class Tower {
     private float fireRate;
     //private int price
 
-    enum Type {
+    public enum Type {
         BASIC, //standard tower
         LASER, //laser projectiles
         FROST //slows movement speed of enemy
@@ -25,15 +25,15 @@ public class Tower {
 
     public void setType(Type t){ this.type = t;}
     public Type getType(){return type;}
-    public void setHP(int HP){this.HP = HP;}
+    public void setHP(float HP){this.HP = HP;}
     public float getHP(){
         return HP;
     }
-    public void setRange(int range){this.range = range;}
+    public void setRange(float range){this.range = range;}
     public float getRange(){
         return range;
     }
-    public void setfireRate(int fireRate){this.fireRate = fireRate;}
+    public void setfireRate(float fireRate){this.fireRate = fireRate;}
     public float getFireRate(){
         return fireRate;
     }
@@ -44,7 +44,7 @@ public class Tower {
 
 
     public void createTower(){
-        createSprite(new Sprite(new Texture("badlogic.jpg")));
+        createSprite(new Sprite(new Texture("towermode.PNG")));
     }
 
     public void createSprite(Sprite sprite){

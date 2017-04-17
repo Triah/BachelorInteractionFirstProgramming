@@ -1,6 +1,7 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import bachelor.project.nije214.thhym14.Bullet;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import bachelor.project.nije214.thhym14.Enemy;
 import bachelor.project.nije214.thhym14.Tower;
@@ -22,84 +25,78 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 public class PlayTowerDefenseState extends State {
     private Waypoint wp;
     private Enemy enemy;
-    private Vector3 touchPoint;
-    private boolean playMode;
-    private Texture runButtonTexture;
-    private Sprite runButton;
+    private Preferences mapPrefs;
+    private Preferences enemyPrefs;
+    private Preferences bulletPrefs;
+    private Preferences towerPrefs;
+    private ArrayList<Tower> towers;
     private float time;
-
-
     private Bullet bullet;
-    private Tower tower;
-
-
-    private LinkedList<Enemy> enemies;
 
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
-        time = 0;
-        this.enemy = new Enemy();
-        //this.bullet = new Bullet();
-        this.tower = new Tower();
-        touchPoint = new Vector3();
-        enemies = new LinkedList<Enemy>();
-        runButtonTexture = new Texture("playButton.jpg");
-        runButton = new Sprite(runButtonTexture);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
-
+        mapPrefs = Gdx.app.getPreferences("mapPrefs");
+        enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
+        bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
+        towerPrefs = Gdx.app.getPreferences("towerPrefs");
+        time = 0;
+        this.enemy = new Enemy();
+        towers= new ArrayList<Tower>();
         bullet = new Bullet();
         wp = new Waypoint();
-        create();
+        createWaypoint();
+        createEnemy();
+        createTower();
+        createBullet();
     }
 
-    public void create(){
+    public void createTower(){
+        for(int i = 0; i<mapPrefs.getFloat("towerSize");i++){
+            Tower tower = new Tower();
+            tower.createTower();
+            tower.setHP(towerPrefs.getFloat("towerHealth"));
+            tower.setfireRate(towerPrefs.getFloat("towerFireRate"));
+            tower.setRange(towerPrefs.getFloat("towerRange"));
+            tower.createSprite(new Sprite(new Texture("towermode.PNG")));
+            tower.setCenter(mapPrefs.getFloat("towerX"+i),mapPrefs.getFloat("towerY"+i));
+            towers.add(tower);
+        }
+    }
+
+    public void createBullet(){
+        bullet.createBulletArray();
+        cloneAndAddToListBullet();
+    }
+
+    public void createWaypoint(){
+        wp.createPath(new Array<Vector2>());
+        wp.addPathNode(new Vector2(mapPrefs.getFloat("firstWpX"),mapPrefs.getFloat("firstWpY")));
+        for(int i = 0; i < mapPrefs.getFloat("wpSize");i++){
+            wp.addPathNode(new Vector2(mapPrefs.getFloat("wpX"+i), mapPrefs.getFloat("wpY"+i)));
+        }
+    }
+
+    public void createEnemy(){
         enemy.createEnemy();
         enemy.createSprite(new Sprite(new Texture("badlogic.jpg")));
-        wp.createPath(new Array<Vector2>());
-        wp.addPathNode(new Vector2(250,500));
+        enemy.setCenter(mapPrefs.getFloat("firstWpX"),mapPrefs.getFloat("firstWpY"));
+        enemy.setSpeed(enemyPrefs.getFloat("enemySpeed"));
+        enemy.setPath(wp.getPath());
+        enemy.setHealth(enemyPrefs.getFloat("enemyHealth"));
         wp.createEnemyArray();
-        wp.addEnemyToPath(this.enemy);
-        wp.createEnemy(enemy);
         wp.createSprite(enemy.getSprite());
         wp.createShapeRenderer();
-        enemy.setCenter(250,0);
-        enemy.setSpeed(100);
-        enemy.setPath(wp.getPath());
-        //enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
-        runButton.setPosition(WIDTH - 100, HEIGHT - 100);
-
-
-
-
-        tower.createTower();
-        tower.createSprite(new Sprite(new Texture("badlogic.jpg")));
-        tower.setCenter(500,1500);
-
-
-        cloneAndAddToListBullet();
-
-        /*
-        bullet.createBullet();
-        bullet.createBulletArray();
-        bullet.createSprite(new Sprite(new Texture("badlogic.jpg")));
-        bullet.setCenter(500,1500);
-        bullet.setSpeed(1000);
-        */
-
-
-
+        wp.addEnemyToPath(this.enemy);
     }
 
     public void processEnemy(){
-
-
+        //et eller andet er helt forkert her
         for (Bullet b : bullet.getBulletArray()) {
-            b.setVelocity(b.getTowerToEnemyAngle(enemy, tower), b.getSpeed());
-            b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
+                b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
         }
-
         for (Enemy enemy : wp.getEnemyArray()) {
             enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
             enemy.setSpritePosition(enemy.getX(),enemy.getVelocity().x,enemy.getY(),enemy.getVelocity().y);
@@ -107,77 +104,46 @@ public class PlayTowerDefenseState extends State {
 
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
                 wp.getEnemyArray().removeValue(enemy,false);
-                //TO DO: implement custom dispose
-                //enemy.dispose();
             }
             if (enemy.isWaypointReached() && !(enemy.getWaypoint() == wp.getPath().size - 1)) {
                 enemy.incrementWaypoint();
             }
-
         }
-
     }
-
 
     public void draw(SpriteBatch batch){
         for(Enemy enemy : wp.getEnemyArray()){
             enemy.getSprite().draw(batch);
         }
-
         for(Bullet b : bullet.getBulletArray()){
             b.getSprite().draw(batch);
         }
-        tower.getSprite().draw(batch);
+        for(Tower t : towers){
+            t.getSprite().draw(batch);
+        }
     }
 
     @Override
     public void handleInput() {
-        if(Gdx.input.justTouched()){
-            camera.unproject(touchPoint.set(Gdx.input.getX(),Gdx.input.getY(),0));
-            if(runButton.getBoundingRectangle().contains(touchPoint.x,touchPoint.y)){
-                toggleBool();
-            } else {
-                wp.addPathNode(new Vector2(touchPoint.x,touchPoint.y));
-            }
-        }
     }
 
-    public void toggleBool(){
-        if(!playMode){
-            playMode = true;
-        } else {
-            playMode = false;
-        }
-    }
-
-
-    public boolean playMode(){
-        return playMode;
-    }
 
     @Override
     public void update(float deltaTime) {
-        handleInput();
-        playMode();
-        time += Gdx.graphics.getDeltaTime();
-        if(time>2){
-            cloneAndAddToList();
-            cloneAndAddToListBullet();
-            time = 0;
-        }
-
+            time += Gdx.graphics.getDeltaTime();
+            if (time > 2) {
+                cloneAndAddToList();
+                cloneAndAddToListBullet();
+                time = 0;
+            }
     }
 
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        if(playMode()){
-            processEnemy();
-            draw(sb);
-        }
-        sb.draw(runButton,runButton.getX(),runButton.getY(),75,75);
-
+        processEnemy();
+        draw(sb);
         sb.end();
 
         wp.drawRoute();
@@ -188,23 +154,24 @@ public class PlayTowerDefenseState extends State {
     public void cloneAndAddToList(){
         Enemy enemy = new Enemy();
         enemy.createEnemy();
-        enemy.setCenter(250,0);
+        enemy.setCenter(mapPrefs.getFloat("firstWpX"),mapPrefs.getFloat("firstWpY"));
         enemy.setSpeed(this.enemy.getSpeed());
         enemy.setPath(this.wp.getPath());
-        enemy.setVelocity(this.enemy.getAngle(),enemy.getSpeed());
+        enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
         wp.getEnemyArray().add(enemy);
     }
 
 
     public void cloneAndAddToListBullet(){
-        Bullet b = new Bullet();
-        bullet.createBulletArray();
-        b.createBullet();
-        b.createSprite(new Sprite(new Texture("badlogic.jpg")));
-        b.setCenter(500,1500);
-        b.setSpeed(1000);
-        bullet.getBulletArray().add(b);
-
+        for(Tower t: towers) {
+            Bullet b = new Bullet();
+            b.createBullet();
+            b.createSprite(new Sprite(new Texture("playButton.jpg")));
+            b.setCenter(t.getX(), t.getY());
+            b.setSpeed(bulletPrefs.getFloat("bulletSpeed"));
+            b.setVelocity(b.getTowerToEnemyAngle(enemy, t), b.getSpeed());
+            bullet.getBulletArray().add(b);
+        }
     }
 
     @Override

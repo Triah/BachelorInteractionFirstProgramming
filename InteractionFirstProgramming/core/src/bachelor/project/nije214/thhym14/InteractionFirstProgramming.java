@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import bachelor.project.nije214.thhym14.states.GameStateManager;
 import bachelor.project.nije214.thhym14.states.GameTypeMenuState;
+import bachelor.project.nije214.thhym14.states.PlayTowerDefenseState;
 
 public class InteractionFirstProgramming extends Game {
 	private SpriteBatch batch;

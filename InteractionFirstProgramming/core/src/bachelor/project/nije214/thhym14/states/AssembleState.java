@@ -2,29 +2,18 @@ package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import java.util.LinkedList;
-
-import bachelor.project.nije214.thhym14.Enemy;
 
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
@@ -39,18 +28,13 @@ public class AssembleState extends State {
     private Skin skin;
     private LinkedList<TextButton> textButtons;
     private Label label;
-    private Preferences prefs;
-    private Enemy enemy;
+    private Preferences mapPrefs;
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
-        enemy = new Enemy();
-        prefs = Gdx.app.getPreferences("Enemy Preferences");
-        if(prefs.getFloat("enemySpeed") != 0){
-            enemy.setSpeed(prefs.getFloat("enemySpeed"));
-        }
+        mapPrefs = Gdx.app.getPreferences("mapPrefs");
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
         Gdx.input.setInputProcessor(stage);
@@ -63,6 +47,7 @@ public class AssembleState extends State {
         setButtonAttributes("Tower",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.25f,HEIGHT*0.43f);
         setButtonAttributes("Enemy",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.55f,HEIGHT*0.57f);
         setButtonAttributes("Map",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.55f,HEIGHT*0.43f);
+        setButtonAttributes("Play Game", WIDTH*0.55f,HEIGHT*0.1f,2.5f,WIDTH*0.25f,HEIGHT*0.25f);
         label = new Label("Tower Defense Assembly Hub",skin);
         label.setPosition(0, HEIGHT-label.getHeight()-300);
         label.setSize(WIDTH,200);
@@ -72,6 +57,7 @@ public class AssembleState extends State {
         for(TextButton textButton : textButtons) {
             addActorToStage(textButton);
         }
+        buttonActions();
     }
 
     public void addActorToStage(Actor actor){
@@ -84,6 +70,7 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -103,6 +90,7 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -123,6 +111,7 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -143,6 +132,7 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -158,6 +148,26 @@ public class AssembleState extends State {
                     }
                 });
 
+            }
+            if(textButton.getLabel().getText().toString().matches("Play Game")){
+                textButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
+                        Thread t = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gdx.app.postRunnable(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gsm.set(new PlayTowerDefenseState(gsm));
+                                    }
+                                });
+                            }
+                        });
+                        t.start();
+                    }
+                });
             }
         }
     }
@@ -182,7 +192,6 @@ public class AssembleState extends State {
     @Override
     public void update(float deltaTime) {
         stage.act();
-        handleInput();
     }
 
     @Override
@@ -193,6 +202,9 @@ public class AssembleState extends State {
 
     @Override
     public void dispose() {
-
+        skin.dispose();
+        for(Actor stageActor : stage.getActors()) {
+            stage.getActors().removeValue(stageActor,true);
+        }
     }
 }

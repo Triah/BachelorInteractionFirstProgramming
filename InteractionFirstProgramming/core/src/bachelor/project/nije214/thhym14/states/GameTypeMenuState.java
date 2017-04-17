@@ -60,6 +60,7 @@ public class GameTypeMenuState extends State {
         label.setFontScale(2.5f);
         label.setAlignment(Align.center);
         addActorToStage(label);
+        buttonActions();
     }
 
 
@@ -73,6 +74,7 @@ public class GameTypeMenuState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        dispose();
                         Thread t = new Thread(new Runnable() {
                            @Override
                             public void run() {
@@ -80,7 +82,6 @@ public class GameTypeMenuState extends State {
                                     @Override
                                     public void run() {
                                         gsm.set(new AssembleState(gsm));
-
                                     }
                                 });
                             }
@@ -109,7 +110,6 @@ public class GameTypeMenuState extends State {
     @Override
     public void update(float deltaTime) {
         stage.act();
-        handleInput();
     }
 
     @Override
@@ -120,6 +120,9 @@ public class GameTypeMenuState extends State {
 
     @Override
     public void dispose() {
-
+        skin.dispose();
+        for(Actor stageActor : stage.getActors()){
+            stage.getActors().removeValue(stageActor,true);
+        }
     }
 }
