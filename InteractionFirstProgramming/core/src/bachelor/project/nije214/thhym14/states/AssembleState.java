@@ -203,8 +203,6 @@ public class AssembleState extends State {
     @Override
     public void dispose() {
         skin.dispose();
-        for(Actor stageActor : stage.getActors()) {
-            stage.getActors().removeValue(stageActor,true);
-        }
+        stage.dispose();
     }
 }
