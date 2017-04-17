@@ -91,6 +91,7 @@ public class AssembleMap extends State {
                     }
                 }
                 mapPrefs.flush();
+                dispose();
                 gsm.set(new AssembleState(gsm));
 
             } else if(modeSprite.getBoundingRectangle().contains(touchPoint.x,touchPoint.y)){
@@ -155,5 +156,10 @@ public class AssembleMap extends State {
 
     @Override
     public void dispose() {
+        for(Sprite sprite : towerSprites){
+            sprite.getTexture().dispose();
+        }
+        modeSprite.getTexture().dispose();
+        finishSprite.getTexture().dispose();
     }
 }
