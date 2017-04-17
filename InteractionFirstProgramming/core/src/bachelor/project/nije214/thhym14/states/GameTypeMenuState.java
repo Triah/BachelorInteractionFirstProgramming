@@ -60,6 +60,7 @@ public class GameTypeMenuState extends State {
         label.setFontScale(2.5f);
         label.setAlignment(Align.center);
         addActorToStage(label);
+        buttonActions();
     }
 
 
@@ -109,7 +110,6 @@ public class GameTypeMenuState extends State {
     @Override
     public void update(float deltaTime) {
         stage.act();
-        handleInput();
     }
 
     @Override
