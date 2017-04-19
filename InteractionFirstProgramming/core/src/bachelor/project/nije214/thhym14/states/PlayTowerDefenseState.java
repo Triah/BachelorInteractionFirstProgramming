@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +18,7 @@ import bachelor.project.nije214.thhym14.Bullet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import bachelor.project.nije214.thhym14.Enemy;
+import bachelor.project.nije214.thhym14.InteractionFirstProgramming;
 import bachelor.project.nije214.thhym14.Tower;
 import bachelor.project.nije214.thhym14.Waypoint;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
@@ -36,12 +38,17 @@ public class PlayTowerDefenseState extends State {
     private ArrayList<Tower> towers;
     private float time;
     private Bullet bullet;
+    private Music music;
 
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/defensemusic.ogg"));
+        music.setVolume(0.5f);
+        music.setLooping(true);
+        music.play();
         mapPrefs = Gdx.app.getPreferences("mapPrefs");
         enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
         bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
@@ -148,9 +155,9 @@ public class PlayTowerDefenseState extends State {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         processEnemy();
+        disposeEntities();
         draw(sb);
         sb.end();
-
         wp.drawRoute();
         wp.drawWayPoints();
         wp.drawRouteFromEnemy();
@@ -180,11 +187,24 @@ public class PlayTowerDefenseState extends State {
         }
     }
 
-    @Override
-    public void dispose() {
+    public void disposeEntities() {
         if(enemy.getWaypoint() == wp.getPath().size){
             enemy.dispose();
         }
+        for(Bullet b : bullet.getBulletArray()){
+            if(b.getSprite().getBoundingRectangle().x > WIDTH ||
+                    b.getSprite().getBoundingRectangle().x+b.getSprite().getWidth() < 0 ||
+                    b.getSprite().getBoundingRectangle().y > HEIGHT ||
+                    b.getSprite().getBoundingRectangle().y+b.getSprite().getHeight() < 0){
+                b.getSprite().getTexture().dispose();
+                bullet.getBulletArray().removeValue(b,true);
+            }
+        }
+    }
+
+    @Override
+    public void dispose(){
+        music.dispose();
     }
 
     public void handleBackAction() {
@@ -194,6 +214,7 @@ public class PlayTowerDefenseState extends State {
                 if(keycode == Input.Keys.BACK) {
                     gsm.set(new AssembleState(gsm));
                     Gdx.input.setCatchBackKey(true);
+                    dispose();
                 }
                 return false;
             }
