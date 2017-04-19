@@ -6,6 +6,8 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +19,7 @@ import bachelor.project.nije214.thhym14.Bullet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import bachelor.project.nije214.thhym14.Enemy;
+import bachelor.project.nije214.thhym14.InteractionFirstProgramming;
 import bachelor.project.nije214.thhym14.Tower;
 import bachelor.project.nije214.thhym14.Waypoint;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
@@ -34,19 +37,28 @@ public class PlayTowerDefenseState extends State {
     private Preferences bulletPrefs;
     private Preferences towerPrefs;
     private ArrayList<Tower> towers;
-    private float time;
+    private float timeSpawn;
     private Bullet bullet;
+    private float timeShoot;
+    private Music music;
+    private Sound normalShot;
 
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/defensemusic.ogg"));
+        music.setVolume(0.5f);
+        music.setLooping(true);
+        music.play();
+        normalShot = Gdx.audio.newSound(Gdx.files.internal("soundeffects/pistol.wav"));
+        timeShoot = 0;
         mapPrefs = Gdx.app.getPreferences("mapPrefs");
         enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
         bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
         towerPrefs = Gdx.app.getPreferences("towerPrefs");
-        time = 0;
+        timeSpawn = 0;
         this.enemy = new Enemy();
         towers= new ArrayList<Tower>();
         bullet = new Bullet();
@@ -98,7 +110,6 @@ public class PlayTowerDefenseState extends State {
     }
 
     public void processEnemy(){
-        //et eller andet er helt forkert her
         for (Bullet b : bullet.getBulletArray()) {
                 b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
         }
@@ -135,12 +146,19 @@ public class PlayTowerDefenseState extends State {
 
     @Override
     public void update(float deltaTime) {
-            time += Gdx.graphics.getDeltaTime();
-            if (time > 2) {
+        timeSpawn += Gdx.graphics.getDeltaTime();
+            if (timeSpawn > 2) {
                 cloneAndAddToList();
-                cloneAndAddToListBullet();
-                time = 0;
+                timeSpawn = 0;
             }
+        timeShoot += Gdx.graphics.getDeltaTime();
+            if(timeShoot > 5/towerPrefs.getFloat("towerFireRate")){
+                cloneAndAddToListBullet();
+                timeShoot = 0;
+                long id = normalShot.play();
+                normalShot.setVolume(id,0.25f);
+            }
+
     }
 
     @Override
@@ -148,9 +166,9 @@ public class PlayTowerDefenseState extends State {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         processEnemy();
+        disposeEntities();
         draw(sb);
         sb.end();
-
         wp.drawRoute();
         wp.drawWayPoints();
         wp.drawRouteFromEnemy();
@@ -180,11 +198,24 @@ public class PlayTowerDefenseState extends State {
         }
     }
 
-    @Override
-    public void dispose() {
+    public void disposeEntities() {
         if(enemy.getWaypoint() == wp.getPath().size){
             enemy.dispose();
         }
+        for(Bullet b : bullet.getBulletArray()){
+            if(b.getSprite().getBoundingRectangle().x > WIDTH ||
+                    b.getSprite().getBoundingRectangle().x+b.getSprite().getWidth() < 0 ||
+                    b.getSprite().getBoundingRectangle().y > HEIGHT ||
+                    b.getSprite().getBoundingRectangle().y+b.getSprite().getHeight() < 0){
+                b.getSprite().getTexture().dispose();
+                bullet.getBulletArray().removeValue(b,true);
+            }
+        }
+    }
+
+    @Override
+    public void dispose(){
+        music.dispose();
     }
 
     public void handleBackAction() {
@@ -194,6 +225,7 @@ public class PlayTowerDefenseState extends State {
                 if(keycode == Input.Keys.BACK) {
                     gsm.set(new AssembleState(gsm));
                     Gdx.input.setCatchBackKey(true);
+                    dispose();
                 }
                 return false;
             }

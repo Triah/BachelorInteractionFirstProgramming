@@ -44,6 +44,7 @@ public class GameTypeMenuState extends State {
 
     public GameTypeMenuState(GameStateManager gsm) {
         super(gsm);
+
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
         textButtons = new LinkedList<TextButton>();
