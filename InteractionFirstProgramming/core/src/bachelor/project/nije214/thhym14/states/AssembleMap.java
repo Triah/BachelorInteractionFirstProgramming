@@ -1,6 +1,10 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -59,6 +63,7 @@ public class AssembleMap extends State {
         mapPrefs = Gdx.app.getPreferences("mapPrefs");
         towerSprites = new ArrayList<Sprite>();
         create();
+        handleBackAction();
     }
 
     public void create(){
@@ -151,7 +156,6 @@ public class AssembleMap extends State {
         sb.end();
         wp.drawRoute();
         wp.drawWayPoints();
-
     }
 
     @Override
@@ -161,5 +165,20 @@ public class AssembleMap extends State {
         }
         modeSprite.getTexture().dispose();
         finishSprite.getTexture().dispose();
+    }
+
+    public void handleBackAction(){
+        InputProcessor adapter = new InputAdapter(){
+            @Override
+            public boolean keyDown(int keycode){
+                if(keycode == Input.Keys.BACK) {
+                    gsm.set(new AssembleState(gsm));
+                    Gdx.input.setCatchBackKey(true);
+                    dispose();
+                }
+                return false;
+            }
+        };
+        Gdx.input.setInputProcessor(adapter);
     }
 }

@@ -1,6 +1,10 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -44,7 +48,7 @@ public class GameTypeMenuState extends State {
         camera.update();
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
-        Gdx.input.setInputProcessor(stage);
+        handleBackAction();
     }
 
     public void createInitialUIElements(){
@@ -124,5 +128,23 @@ public class GameTypeMenuState extends State {
         for(Actor stageActor : stage.getActors()){
             stage.getActors().removeValue(stageActor,true);
         }
+    }
+
+    public void handleBackAction() {
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        InputProcessor adapter = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if(keycode == Input.Keys.BACK) {
+                    Gdx.app.exit();
+                    Gdx.input.setCatchBackKey(true);
+                    dispose();
+                }
+                return false;
+            }
+        };
+        multiplexer.addProcessor(adapter);
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 }

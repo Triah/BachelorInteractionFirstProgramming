@@ -1,6 +1,10 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -50,7 +54,6 @@ public abstract class AssembleObject extends State {
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         table = new Table(skin);
         setUpStage();
-        Gdx.input.setInputProcessor(stage);
     }
 
     protected void setUpStage(){
@@ -132,6 +135,7 @@ public abstract class AssembleObject extends State {
             sb.draw(getSprite(), getSprite().getX(), getSprite().getY(), getSprite().getWidth(), getSprite().getHeight());
             sb.end();
         }
+
     }
 
     @Override

@@ -1,6 +1,10 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,16 +32,16 @@ public class AssembleState extends State {
     private Skin skin;
     private LinkedList<TextButton> textButtons;
     private Label label;
-    private Preferences mapPrefs;
+    InputProcessor backProcessor;
+
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
-        mapPrefs = Gdx.app.getPreferences("mapPrefs");
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
-        Gdx.input.setInputProcessor(stage);
+        handleBackAction();
     }
 
     public void createInitialUIElements(){
@@ -58,6 +62,7 @@ public class AssembleState extends State {
             addActorToStage(textButton);
         }
         buttonActions();
+        handleBackAction();
     }
 
     public void addActorToStage(Actor actor){
@@ -186,7 +191,6 @@ public class AssembleState extends State {
 
     @Override
     public void handleInput() {
-        buttonActions();
     }
 
     @Override
@@ -204,5 +208,23 @@ public class AssembleState extends State {
     public void dispose() {
         skin.dispose();
         stage.dispose();
+    }
+
+    public void handleBackAction() {
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        InputProcessor adapter = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if(keycode == Input.Keys.BACK) {
+                    gsm.set(new GameTypeMenuState(gsm));
+                    Gdx.input.setCatchBackKey(true);
+                    dispose();
+                }
+                return true;
+            }
+        };
+        multiplexer.addProcessor(adapter);
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 }

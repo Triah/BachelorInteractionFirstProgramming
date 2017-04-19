@@ -1,6 +1,10 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -42,6 +46,7 @@ public class AssembleEnemy extends AssembleObject {
             table.row();
         }
         createSprite("enemyimage.PNG");
+        handleBackAction();
     }
 
     public void createButtons(){
@@ -154,6 +159,24 @@ public class AssembleEnemy extends AssembleObject {
     public void dispose(){
         stage.dispose();
         skin.dispose();
+    }
+
+    public void handleBackAction() {
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        InputProcessor adapter = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if(keycode == Input.Keys.BACK) {
+                    gsm.set(new AssembleState(gsm));
+                    Gdx.input.setCatchBackKey(true);
+                    dispose();
+                }
+                return true;
+            }
+        };
+        multiplexer.addProcessor(adapter);
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 }
 

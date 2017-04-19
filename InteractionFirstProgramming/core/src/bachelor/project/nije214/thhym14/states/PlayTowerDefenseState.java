@@ -1,6 +1,10 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -51,6 +55,7 @@ public class PlayTowerDefenseState extends State {
         createEnemy();
         createTower();
         createBullet();
+        handleBackAction();
     }
 
     public void createTower(){
@@ -149,6 +154,7 @@ public class PlayTowerDefenseState extends State {
         wp.drawRoute();
         wp.drawWayPoints();
         wp.drawRouteFromEnemy();
+
     }
 
     public void cloneAndAddToList(){
@@ -179,5 +185,19 @@ public class PlayTowerDefenseState extends State {
         if(enemy.getWaypoint() == wp.getPath().size){
             enemy.dispose();
         }
+    }
+
+    public void handleBackAction() {
+        InputProcessor adapter = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if(keycode == Input.Keys.BACK) {
+                    gsm.set(new AssembleState(gsm));
+                    Gdx.input.setCatchBackKey(true);
+                }
+                return false;
+            }
+        };
+        Gdx.input.setInputProcessor(adapter);
     }
 }
