@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import bachelor.project.nije214.thhym14.Bullet;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import bachelor.project.nije214.thhym14.Enemy;
+import bachelor.project.nije214.thhym14.Raycast;
 import bachelor.project.nije214.thhym14.Tower;
 import bachelor.project.nije214.thhym14.Waypoint;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
@@ -31,7 +33,10 @@ public class PlayTowerDefenseState extends State {
     private Preferences towerPrefs;
     private ArrayList<Tower> towers;
     private float time;
+    private float timez;
     private Bullet bullet;
+
+    private Raycast ray;
 
 
     public PlayTowerDefenseState(GameStateManager gsm) {
@@ -47,6 +52,9 @@ public class PlayTowerDefenseState extends State {
         towers= new ArrayList<Tower>();
         bullet = new Bullet();
         wp = new Waypoint();
+        ray = new Raycast();
+
+
         createWaypoint();
         createEnemy();
         createTower();
@@ -59,7 +67,7 @@ public class PlayTowerDefenseState extends State {
             tower.createTower();
             tower.setHP(towerPrefs.getFloat("towerHealth"));
             tower.setfireRate(towerPrefs.getFloat("towerFireRate"));
-            tower.setRange(towerPrefs.getFloat("towerRange"));
+           // tower.setRange(towerPrefs.getFloat("towerRange"));
             tower.createSprite(new Sprite(new Texture("towermode.PNG")));
             tower.setCenter(mapPrefs.getFloat("towerX"+i),mapPrefs.getFloat("towerY"+i));
             towers.add(tower);
@@ -115,12 +123,11 @@ public class PlayTowerDefenseState extends State {
         for(Enemy enemy : wp.getEnemyArray()){
             enemy.getSprite().draw(batch);
         }
-        for(Bullet b : bullet.getBulletArray()){
-            b.getSprite().draw(batch);
-        }
         for(Tower t : towers){
             t.getSprite().draw(batch);
         }
+        for(Bullet b : bullet.getBulletArray()){
+            b.getSprite().draw(batch);}
     }
 
     @Override
@@ -131,11 +138,26 @@ public class PlayTowerDefenseState extends State {
     @Override
     public void update(float deltaTime) {
             time += Gdx.graphics.getDeltaTime();
-            if (time > 2) {
-                cloneAndAddToList();
-                cloneAndAddToListBullet();
+            timez += Gdx.graphics.getDeltaTime();
+
+        if (time > 2) {
+                //if(ray.isPlayerInSight(enemy, towers.get(0), 500)){
+                //if(ray.rangeCheckHack(enemy, towers.get(), 500)){  //hack
+
+                    cloneAndAddToListBullet();
+
                 time = 0;
             }
+
+        if (timez > 5) {
+            //if(ray.isPlayerInSight(enemy, towers.get(0), 500)){
+            //if(ray.rangeCheckHack(enemy, towers.get(), 500)){  //hack
+
+            cloneAndAddToList();
+
+
+            timez = 0;
+        }
     }
 
     @Override
@@ -167,9 +189,10 @@ public class PlayTowerDefenseState extends State {
             Bullet b = new Bullet();
             b.createBullet();
             b.createSprite(new Sprite(new Texture("playButton.jpg")));
-            b.setCenter(t.getX(), t.getY());
+            b.setCenter(t.getX()+t.getSprite().getWidth()/2, t.getY()+ t.getSprite().getHeight()/2);
             b.setSpeed(bulletPrefs.getFloat("bulletSpeed"));
             b.setVelocity(b.getTowerToEnemyAngle(enemy, t), b.getSpeed());
+            b.towerToEnemyLaser(enemy, t);     //laser
             bullet.getBulletArray().add(b);
         }
     }

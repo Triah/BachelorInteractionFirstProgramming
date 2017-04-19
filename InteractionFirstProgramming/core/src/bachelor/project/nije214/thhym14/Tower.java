@@ -13,7 +13,7 @@ public class Tower {
     private Sprite sprite;
     private float HP;
     private Type type;
-    private float range;
+    private int range;
     private float fireRate;
     //private int price
 
@@ -29,11 +29,11 @@ public class Tower {
     public float getHP(){
         return HP;
     }
-    public void setRange(float range){this.range = range;}
+    public void setRange(int range){this.range = range;}
     public float getRange(){
         return range;
     }
-    public void setfireRate(float fireRate){this.fireRate = fireRate;}
+    public void setfireRate(float fireRate){this.fireRate = 1/fireRate;}
     public float getFireRate(){
         return fireRate;
     }
@@ -70,6 +70,7 @@ public class Tower {
     public float getX(){
         return sprite.getX();
     }
+
 
 
 
