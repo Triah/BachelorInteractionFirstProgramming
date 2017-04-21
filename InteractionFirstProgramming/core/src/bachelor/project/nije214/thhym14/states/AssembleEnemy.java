@@ -45,7 +45,7 @@ public class AssembleEnemy extends AssembleObject {
             table.add(textButton).width(scrollPane.getWidth()-25).height(textButton.getHeight());
             table.row();
         }
-        createSprite("enemyimage.PNG");
+        createSprite("rock_enemy_game_character.png");
         handleBackAction();
     }
 

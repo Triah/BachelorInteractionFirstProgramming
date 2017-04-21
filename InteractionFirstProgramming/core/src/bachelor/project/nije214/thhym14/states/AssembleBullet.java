@@ -46,7 +46,7 @@ public class AssembleBullet extends AssembleObject {
             table.add(textButton).width(scrollPane.getWidth()-25).height(textButton.getHeight());
             table.row();
         }
-        createSprite("enemyimage.PNG");
+        createSprite("Cannon_Ball.png");
         handleBackAction();
     }
 

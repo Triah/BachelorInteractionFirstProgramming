@@ -18,11 +18,10 @@ public class Bullet {
     private Vector2 velocity = new Vector2();
     private float speed;
     private Sprite sprite;
-    private Array<Bullet> bullets;
 
 
     public void createBullet(){
-    createSprite(new Sprite(new Texture("badlogic.jpg")));
+    createSprite(new Sprite(new Texture("Cannon_Ball.png")));
 }
     public void createSprite(Sprite sprite){
         this.sprite = sprite;
@@ -43,12 +42,6 @@ public class Bullet {
     }
     public float getSpeed(){
         return speed;
-    }
-    public void createBulletArray(){
-        bullets = new Array<Bullet>();
-    }
-    public Array<Bullet> getBulletArray(){
-        return this.bullets;
     }
 
 

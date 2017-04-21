@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -32,13 +33,14 @@ public class AssembleState extends State {
     private Skin skin;
     private LinkedList<TextButton> textButtons;
     private Label label;
-    InputProcessor backProcessor;
+    private Texture background;
 
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        background = new Texture("airadventurelevel2.png");
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
         handleBackAction();
@@ -201,6 +203,9 @@ public class AssembleState extends State {
     @Override
     public void render(SpriteBatch sb) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        sb.begin();
+        sb.draw(background,0,0,background.getWidth(),HEIGHT);
+        sb.end();
         stage.draw();
     }
 

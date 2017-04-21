@@ -43,16 +43,18 @@ public class AssembleMap extends State {
     private ArrayList<Float> xTowerPos;
     private ArrayList<Float> yTowerPos;
     private ArrayList<Sprite> towerSprites;
+    private Texture background;
 
     public AssembleMap(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        background = new Texture("grass_template2.jpg");
         towerMode = false;
         roadModeTexture = new Texture("roadmode.PNG");
-        towerModeTexture = new Texture("towermode.PNG");
+        towerModeTexture = new Texture("tower_grass.png");
         modeSprite = new Sprite(roadModeTexture);
-        finishTexture = new Texture("mapimage.PNG");
+        finishTexture = new Texture("home.png");
         finishSprite = new Sprite(finishTexture);
         touchPoint = new Vector3();
         wp = new Waypoint();
@@ -72,7 +74,7 @@ public class AssembleMap extends State {
         wp.addPathNode(new Vector2(250,0));
         mapPrefs.putFloat("firstWpX",wp.getPath().first().x);
         mapPrefs.putFloat("firstWpY",wp.getPath().first().y);
-        finishSprite.setSize(250,100);
+        finishSprite.setSize(100,100);
         finishSprite.setPosition(WIDTH-finishSprite.getWidth(),0);
         modeSprite.setSize(75,75);
         modeSprite.setPosition(WIDTH-modeSprite.getWidth(),HEIGHT-modeSprite.getHeight());
@@ -122,7 +124,7 @@ public class AssembleMap extends State {
     }
 
     public void createTowerSpriteAtPosition(float x, float y){
-        Sprite towerSprite = new Sprite(new Texture("towermode.PNG"));
+        Sprite towerSprite = new Sprite(new Texture("tower_grass.png"));
         towerSprite.setPosition(x,y);
         towerSprite.setSize(75,75);
         towerSprites.add(towerSprite);
@@ -136,6 +138,7 @@ public class AssembleMap extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
+        sb.draw(background,0,0,WIDTH,HEIGHT);
         sb.draw(finishSprite,
                 finishSprite.getX(),
                 finishSprite.getY(),

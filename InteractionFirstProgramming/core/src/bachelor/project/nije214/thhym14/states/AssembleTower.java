@@ -49,7 +49,7 @@ public class AssembleTower extends AssembleObject {
             table.add(textButton).width(scrollPane.getWidth()-25).height(textButton.getHeight());
             table.row();
         }
-        createSprite("enemyimage.PNG");
+        createSprite("tower_grass.png");
         handleBackAction();
     }
 

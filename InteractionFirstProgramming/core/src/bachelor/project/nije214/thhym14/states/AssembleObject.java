@@ -42,11 +42,13 @@ public abstract class AssembleObject extends State {
     protected Preferences bulletPrefs;
     protected Preferences towerPrefs;
     protected TextButton finishButton;
+    protected Texture background;
 
     public AssembleObject(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        background = new Texture("airadventurelevel2.png");
         enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
         towerPrefs = Gdx.app.getPreferences("towerPrefs");
         bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
@@ -129,13 +131,13 @@ public abstract class AssembleObject extends State {
     @Override
     public void render(SpriteBatch sb) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.draw();
+        sb.begin();
+        sb.draw(background,0,0,background.getWidth(),HEIGHT);
         if(sprite!=null) {
-            sb.begin();
             sb.draw(getSprite(), getSprite().getX(), getSprite().getY(), getSprite().getWidth(), getSprite().getHeight());
-            sb.end();
         }
-
+        sb.end();
+        stage.draw();
     }
 
     @Override
