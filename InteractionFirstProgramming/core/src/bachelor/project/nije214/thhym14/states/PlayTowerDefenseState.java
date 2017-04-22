@@ -24,6 +24,7 @@ import bachelor.project.nije214.thhym14.Tower;
 import bachelor.project.nije214.thhym14.Waypoint;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerTypePref;
 
 /**
  * Created by Nicolai on 26-03-2017.
@@ -76,20 +77,26 @@ public class PlayTowerDefenseState extends State {
     public void createTower(){
         for(int i = 0; i<mapPrefs.getFloat("towerSize");i++){
             Tower tower = new Tower();
-            tower.createTower();
+            tower.createTower(towerPrefs.getString("towerSprite"));
             tower.setHP(towerPrefs.getFloat("towerHealth"));
             tower.setfireRate(towerPrefs.getFloat("towerFireRate"));
             tower.setRange(towerPrefs.getFloat("towerRange"));
-            tower.createSprite(new Sprite(new Texture("tower_grass.png")));
-            tower.getSprite().setSize(120,120);
+            tower.getSprite().setSize(200,200);
             tower.setCenter(mapPrefs.getFloat("towerX"+i),mapPrefs.getFloat("towerY"+i));
+            if(towerPrefs.getString(towerTypePref) == "FROST"){
+                tower.setType(Tower.Type.FROST);
+            } else if (towerPrefs.getString(towerTypePref) == "BASIC"){
+                tower.setType(Tower.Type.BASIC);
+            } else if (towerPrefs.getString(towerTypePref) == "LASER"){
+                tower.setType(Tower.Type.LASER);
+            }
             towers.add(tower);
         }
     }
 
     public void createBullet(){
         bullet = new Bullet();
-        bullet.createBullet();
+        bullet.createBullet(bulletPrefs.getString("bulletSprite"));
         cloneAndAddToListBullet();
     }
 
@@ -102,16 +109,18 @@ public class PlayTowerDefenseState extends State {
     }
 
     public void createEnemy(){
-        enemy.createEnemy();
-        enemy.setCenter(mapPrefs.getFloat("firstWpX"),mapPrefs.getFloat("firstWpY"));
+        enemy.createEnemy(enemyPrefs.getString("enemySprite"));
+        enemy.getSprite().setCenter(mapPrefs.getFloat("firstWpX"),mapPrefs.getFloat("firstWpY"));
         enemy.setSpeed(enemyPrefs.getFloat("enemySpeed"));
         enemy.setPath(wp.getPath());
         enemy.setHealth(enemyPrefs.getFloat("enemyHealth"));
-        enemy.getSprite().setScale(0.3f);
         wp.createEnemyArray();
         wp.createSprite(enemy.getSprite());
         wp.createShapeRenderer();
         wp.addEnemyToPath(this.enemy);
+        enemy.getSprite().setSize(200,200);
+        enemy.getSprite().setOriginCenter();
+
     }
 
     public void processEnemy(){
@@ -170,8 +179,8 @@ public class PlayTowerDefenseState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(camera.combined);
         sb.begin();
+        sb.setProjectionMatrix(camera.combined);
         sb.draw(background,0,0,WIDTH,HEIGHT);
         processEnemy();
         disposeEntities();
@@ -185,25 +194,26 @@ public class PlayTowerDefenseState extends State {
 
     public void cloneAndAddToList(){
         Enemy enemy = new Enemy();
-        enemy.createEnemy();
-        enemy.getSprite().setSize(this.enemy.getSprite().getWidth(),this.enemy.getSprite().getHeight());
+        enemy.createEnemy(enemyPrefs.getString("enemySprite"));
         enemy.setCenter(mapPrefs.getFloat("firstWpX"),mapPrefs.getFloat("firstWpY"));
         enemy.setSpeed(this.enemy.getSpeed());
         enemy.setPath(this.wp.getPath());
         enemy.setVelocity(enemy.getAngle(),enemy.getSpeed());
-        enemy.getSprite().setScale(this.enemy.getSprite().getScaleX(),this.enemy.getSprite().getScaleY());
+        enemy.getSprite().setSize(this.enemy.getSprite().getWidth(),this.enemy.getSprite().getHeight());
         wp.getEnemyArray().add(enemy);
+        enemy.getSprite().setOriginCenter();
     }
 
 
     public void cloneAndAddToListBullet(){
         for(Tower t: towers) {
             Bullet b = new Bullet();
-            b.createBullet();
-            b.createSprite(new Sprite(new Texture("Cannon_Ball.png")));
+            b.createBullet(bulletPrefs.getString("bulletSprite"));
             b.setCenter(t.getX() + t.getSprite().getWidth()/2, t.getY() + t.getSprite().getHeight()/2);
             b.setSpeed(bulletPrefs.getFloat("bulletSpeed"));
             b.setVelocity(b.getTowerToEnemyAngle(enemy, t), b.getSpeed());
+            b.getSprite().rotate((180/(float)Math.PI * (float)Math.atan2(enemy.getY() - t.getY(), enemy.getX() - t.getX()))+90);
+            b.getSprite().setOriginCenter();
             bullets.add(b);
         }
     }

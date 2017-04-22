@@ -20,9 +20,10 @@ public class Bullet {
     private Sprite sprite;
 
 
-    public void createBullet(){
-    createSprite(new Sprite(new Texture("Cannon_Ball.png")));
-}
+    public void createBullet(String texture){
+    createSprite(new Sprite(new Texture(texture)));
+    }
+
     public void createSprite(Sprite sprite){
         this.sprite = sprite;
     }

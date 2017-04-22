@@ -40,6 +40,7 @@ public class AssembleMap extends State {
     private ArrayList<Float> yPathNodes;
     private boolean towerMode;
     private Preferences mapPrefs;
+    private Preferences towerPrefs;
     private ArrayList<Float> xTowerPos;
     private ArrayList<Float> yTowerPos;
     private ArrayList<Sprite> towerSprites;
@@ -49,10 +50,11 @@ public class AssembleMap extends State {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        towerPrefs = Gdx.app.getPreferences("towerPrefs");
         background = new Texture("grass_template2.jpg");
         towerMode = false;
         roadModeTexture = new Texture("roadmode.PNG");
-        towerModeTexture = new Texture("tower_grass.png");
+        towerModeTexture = new Texture(towerPrefs.getString("towerSprite"));
         modeSprite = new Sprite(roadModeTexture);
         finishTexture = new Texture("home.png");
         finishSprite = new Sprite(finishTexture);
@@ -124,7 +126,7 @@ public class AssembleMap extends State {
     }
 
     public void createTowerSpriteAtPosition(float x, float y){
-        Sprite towerSprite = new Sprite(new Texture("tower_grass.png"));
+        Sprite towerSprite = new Sprite(new Texture(towerPrefs.getString("towerSprite")));
         towerSprite.setPosition(x,y);
         towerSprite.setSize(75,75);
         towerSprites.add(towerSprite);

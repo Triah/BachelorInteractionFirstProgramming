@@ -23,8 +23,8 @@ public class Enemy {
     private int waypoint = 0;
     private float health;
 
-    public void createEnemy(){
-        createSprite(new Sprite(new Texture("rock_enemy_game_character.png")));
+    public void createEnemy(String texture){
+        createSprite(new Sprite(new Texture(texture)));
     }
 
     public void setCenter(float x, float y){
@@ -92,8 +92,9 @@ public class Enemy {
     }
 
     public float getAngle(){
-        return (float) Math.atan2(path.get(waypoint).y - getY() - (sprite.getHeight()/2), path.get(waypoint).x - getX()-(sprite.getWidth()/2));
+        return (float) Math.atan2(path.get(waypoint).y - getY() - (sprite.getHeight()/2), path.get(waypoint).x - getX() - (sprite.getWidth()/2));
     }
+
 
     public void setVelocity(float angle, float speed){
         velocity.set((float) Math.cos(angle) * speed, (float) Math.sin(angle) * speed);

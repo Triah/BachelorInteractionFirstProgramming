@@ -43,8 +43,8 @@ public class Tower {
     }
 
 
-    public void createTower(){
-        createSprite(new Sprite(new Texture("towermode.PNG")));
+    public void createTower(String texture){
+        createSprite(new Sprite(new Texture(texture)));
     }
 
     public void createSprite(Sprite sprite){

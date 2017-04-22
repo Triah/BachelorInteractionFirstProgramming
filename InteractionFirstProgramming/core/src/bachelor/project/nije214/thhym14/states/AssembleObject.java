@@ -70,7 +70,6 @@ public abstract class AssembleObject extends State {
         scrollPane.setPosition(WIDTH*0.6f,HEIGHT*0.15f);
         scrollPane.setFadeScrollBars(false);
         table.align(Align.top);
-        createSprite("badlogic.jpg");
         table.setWidth(scrollPane.getWidth());
         for(TextButton textButton : textButtons){
             table.add(textButton).width(scrollPane.getWidth()- 25).height(textButton.getHeight());
@@ -101,15 +100,8 @@ public abstract class AssembleObject extends State {
         stage.addActor(finishButton);
     }
 
-    protected void setButtons(String text){
-        TextButton textButton = new TextButton(text,skin);
-        textButton.setHeight(HEIGHT*0.1f);
-        textButton.getLabel().setFontScale(2.5f);
-        textButtons.add(textButton);
-    }
-
-    protected void createSprite(String textForPicture){
-        this.sprite = new Sprite(new Texture(textForPicture));
+    protected void createSprite(Texture texture){
+        this.sprite = new Sprite(texture);
         sprite.setSize(WIDTH*0.45f,WIDTH*0.45f);
         sprite.setPosition(WIDTH*0.1f,HEIGHT-(getSprite().getHeight()+100));
     }
@@ -125,6 +117,7 @@ public abstract class AssembleObject extends State {
 
     @Override
     public void update(float deltaTime) {
+        handleInput();
         stage.act();
     }
 
