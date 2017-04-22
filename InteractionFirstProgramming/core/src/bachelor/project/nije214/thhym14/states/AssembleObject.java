@@ -112,7 +112,7 @@ public abstract class AssembleObject extends State {
 
     @Override
     public void handleInput() {
-
+        //needed for override
     }
 
     @Override
@@ -135,6 +135,6 @@ public abstract class AssembleObject extends State {
 
     @Override
     public void dispose() {
-
+        //needed for override
     }
 }

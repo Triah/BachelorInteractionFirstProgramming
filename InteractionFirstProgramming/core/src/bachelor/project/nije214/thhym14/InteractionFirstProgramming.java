@@ -30,7 +30,6 @@ public class InteractionFirstProgramming extends Game {
 		music.setLooping(true);
 		music.setVolume(0.5f);
 		music.play();
-
 	}
 
 	@Override

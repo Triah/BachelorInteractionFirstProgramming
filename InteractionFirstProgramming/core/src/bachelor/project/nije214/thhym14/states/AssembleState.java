@@ -179,8 +179,6 @@ public class AssembleState extends State {
         }
     }
 
-
-
     public void setButtonAttributes(String buttonText, float width, float height, float fontScale, float x, float y){
         TextButton textButton = new TextButton(buttonText,skin);
         textButton.setWidth(width);

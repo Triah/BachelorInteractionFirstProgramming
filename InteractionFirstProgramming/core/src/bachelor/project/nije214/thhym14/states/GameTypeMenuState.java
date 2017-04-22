@@ -69,7 +69,6 @@ public class GameTypeMenuState extends State {
         buttonActions();
     }
 
-
     public void addActorToStage(Actor actor){
         stage.addActor(actor);
     }

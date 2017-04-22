@@ -188,8 +188,6 @@ public class PlayTowerDefenseState extends State {
         sb.end();
         wp.drawRoute();
         wp.drawWayPoints();
-        wp.drawRouteFromEnemy();
-
     }
 
     public void cloneAndAddToList(){
