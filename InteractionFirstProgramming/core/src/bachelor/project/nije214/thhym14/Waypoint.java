@@ -3,6 +3,7 @@ package bachelor.project.nije214.thhym14;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,13 +20,6 @@ public class Waypoint {
     private Sprite sprite;
     private Enemy enemy;
     Array<Vector2> path;
-
-    public void render() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        drawWayPoints();
-        drawRoute();
-        drawRouteFromEnemy();
-    }
 
     public void drawRouteFromEnemy(){
         getShapeRenderer().setAutoShapeType(true);
@@ -71,24 +65,8 @@ public class Waypoint {
         getShapeRenderer().setColor(color);
     }
 
-    public void createEnemy(Enemy enemy){
-        this.enemy = enemy;
-    }
-
     public Enemy getEnemy(){
         return this.enemy;
-    }
-
-    public Sprite getSprite(){
-        return sprite;
-    }
-
-    public void setSpriteSize(float w, float h){
-        getSprite().setSize(w,h);
-    }
-
-    public void setSpriteOrigin(float h, float w){
-        getSprite().setOrigin(h,w);
     }
 
     public void createSprite(Sprite sprite){
@@ -97,10 +75,6 @@ public class Waypoint {
 
     public void createEnemyArray(){
         enemies = new Array<Enemy>();
-    }
-
-    public void setEnemyCenter(float x, float y){
-        getEnemy().setCenter(x,y);
     }
 
     public Array<Enemy> getEnemyArray(){

@@ -41,12 +41,13 @@ public class GameTypeMenuState extends State {
     private Skin skin;
     private LinkedList<TextButton> textButtons;
     private Label label;
+    private Texture background;
 
     public GameTypeMenuState(GameStateManager gsm) {
         super(gsm);
-
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        background = new Texture("airadventurelevel2.png");
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
         handleBackAction();
@@ -67,7 +68,6 @@ public class GameTypeMenuState extends State {
         addActorToStage(label);
         buttonActions();
     }
-
 
     public void addActorToStage(Actor actor){
         stage.addActor(actor);
@@ -120,6 +120,9 @@ public class GameTypeMenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        sb.begin();
+        sb.draw(background,0,0,background.getWidth(),HEIGHT);
+        sb.end();
         stage.draw();
     }
 

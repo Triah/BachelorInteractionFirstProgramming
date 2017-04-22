@@ -15,7 +15,6 @@ public class Tower {
     private Type type;
     private float range;
     private float fireRate;
-    //private int price
 
     public enum Type {
         BASIC, //standard tower
@@ -24,16 +23,23 @@ public class Tower {
     }
 
     public void setType(Type t){ this.type = t;}
+
     public Type getType(){return type;}
+
     public void setHP(float HP){this.HP = HP;}
+
     public float getHP(){
         return HP;
     }
+
     public void setRange(float range){this.range = range;}
+
     public float getRange(){
         return range;
     }
+
     public void setfireRate(float fireRate){this.fireRate = fireRate;}
+
     public float getFireRate(){
         return fireRate;
     }
@@ -43,8 +49,8 @@ public class Tower {
     }
 
 
-    public void createTower(){
-        createSprite(new Sprite(new Texture("towermode.PNG")));
+    public void createTower(String texture){
+        createSprite(new Sprite(new Texture(texture)));
     }
 
     public void createSprite(Sprite sprite){
@@ -69,14 +75,6 @@ public class Tower {
 
     public float getX(){
         return sprite.getX();
-    }
-
-
-
-
-
-    public void setSpritePosition(float x, float y){
-        getSprite().setPosition(x , y );
     }
 
     public void dispose(){
