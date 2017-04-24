@@ -23,8 +23,8 @@ public class Enemy {
     private int waypoint = 0;
     private float health;
 
-    public void createEnemy(){
-        createSprite(new Sprite(new Texture("badlogic.jpg")));
+    public void createEnemy(String texture){
+        createSprite(new Sprite(new Texture(texture)));
     }
 
     public void setCenter(float x, float y){
@@ -51,20 +51,12 @@ public class Enemy {
         this.path = path;
     }
 
-    public Array<Vector2> getPath(){
-        return path;
-    }
-
     public void setSpeed(float speed){
         this.speed = speed;
     }
 
     public float getSpeed(){
         return speed;
-    }
-
-    public void draw(SpriteBatch batch){
-        getSprite().draw(batch);
     }
 
     public void createSprite(Sprite sprite){
@@ -92,7 +84,7 @@ public class Enemy {
     }
 
     public float getAngle(){
-        return (float) Math.atan2(path.get(waypoint).y - getY() - sprite.getHeight()/2, path.get(waypoint).x - getX() - sprite.getWidth()/2);
+        return (float) Math.atan2(path.get(waypoint).y - getY() - (sprite.getHeight()/2), path.get(waypoint).x - getX() - (sprite.getWidth()/2));
     }
 
     public void setVelocity(float angle, float speed){
@@ -111,29 +103,20 @@ public class Enemy {
         getSprite().setRotation(angle * MathUtils.radiansToDegrees);
     }
 
-    public void setSpriteCenter(float x, float y){
-        //sættes til waypoint path.getPath().x og y
-        getSprite().setCenter(x,y);
-    }
-
     public void incrementWaypoint(){
         this.waypoint++;
     }
 
-
     public boolean isWaypointReached() {
-        //Afstand til waypoint i forhold maks afstand enemy kan flytte sig på 1 frame
         return Math.abs(path.get(waypoint).x - getX()-getSprite().getHeight()/2) <=
                 getSpeed() * Gdx.graphics.getDeltaTime() &&
                 Math.abs(path.get(waypoint).y - getY()-getSprite().getWidth()/2) <=
                         getSpeed() * Gdx.graphics.getDeltaTime();
     }
 
-
     public int getWaypoint() {
         return waypoint;
     }
-
 
     public void dispose(){
         this.dispose();

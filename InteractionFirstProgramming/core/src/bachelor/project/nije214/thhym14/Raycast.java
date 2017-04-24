@@ -17,7 +17,8 @@ public class Raycast {
 
     private Point enemy;
     private Point tower;
-    private ShapeRenderer sr;
+    private int i = 0;
+   //private ShapeRenderer sr;
 
 
     /*
@@ -55,7 +56,7 @@ public class Raycast {
      * @param x The x position to check as an integer
      * @param y The y position to check as an integer
      * @return true if the player is in the given coordinates, false otherwise
-    */
+     */
     private boolean isEnemyInField(float x, float y) {
         return (Math.abs(x - enemy.getX()) <= 50) && (Math.abs(y - enemy.getY()) <= 50);
     }
@@ -75,19 +76,21 @@ public class Raycast {
     }
 
 
-    public void pointer(Vector2 vec1, Vector2 vec2) {
+    /*
+    public void circleshape(Vector2 vec) {
+
         sr = new ShapeRenderer();
         sr.setAutoShapeType(true);
         sr.setColor(Color.CYAN);
         sr.begin();
-        sr.line(
-                new Vector2(vec1.x, vec1.y),
-                new Vector2(vec2.x, vec2.y));
-        Gdx.gl.glLineWidth((20));
+        //for(Tower t : tower.getTowerArray){
+        sr.circle(vec.x, vec.y, 250);
+        Gdx.gl.glLineWidth((2));
         sr.end();
-
-
+        //Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
+        //circleshape(vec1);
     }
+    */
 
 
 
@@ -103,10 +106,10 @@ public class Raycast {
      * @return true if player is found, false otherwise
      */
     private boolean makeRays(int startAngle, int endAngle, int sightRadius) {
-
+        this.i = 0;
         float px = tower.getX();
         float py = tower.getY();
-        int degreeLeap = 4;
+        int degreeLeap = 45;
 
         // Iterate through the angles
         for (int i = startAngle; i < endAngle; i += degreeLeap) {
@@ -126,9 +129,6 @@ public class Raycast {
                 float roundedX = Math.round(x);
                 float roundedY = Math.round(y);
 
-                /*Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
-                Vector2 vec2 = new Vector2(roundedX, roundedY);
-                pointer(vec1, vec2);*/
 
                 // If ray is out of range, continue to next ray
                 if (roundedX < 0 || roundedY < 0) {
@@ -137,6 +137,9 @@ public class Raycast {
 
                 // If we found the player, return true
                 if (isEnemyInField(roundedX, roundedY)) {
+
+                    //Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
+                    //circleshape(vec1);
                     return true;
                 }
             }

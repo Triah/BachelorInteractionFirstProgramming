@@ -2,7 +2,9 @@ package bachelor.project.nije214.thhym14;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
 
 
 /**
@@ -13,9 +15,11 @@ public class Tower {
     private Sprite sprite;
     private float HP;
     private Type type;
-    private int range;
+    private float range;
     private float fireRate;
-    //private int price
+    private float timer;
+    //private ArrayList<Tower> towers;
+
 
     public enum Type {
         BASIC, //standard tower
@@ -23,17 +27,31 @@ public class Tower {
         FROST //slows movement speed of enemy
     }
 
+
+    public void setTimer(float timer){this.timer = timer;}
+
+    public float getTimer(){
+        return timer;
+    }
+
     public void setType(Type t){ this.type = t;}
+
     public Type getType(){return type;}
+
     public void setHP(float HP){this.HP = HP;}
+
     public float getHP(){
         return HP;
     }
-    public void setRange(int range){this.range = range;}
+
+    public void setRange(float range){this.range = range;}
+
     public float getRange(){
         return range;
     }
-    public void setfireRate(float fireRate){this.fireRate = 1/fireRate;}
+
+    public void setfireRate(float fireRate){this.fireRate = fireRate;}
+
     public float getFireRate(){
         return fireRate;
     }
@@ -43,8 +61,8 @@ public class Tower {
     }
 
 
-    public void createTower(){
-        createSprite(new Sprite(new Texture("towermode.PNG")));
+    public void createTower(String texture){
+        createSprite(new Sprite(new Texture(texture)));
     }
 
     public void createSprite(Sprite sprite){
@@ -71,14 +89,9 @@ public class Tower {
         return sprite.getX();
     }
 
+    //public void createTowerArray(){towers = new ArrayList<Tower>();}
 
-
-
-
-
-    public void setSpritePosition(float x, float y){
-        getSprite().setPosition(x , y );
-    }
+    //public ArrayList<Tower> getTowerArray(){return this.towers;}
 
     public void dispose(){
         this.dispose();

@@ -37,4 +37,8 @@ public class GameStateManager {
         states.peek().render(batch);
     }
 
+    public State peek(){
+        return states.peek();
+    }
+
 }

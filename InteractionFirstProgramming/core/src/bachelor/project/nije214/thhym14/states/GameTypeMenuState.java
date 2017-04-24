@@ -1,6 +1,10 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -22,6 +26,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import java.util.LinkedList;
 
 import bachelor.project.nije214.thhym14.Enemy;
+import bachelor.project.nije214.thhym14.Raycast;
 import bachelor.project.nije214.thhym14.Waypoint;
 
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
@@ -37,14 +42,19 @@ public class GameTypeMenuState extends State {
     private Skin skin;
     private LinkedList<TextButton> textButtons;
     private Label label;
+    private Texture background;
+
 
     public GameTypeMenuState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        background = new Texture("airadventurelevel2.png");
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
-        Gdx.input.setInputProcessor(stage);
+        handleBackAction();
+
+        loadRaycast();
     }
 
     public void createInitialUIElements(){
@@ -62,7 +72,6 @@ public class GameTypeMenuState extends State {
         addActorToStage(label);
         buttonActions();
     }
-
 
     public void addActorToStage(Actor actor){
         stage.addActor(actor);
@@ -115,6 +124,9 @@ public class GameTypeMenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        sb.begin();
+        sb.draw(background,0,0,background.getWidth(),HEIGHT);
+        sb.end();
         stage.draw();
     }
 
@@ -125,4 +137,39 @@ public class GameTypeMenuState extends State {
             stage.getActors().removeValue(stageActor,true);
         }
     }
+
+    public void handleBackAction() {
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        InputProcessor adapter = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if(keycode == Input.Keys.BACK) {
+                    Gdx.app.exit();
+                    Gdx.input.setCatchBackKey(true);
+                    dispose();
+                }
+                return false;
+            }
+        };
+        multiplexer.addProcessor(adapter);
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
+    }
+
+
+    public void loadRaycast(){
+        System.out.println("loadrays");
+        Runnable task1 = new Runnable(){
+
+            @Override
+            public void run(){
+            Raycast ray = new Raycast();
+            }
+        };
+
+
+        Thread thread1 = new Thread(task1);
+        thread1.start();
+    }
+
 }
