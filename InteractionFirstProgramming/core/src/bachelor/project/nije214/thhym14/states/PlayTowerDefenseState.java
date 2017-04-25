@@ -10,6 +10,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -56,6 +57,8 @@ public class PlayTowerDefenseState extends State {
     private int i = 0;
 
 
+
+
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
@@ -73,7 +76,8 @@ public class PlayTowerDefenseState extends State {
         timeSpawn = 0;
         bullets = new Array<Bullet>();
         this.enemy = new Enemy();
-        towers = new ArrayList<Tower>();
+
+        towers= new ArrayList<Tower>();
         wp = new Waypoint();
         background = new Texture("grass_template2.jpg");
         createWaypoint();
@@ -84,6 +88,7 @@ public class PlayTowerDefenseState extends State {
 
         ray = new Raycast();
         sr = new ShapeRenderer();
+
 
     }
 
@@ -97,6 +102,7 @@ public class PlayTowerDefenseState extends State {
             tower.getSprite().setSize(200,200);
             tower.setCenter(mapPrefs.getFloat("towerX"+i),mapPrefs.getFloat("towerY"+i));
             tower.setTimer(0);
+
             if(towerPrefs.getString(towerTypePref) == "FROST"){
                 tower.setType(Tower.Type.FROST);
             } else if (towerPrefs.getString(towerTypePref) == "BASIC"){
@@ -112,6 +118,7 @@ public class PlayTowerDefenseState extends State {
     public void createBullet(){
         bullet = new Bullet();
         bullet.createBullet(bulletPrefs.getString("bulletSprite"));
+
     }
 
     public void createWaypoint(){
@@ -201,6 +208,7 @@ public class PlayTowerDefenseState extends State {
         }}}
 
 
+
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
@@ -236,6 +244,7 @@ public class PlayTowerDefenseState extends State {
             b.getSprite().rotate((180/(float)Math.PI * (float)Math.atan2(ex.getY() - tx.getY(), ex.getX() - tx.getX()))+90);
             b.getSprite().setOriginCenter();
             bullets.add(b);
+
     }
 
     public void disposeEntities() {
@@ -254,7 +263,6 @@ public class PlayTowerDefenseState extends State {
     }
 
 
-
     public void circleshape() {
         sr = new ShapeRenderer();
         sr.setAutoShapeType(true);
@@ -267,21 +275,6 @@ public class PlayTowerDefenseState extends State {
         sr.end();
     }
 
-
-    public void rayThread(){
-        System.out.println("loadrays");
-        Runnable task1 = new Runnable(){
-
-            @Override
-            public void run(){
-                Raycast ray = new Raycast();
-            }
-        };
-
-
-        Thread thread1 = new Thread(task1);
-        thread1.start();
-    }
 
 
     @Override

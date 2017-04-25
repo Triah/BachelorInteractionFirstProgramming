@@ -72,17 +72,5 @@ public class Bullet {
     ////TODO: 09-04-2017  implement heatseeking bullet
     */
 
-    public void towerToEnemyLaser(Enemy e, Tower t) {
-        ShapeRenderer sr = new ShapeRenderer();
-        sr.setAutoShapeType(true);
-        sr.setColor(Color.CYAN);
-        sr.begin();
-        sr.line(
-                new Vector2(e.getX()+e.getSprite().getWidth()/2, e.getY()+e.getSprite().getHeight()/2),
-                new Vector2(t.getX()+t.getSprite().getWidth()/2, t.getY() + t.getSprite().getHeight()/2));
-        Gdx.gl.glLineWidth((20));
-        sr.end();
 
-
-    }
 }

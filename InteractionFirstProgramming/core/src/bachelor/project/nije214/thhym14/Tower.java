@@ -18,7 +18,8 @@ public class Tower {
     private float range;
     private float fireRate;
     private float timer;
-    //private ArrayList<Tower> towers;
+
+
 
 
     public enum Type {
@@ -89,9 +90,8 @@ public class Tower {
         return sprite.getX();
     }
 
-    //public void createTowerArray(){towers = new ArrayList<Tower>();}
 
-    //public ArrayList<Tower> getTowerArray(){return this.towers;}
+
 
     public void dispose(){
         this.dispose();

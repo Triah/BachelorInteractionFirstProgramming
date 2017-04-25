@@ -165,6 +165,7 @@ public class AssembleTower extends AssembleObject {
         setTowerRangeButtons("Short Range",200);
         setTowerRangeButtons("Medium Range",300);
         setTowerRangeButtons("Long Range",450);
+
         setTowerTypeButtons("Frost Type","FROST");
         setTowerTypeButtons("Basic Type", "BASIC");
         setTowerTypeButtons("Laser Type", "LASER");
