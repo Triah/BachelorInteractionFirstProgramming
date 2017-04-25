@@ -75,7 +75,7 @@ public class PlayTowerDefenseState extends State {
         this.enemy = new Enemy();
         towers = new ArrayList<Tower>();
         wp = new Waypoint();
-        //background = new Texture("grass_template2.jpg");
+        background = new Texture("grass_template2.jpg");
         createWaypoint();
         createEnemy();
         createTower();
@@ -83,9 +83,7 @@ public class PlayTowerDefenseState extends State {
         handleBackAction();
 
         ray = new Raycast();
-        //circleshape(tower.getRange());
         sr = new ShapeRenderer();
-        //circleshape(250);
 
     }
 
@@ -114,7 +112,6 @@ public class PlayTowerDefenseState extends State {
     public void createBullet(){
         bullet = new Bullet();
         bullet.createBullet(bulletPrefs.getString("bulletSprite"));
-        cloneAndAddToListBullet(enemy, towers.get(0));
     }
 
     public void createWaypoint(){
@@ -168,6 +165,7 @@ public class PlayTowerDefenseState extends State {
         for(Tower t : towers){
             t.getSprite().draw(batch);
         }
+        circleshape();
 
     }
 
@@ -182,7 +180,6 @@ public class PlayTowerDefenseState extends State {
             float timer = t.getTimer();
             timer += Gdx.graphics.getDeltaTime();
             t.setTimer(timer);
-            System.out.println(timer);
         }
 
         timeSpawn += Gdx.graphics.getDeltaTime();
@@ -190,30 +187,16 @@ public class PlayTowerDefenseState extends State {
                 cloneAndAddToList();
                 timeSpawn = 0;
             }
-        timeShoot += Gdx.graphics.getDeltaTime();
         if(!towers.isEmpty()) {
             for(Tower t: towers) {
                 for(Enemy e : wp.getEnemyArray()){
-                if(ray.isPlayerInSight(e, t, 500)){
-                    if(t.getTimer()>5/towerPrefs.getFloat("towerFireRate")){
-                        System.out.println("meh");
-                        bullet.towerToEnemyLaser(e,t);
+                if(ray.isPlayerInSight(e, t, (int)towerPrefs.getFloat("towerRange"))){
+                  if(t.getTimer()>5/towerPrefs.getFloat("towerFireRate")){
                         cloneAndAddToListBullet(e, t);
                         t.setTimer(0);
                         long id = normalShot.play();
                         normalShot.setVolume(id, 0.25f);
                     }
-
-/*
-                if (timeShoot > 5 / towerPrefs.getFloat("towerFireRate")) {
-                    cloneAndAddToListBullet(e, t);
-                    timeShoot = 0;
-                    long id = normalShot.play();
-                    normalShot.setVolume(id, 0.25f);
-                }
-                */
-
-
             }}
         }}}
 
@@ -222,7 +205,7 @@ public class PlayTowerDefenseState extends State {
     public void render(SpriteBatch sb) {
         sb.begin();
         sb.setProjectionMatrix(camera.combined);
-        //sb.draw(background,0,0,WIDTH,HEIGHT);
+        sb.draw(background,0,0,WIDTH,HEIGHT);
         processEnemy();
         disposeEntities();
         draw(sb);
@@ -245,16 +228,14 @@ public class PlayTowerDefenseState extends State {
 
 
     public void cloneAndAddToListBullet(Enemy ex, Tower tx){
-       // for(Tower t: towers) {
             Bullet b = new Bullet();
             b.createBullet(bulletPrefs.getString("bulletSprite"));
             b.setCenter(tx.getX() + tx.getSprite().getWidth()/2, tx.getY() + tx.getSprite().getHeight()/2);
             b.setSpeed(bulletPrefs.getFloat("bulletSpeed"));
             b.setVelocity(b.getTowerToEnemyAngle(ex, tx), b.getSpeed());
-            b.getSprite().rotate((180/(float)Math.PI * (float)Math.atan2(enemy.getY() - tx.getY(), enemy.getX() - tx.getX()))+90);
+            b.getSprite().rotate((180/(float)Math.PI * (float)Math.atan2(ex.getY() - tx.getY(), ex.getX() - tx.getX()))+90);
             b.getSprite().setOriginCenter();
             bullets.add(b);
-     //   }
     }
 
     public void disposeEntities() {
@@ -273,21 +254,19 @@ public class PlayTowerDefenseState extends State {
     }
 
 
-/*
-    public void circleshape(int radius) {
-        //int radius = tower.getRange();
+
+    public void circleshape() {
         sr = new ShapeRenderer();
         sr.setAutoShapeType(true);
         sr.setColor(Color.CYAN);
         sr.begin();
-        for(Tower t : towers()) {
-            sr.begin();
-            sr.circle(t.getX() + t.getSprite().getWidth()/2, t.getY() +t.getSprite().getHeight()/2, radius);
+        for(Tower t : towers) {
+            sr.circle(t.getX() + t.getSprite().getWidth()/2, t.getY() +t.getSprite().getHeight()/2, towerPrefs.getFloat("towerRange"));
             Gdx.gl.glLineWidth((20));
        }
         sr.end();
     }
-*/
+
 
     public void rayThread(){
         System.out.println("loadrays");

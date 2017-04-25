@@ -53,8 +53,6 @@ public class GameTypeMenuState extends State {
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
         handleBackAction();
-
-        loadRaycast();
     }
 
     public void createInitialUIElements(){
@@ -155,21 +153,4 @@ public class GameTypeMenuState extends State {
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
     }
-
-
-    public void loadRaycast(){
-        System.out.println("loadrays");
-        Runnable task1 = new Runnable(){
-
-            @Override
-            public void run(){
-            Raycast ray = new Raycast();
-            }
-        };
-
-
-        Thread thread1 = new Thread(task1);
-        thread1.start();
-    }
-
 }

@@ -37,8 +37,7 @@ public class Raycast {
      * @param tower The Entity, whose coordinates should be used to set the player
      */
     private void setTower(Tower tower) {
-        this.tower = new Point(tower.getX()+140, tower.getY()+140);
-        //TODO HARDCODED 140 VALUE.. LUL
+        this.tower = new Point(tower.getX() + tower.getSprite().getWidth()/2, tower.getY() + tower.getSprite().getHeight()/2);
     }
 
     /**
@@ -47,7 +46,7 @@ public class Raycast {
      * @param enemy The Entity, whose coordinates should be used to set the enemy
      */
     private void setEnemy(Enemy enemy) {
-        this.enemy = new Point(enemy.getX(), enemy.getY());
+        this.enemy = new Point(enemy.getX() + enemy.getSprite().getWidth()/2, enemy.getY()+enemy.getSprite().getHeight()/2);
     }
 
     /**
@@ -58,7 +57,7 @@ public class Raycast {
      * @return true if the player is in the given coordinates, false otherwise
      */
     private boolean isEnemyInField(float x, float y) {
-        return (Math.abs(x - enemy.getX()) <= 50) && (Math.abs(y - enemy.getY()) <= 50);
+        return (Math.abs(x - enemy.getX()) <= 10) && (Math.abs(y - enemy.getY()) <= 10);
     }
 
     /**
@@ -91,6 +90,7 @@ public class Raycast {
         //circleshape(vec1);
     }
     */
+
 
 
 
@@ -138,8 +138,11 @@ public class Raycast {
                 // If we found the player, return true
                 if (isEnemyInField(roundedX, roundedY)) {
 
-                    //Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
+                    Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
                     //circleshape(vec1);
+                    Vector2 vec2 = new Vector2(roundedX, roundedY);
+                    System.out.println(vec1.dst(vec2));
+
                     return true;
                 }
             }

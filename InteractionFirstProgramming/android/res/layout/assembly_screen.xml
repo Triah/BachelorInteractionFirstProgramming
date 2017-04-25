@@ -33,4 +33,14 @@
         android:layout_alignBottom="@+id/chooseObjectButton"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="29dp" />
+
+    <Button
+        android:text="play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chooseObjectButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="212dp"
+        android:id="@+id/playButton"
+        android:onClick="playButtonClick" />
 </RelativeLayout>
