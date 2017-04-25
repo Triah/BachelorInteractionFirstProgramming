@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import java.util.LinkedList;
 
 import bachelor.project.nije214.thhym14.Enemy;
+import bachelor.project.nije214.thhym14.Raycast;
 import bachelor.project.nije214.thhym14.Waypoint;
 
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
@@ -42,6 +43,7 @@ public class GameTypeMenuState extends State {
     private LinkedList<TextButton> textButtons;
     private Label label;
     private Texture background;
+
 
     public GameTypeMenuState(GameStateManager gsm) {
         super(gsm);

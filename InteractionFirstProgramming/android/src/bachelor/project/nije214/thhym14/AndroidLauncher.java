@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import bachelor.project.nije214.thhym14.InteractionFirstProgramming;
+//import bachelor.project.nije214.thhym14.InteractionFirstProgramming;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

@@ -1,6 +1,9 @@
 package bachelor.project.nije214.thhym14;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import java.awt.geom.Point2D;
@@ -14,6 +17,8 @@ public class Raycast {
 
     private Point enemy;
     private Point tower;
+    private int i = 0;
+   //private ShapeRenderer sr;
 
 
     /*
@@ -32,7 +37,7 @@ public class Raycast {
      * @param tower The Entity, whose coordinates should be used to set the player
      */
     private void setTower(Tower tower) {
-        this.tower = new Point(tower.getX(), tower.getY());
+        this.tower = new Point(tower.getX() + tower.getSprite().getWidth()/2, tower.getY() + tower.getSprite().getHeight()/2);
     }
 
     /**
@@ -41,7 +46,7 @@ public class Raycast {
      * @param enemy The Entity, whose coordinates should be used to set the enemy
      */
     private void setEnemy(Enemy enemy) {
-        this.enemy = new Point(enemy.getX(), enemy.getY());
+        this.enemy = new Point(enemy.getX() + enemy.getSprite().getWidth()/2, enemy.getY()+enemy.getSprite().getHeight()/2);
     }
 
     /**
@@ -50,9 +55,9 @@ public class Raycast {
      * @param x The x position to check as an integer
      * @param y The y position to check as an integer
      * @return true if the player is in the given coordinates, false otherwise
-    */
-    private boolean isPlayerInField(float x, float y) {
-        return (Math.abs(x - tower.getX()) <= 10) && (Math.abs(y - tower.getY()) <= 10);
+     */
+    private boolean isEnemyInField(float x, float y) {
+        return (Math.abs(x - enemy.getX()) <= 10) && (Math.abs(y - enemy.getY()) <= 10);
     }
 
     /**
@@ -69,6 +74,26 @@ public class Raycast {
         return makeRays(0, 360, sightRadius);
     }
 
+
+    /*
+    public void circleshape(Vector2 vec) {
+
+        sr = new ShapeRenderer();
+        sr.setAutoShapeType(true);
+        sr.setColor(Color.CYAN);
+        sr.begin();
+        //for(Tower t : tower.getTowerArray){
+        sr.circle(vec.x, vec.y, 250);
+        Gdx.gl.glLineWidth((2));
+        sr.end();
+        //Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
+        //circleshape(vec1);
+    }
+    */
+
+
+
+
     /**
      * Cast rays ranging from the startAngle to the endAngle every 4 degrees.
      * The ray range is defined by the sightRadius. This code is optimized by
@@ -81,9 +106,10 @@ public class Raycast {
      * @return true if player is found, false otherwise
      */
     private boolean makeRays(int startAngle, int endAngle, int sightRadius) {
-        float px = enemy.getX();
-        float py = enemy.getY();
-        int degreeLeap = 4;
+        this.i = 0;
+        float px = tower.getX();
+        float py = tower.getY();
+        int degreeLeap = 45;
 
         // Iterate through the angles
         for (int i = startAngle; i < endAngle; i += degreeLeap) {
@@ -103,13 +129,20 @@ public class Raycast {
                 float roundedX = Math.round(x);
                 float roundedY = Math.round(y);
 
+
                 // If ray is out of range, continue to next ray
                 if (roundedX < 0 || roundedY < 0) {
                     break;
                 }
 
                 // If we found the player, return true
-                if (isPlayerInField(roundedX, roundedY)) {
+                if (isEnemyInField(roundedX, roundedY)) {
+
+                    Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
+                    //circleshape(vec1);
+                    Vector2 vec2 = new Vector2(roundedX, roundedY);
+                    System.out.println(vec1.dst(vec2));
+
                     return true;
                 }
             }

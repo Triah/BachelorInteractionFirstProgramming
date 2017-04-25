@@ -2,7 +2,9 @@ package bachelor.project.nije214.thhym14;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
 
 
 /**
@@ -15,11 +17,22 @@ public class Tower {
     private Type type;
     private float range;
     private float fireRate;
+    private float timer;
+
+
+
 
     public enum Type {
         BASIC, //standard tower
         LASER, //laser projectiles
         FROST //slows movement speed of enemy
+    }
+
+
+    public void setTimer(float timer){this.timer = timer;}
+
+    public float getTimer(){
+        return timer;
     }
 
     public void setType(Type t){ this.type = t;}
@@ -76,6 +89,9 @@ public class Tower {
     public float getX(){
         return sprite.getX();
     }
+
+
+
 
     public void dispose(){
         this.dispose();

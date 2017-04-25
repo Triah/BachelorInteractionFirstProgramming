@@ -162,9 +162,10 @@ public class AssembleTower extends AssembleObject {
         setTowerHealthButtons("Low Health",1);
         setTowerHealthButtons("Medium Health",5);
         setTowerHealthButtons("High Health",10);
-        setTowerRangeButtons("Short Range",300);
-        setTowerRangeButtons("Medium Range",600);
-        setTowerRangeButtons("Long Range",900);
+        setTowerRangeButtons("Short Range",200);
+        setTowerRangeButtons("Medium Range",300);
+        setTowerRangeButtons("Long Range",450);
+
         setTowerTypeButtons("Frost Type","FROST");
         setTowerTypeButtons("Basic Type", "BASIC");
         setTowerTypeButtons("Laser Type", "LASER");

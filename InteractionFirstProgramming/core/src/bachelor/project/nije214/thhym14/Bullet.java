@@ -3,7 +3,10 @@ package bachelor.project.nije214.thhym14;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.Color;
+
 
 import com.badlogic.gdx.utils.Array;
 
@@ -61,16 +64,13 @@ public class Bullet {
         getSprite().setPosition(x + velX * Gdx.graphics.getDeltaTime(), y + velY * Gdx.graphics.getDeltaTime());
     }
 
-    public float getTowerToEnemyAngle(Enemy e, Tower t){
-        return (float) Math.atan2(e.getY() - t.getY() - e.getSprite().getHeight()/2, e.getX() - t.getX()- e.getSprite().getWidth()/2);
+    public float getTowerToEnemyAngle(Enemy e, Tower t) {
+        return (float) Math.atan2(e.getY() - t.getY(), e.getX() - t.getX());
     }
     /*
     /public void towerToEnemy(Enemy e, Tower t){}
     ////TODO: 09-04-2017  implement heatseeking bullet
     */
 
-    /*
-    /public void towerToEnemyLaser(Enemy e, Tower t){}
-    ////TODO: 09-04-2017  implement laser bullet
-    */
+
 }

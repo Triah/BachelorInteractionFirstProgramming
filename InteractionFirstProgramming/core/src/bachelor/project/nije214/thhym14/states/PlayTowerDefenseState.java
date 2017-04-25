@@ -8,9 +8,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import bachelor.project.nije214.thhym14.Enemy;
 import bachelor.project.nije214.thhym14.InteractionFirstProgramming;
+import bachelor.project.nije214.thhym14.Raycast;
 import bachelor.project.nije214.thhym14.Tower;
 import bachelor.project.nije214.thhym14.Waypoint;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
@@ -46,6 +51,13 @@ public class PlayTowerDefenseState extends State {
     private Texture background;
     private Array<Bullet> bullets;
 
+    private Raycast ray;
+    private ShapeRenderer sr;
+
+    private int i = 0;
+
+
+
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
@@ -64,6 +76,7 @@ public class PlayTowerDefenseState extends State {
         timeSpawn = 0;
         bullets = new Array<Bullet>();
         this.enemy = new Enemy();
+
         towers= new ArrayList<Tower>();
         wp = new Waypoint();
         background = new Texture("grass_template2.jpg");
@@ -72,6 +85,11 @@ public class PlayTowerDefenseState extends State {
         createTower();
         createBullet();
         handleBackAction();
+
+        ray = new Raycast();
+        sr = new ShapeRenderer();
+
+
     }
 
     public void createTower(){
@@ -83,6 +101,8 @@ public class PlayTowerDefenseState extends State {
             tower.setRange(towerPrefs.getFloat("towerRange"));
             tower.getSprite().setSize(200,200);
             tower.setCenter(mapPrefs.getFloat("towerX"+i),mapPrefs.getFloat("towerY"+i));
+            tower.setTimer(0);
+
             if(towerPrefs.getString(towerTypePref) == "FROST"){
                 tower.setType(Tower.Type.FROST);
             } else if (towerPrefs.getString(towerTypePref) == "BASIC"){
@@ -90,6 +110,7 @@ public class PlayTowerDefenseState extends State {
             } else if (towerPrefs.getString(towerTypePref) == "LASER"){
                 tower.setType(Tower.Type.LASER);
             }
+
             towers.add(tower);
         }
     }
@@ -97,7 +118,7 @@ public class PlayTowerDefenseState extends State {
     public void createBullet(){
         bullet = new Bullet();
         bullet.createBullet(bulletPrefs.getString("bulletSprite"));
-        cloneAndAddToListBullet();
+
     }
 
     public void createWaypoint(){
@@ -151,6 +172,8 @@ public class PlayTowerDefenseState extends State {
         for(Tower t : towers){
             t.getSprite().draw(batch);
         }
+        circleshape();
+
     }
 
     @Override
@@ -160,22 +183,31 @@ public class PlayTowerDefenseState extends State {
 
     @Override
     public void update(float deltaTime) {
+        for(Tower t : towers){
+            float timer = t.getTimer();
+            timer += Gdx.graphics.getDeltaTime();
+            t.setTimer(timer);
+        }
+
         timeSpawn += Gdx.graphics.getDeltaTime();
-            if (timeSpawn > 2) {
+            if (timeSpawn > 5) {
                 cloneAndAddToList();
                 timeSpawn = 0;
             }
-        timeShoot += Gdx.graphics.getDeltaTime();
         if(!towers.isEmpty()) {
-            if (timeShoot > 5 / towerPrefs.getFloat("towerFireRate")) {
-                cloneAndAddToListBullet();
-                timeShoot = 0;
-                long id = normalShot.play();
-                normalShot.setVolume(id, 0.25f);
-            }
-        }
+            for(Tower t: towers) {
+                for(Enemy e : wp.getEnemyArray()){
+                if(ray.isPlayerInSight(e, t, (int)towerPrefs.getFloat("towerRange"))){
+                  if(t.getTimer()>5/towerPrefs.getFloat("towerFireRate")){
+                        cloneAndAddToListBullet(e, t);
+                        t.setTimer(0);
+                        long id = normalShot.play();
+                        normalShot.setVolume(id, 0.25f);
+                    }
+            }}
+        }}}
 
-    }
+
 
     @Override
     public void render(SpriteBatch sb) {
@@ -203,17 +235,16 @@ public class PlayTowerDefenseState extends State {
     }
 
 
-    public void cloneAndAddToListBullet(){
-        for(Tower t: towers) {
+    public void cloneAndAddToListBullet(Enemy ex, Tower tx){
             Bullet b = new Bullet();
             b.createBullet(bulletPrefs.getString("bulletSprite"));
-            b.setCenter(t.getX() + t.getSprite().getWidth()/2, t.getY() + t.getSprite().getHeight()/2);
+            b.setCenter(tx.getX() + tx.getSprite().getWidth()/2, tx.getY() + tx.getSprite().getHeight()/2);
             b.setSpeed(bulletPrefs.getFloat("bulletSpeed"));
-            b.setVelocity(b.getTowerToEnemyAngle(enemy, t), b.getSpeed());
-            b.getSprite().rotate((180/(float)Math.PI * (float)Math.atan2(enemy.getY() - t.getY(), enemy.getX() - t.getX()))+90);
+            b.setVelocity(b.getTowerToEnemyAngle(ex, tx), b.getSpeed());
+            b.getSprite().rotate((180/(float)Math.PI * (float)Math.atan2(ex.getY() - tx.getY(), ex.getX() - tx.getX()))+90);
             b.getSprite().setOriginCenter();
             bullets.add(b);
-        }
+
     }
 
     public void disposeEntities() {
@@ -230,6 +261,21 @@ public class PlayTowerDefenseState extends State {
             }
         }
     }
+
+
+    public void circleshape() {
+        sr = new ShapeRenderer();
+        sr.setAutoShapeType(true);
+        sr.setColor(Color.CYAN);
+        sr.begin();
+        for(Tower t : towers) {
+            sr.circle(t.getX() + t.getSprite().getWidth()/2, t.getY() +t.getSprite().getHeight()/2, towerPrefs.getFloat("towerRange"));
+            Gdx.gl.glLineWidth((20));
+       }
+        sr.end();
+    }
+
+
 
     @Override
     public void dispose(){
