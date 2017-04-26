@@ -17,8 +17,7 @@ public class Raycast {
 
     private Point enemy;
     private Point tower;
-    private int i = 0;
-   //private ShapeRenderer sr;
+
 
 
     /*
@@ -75,25 +74,6 @@ public class Raycast {
     }
 
 
-    /*
-    public void circleshape(Vector2 vec) {
-
-        sr = new ShapeRenderer();
-        sr.setAutoShapeType(true);
-        sr.setColor(Color.CYAN);
-        sr.begin();
-        //for(Tower t : tower.getTowerArray){
-        sr.circle(vec.x, vec.y, 250);
-        Gdx.gl.glLineWidth((2));
-        sr.end();
-        //Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
-        //circleshape(vec1);
-    }
-    */
-
-
-
-
     /**
      * Cast rays ranging from the startAngle to the endAngle every 4 degrees.
      * The ray range is defined by the sightRadius. This code is optimized by
@@ -106,7 +86,6 @@ public class Raycast {
      * @return true if player is found, false otherwise
      */
     private boolean makeRays(int startAngle, int endAngle, int sightRadius) {
-        this.i = 0;
         float px = tower.getX();
         float py = tower.getY();
         int degreeLeap = 45;
@@ -139,9 +118,8 @@ public class Raycast {
                 if (isEnemyInField(roundedX, roundedY)) {
 
                     Vector2 vec1 = new Vector2(tower.getX(), tower.getY());
-                    //circleshape(vec1);
                     Vector2 vec2 = new Vector2(roundedX, roundedY);
-                    System.out.println(vec1.dst(vec2));
+                    //System.out.println(vec1.dst(vec2));
 
                     return true;
                 }
