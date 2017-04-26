@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Collision {
 
-    private Rectangle boundsTop, boundsBot;
+    private Rectangle bounds;
 
 // TODO: 14-04-2017  nullpointer ud over det hele
 
@@ -22,11 +22,9 @@ public class Collision {
 
 
     public boolean isColliding(Rectangle enemy, Rectangle bullet){
-        boundsTop = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight());
-        boundsBot = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight());
+        bounds = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight());
 
-        System.out.println("Åh nej, hvem er den............");
-        return enemy.overlaps(boundsTop) || enemy.overlaps(boundsBot);
+        return enemy.overlaps(bounds);
     }
 
 

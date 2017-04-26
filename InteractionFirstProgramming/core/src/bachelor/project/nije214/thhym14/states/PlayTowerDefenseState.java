@@ -22,6 +22,8 @@ import bachelor.project.nije214.thhym14.Bullet;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import bachelor.project.nije214.thhym14.Collision;
 import bachelor.project.nije214.thhym14.Enemy;
 import bachelor.project.nije214.thhym14.InteractionFirstProgramming;
 import bachelor.project.nije214.thhym14.Raycast;
@@ -49,20 +51,17 @@ public class PlayTowerDefenseState extends State {
     private Sound normalShot;
     private Texture background;
     private Array<Bullet> bullets;
-    private boolean activeTower;
     private Raycast ray;
     private ShapeRenderer sr;
     private int i = 0;
     private Vector3 touchPoint;
     private ArrayList<Tower> inactiveTowers;
-    private Texture inactiveTower;
-    private Texture activeTowerTexture;
+    private Collision cl;
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
-        inactiveTower = new Texture("stone.png");
         touchPoint = new Vector3();
         music = Gdx.audio.newMusic(Gdx.files.internal("music/defensemusic.ogg"));
         music.setVolume(0.5f);
@@ -76,7 +75,6 @@ public class PlayTowerDefenseState extends State {
         timeSpawn = 0;
         bullets = new Array<Bullet>();
         this.enemy = new Enemy();
-        activeTower = false;
         inactiveTowers = new ArrayList<Tower>();
         towers = new ArrayList<Tower>();
         wp = new Waypoint();
@@ -88,6 +86,7 @@ public class PlayTowerDefenseState extends State {
         handleBackAction();
         ray = new Raycast();
         sr = new ShapeRenderer();
+        cl = new Collision();
     }
 
     public void createTower() {
@@ -98,7 +97,7 @@ public class PlayTowerDefenseState extends State {
             tower.setHP(towerPrefs.getFloat("towerHealth"));
             tower.setfireRate(towerPrefs.getFloat("towerFireRate"));
             tower.setRange(towerPrefs.getFloat("towerRange"));
-            tower.getSprite().setSize(200, 200);
+            tower.getSprite().setSize(100, 100);
             tower.setCenter(mapPrefs.getFloat("towerX" + i), mapPrefs.getFloat("towerY" + i));
             tower.setTimer(0);
             if (towerPrefs.getString(towerTypePref) == "FROST") {
@@ -161,7 +160,7 @@ public class PlayTowerDefenseState extends State {
         wp.createSprite(enemy.getSprite());
         wp.createShapeRenderer();
         wp.addEnemyToPath(this.enemy);
-        enemy.getSprite().setSize(200,200);
+        enemy.getSprite().setSize(100,100);
         enemy.getSprite().setOriginCenter();
 
     }
@@ -233,6 +232,17 @@ public class PlayTowerDefenseState extends State {
                 }
             }
         }
+
+        for (Bullet b : bullets) {
+            for (Enemy e : wp.getEnemyArray()) {
+                if(cl.isColliding(b.getSprite().getBoundingRectangle(), e.getSprite().getBoundingRectangle())){
+                    b.setVelocity(0 ,0);
+                    break;
+
+                }
+            }
+        }
+
         handleInput();
     }
 
@@ -269,6 +279,7 @@ public class PlayTowerDefenseState extends State {
     public void cloneAndAddToListBullet(Enemy ex, Tower tx){
         Bullet b = new Bullet();
         b.createBullet(bulletPrefs.getString("bulletSprite"));
+        b.getSprite().setSize(100, 100);
         b.setCenter(tx.getX() + tx.getSprite().getWidth()/2, tx.getY() + tx.getSprite().getHeight()/2);
         b.setSpeed(bulletPrefs.getFloat("bulletSpeed"));
         b.setVelocity(b.getTowerToEnemyAngle(ex, tx), b.getSpeed());
@@ -297,9 +308,9 @@ public class PlayTowerDefenseState extends State {
         sr.setAutoShapeType(true);
         sr.setColor(Color.CYAN);
         sr.begin();
+
         for(Tower t : towers) {
             sr.circle(t.getX() + t.getSprite().getWidth()/2, t.getY() +t.getSprite().getHeight()/2, towerPrefs.getFloat("towerRange"));
-            Gdx.gl.glLineWidth((20));
         }
         sr.end();
     }

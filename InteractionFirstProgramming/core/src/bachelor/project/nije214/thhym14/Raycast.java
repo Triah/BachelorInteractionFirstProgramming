@@ -88,7 +88,7 @@ public class Raycast {
     private boolean makeRays(int startAngle, int endAngle, int sightRadius) {
         float px = tower.getX();
         float py = tower.getY();
-        int degreeLeap = 45;
+        int degreeLeap = 15;
 
         // Iterate through the angles
         for (int i = startAngle; i < endAngle; i += degreeLeap) {

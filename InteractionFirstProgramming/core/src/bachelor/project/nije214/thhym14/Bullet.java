@@ -21,6 +21,7 @@ public class Bullet {
     private Vector2 velocity = new Vector2();
     private float speed;
     private Sprite sprite;
+    private ShapeRenderer sr;
 
     public void createBullet(String texture){
     createSprite(new Sprite(new Texture(texture)));
@@ -65,7 +66,18 @@ public class Bullet {
     }
 
     public float getTowerToEnemyAngle(Enemy e, Tower t) {
-        return (float) Math.atan2(e.getY() - t.getY(), e.getX() - t.getX());
+        /*
+        sr = new ShapeRenderer();
+        sr.setAutoShapeType(true);
+        sr.setColor(Color.CYAN);
+        sr.begin();
+        sr.line(e.getY()+e.getSprite().getHeight()/2, e.getX()+e.getSprite().getHeight()/2, t.getY(), - t.getX());
+        sr.end();
+*/
+
+
+
+        return (float) Math.atan2(e.getY() - t.getY() + e.getSprite().getHeight()/2, e.getX() - t.getX()+e.getSprite().getWidth()/2);
     }
     /*
     /public void towerToEnemy(Enemy e, Tower t){}
