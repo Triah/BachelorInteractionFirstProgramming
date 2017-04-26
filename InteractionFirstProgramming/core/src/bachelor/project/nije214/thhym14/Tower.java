@@ -18,6 +18,7 @@ public class Tower {
     private float range;
     private float fireRate;
     private float timer;
+    private boolean active;
 
 
 
@@ -28,6 +29,13 @@ public class Tower {
         FROST //slows movement speed of enemy
     }
 
+    public void setActive(boolean b){
+        active = b;
+    }
+
+    public boolean getActive(){
+        return active;
+    }
 
     public void setTimer(float timer){this.timer = timer;}
 
