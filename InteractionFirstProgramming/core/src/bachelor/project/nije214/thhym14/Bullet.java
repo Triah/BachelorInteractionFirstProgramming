@@ -64,10 +64,6 @@ public class Bullet {
         return speed;
     }
 
-    public void setDamage(float dmg){this.dmg = dmg;}
-
-    public float getDamage(){return dmg;}
-
     public void setVelocity(float angle, float speed){
         velocity.set((float) Math.cos(angle) * speed, (float) Math.sin(angle) * speed);
     }
