@@ -21,6 +21,7 @@ public class Bullet {
     private Sprite sprite;
     private float damage;
 
+
     public void createBullet(String texture){
     createSprite(new Sprite(new Texture(texture)));
     }
@@ -62,6 +63,10 @@ public class Bullet {
     public float getSpeed(){
         return speed;
     }
+
+    public void setDamage(float dmg){this.dmg = dmg;}
+
+    public float getDamage(){return dmg;}
 
     public void setVelocity(float angle, float speed){
         velocity.set((float) Math.cos(angle) * speed, (float) Math.sin(angle) * speed);

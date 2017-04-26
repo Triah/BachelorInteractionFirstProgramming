@@ -215,7 +215,7 @@ public class PlayTowerDefenseState extends State {
         }
 
         timeSpawn += Gdx.graphics.getDeltaTime();
-        if (timeSpawn > 5) {
+        if (timeSpawn > 2) {
             cloneAndAddToList();
             timeSpawn = 0;
         }
@@ -237,26 +237,24 @@ public class PlayTowerDefenseState extends State {
         for (Bullet b : bullets) {
             for (Enemy e : wp.getEnemyArray()) {
                 if (cl.isColliding(b.getSprite().getBoundingRectangle(), e.getSprite().getBoundingRectangle())) {
-                    /**
-                     * remove from array
-                     * set null for garbagecollection
-                     * enemyPrefs.getFloat("enemyHealth")
-                     * bulletPrefs.getFloat("bulletDamage")
-                     */
-                    wp.getEnemyArray().removeValue(e, true);
-                    bullets.removeValue(b, true);
-
-                    e = null;
-                    b = null;
-
-
-                    break;
-
+                    if ((e.getHealth()-b.getDamage()) > 0) {
+                        //subtract bullet damage from enemy health
+                        e.setHealth(e.getHealth()-b.getDamage());
+                    } else {
+                        /**
+                         * remove from array
+                         * set null for garbagecollection
+                         */
+                        wp.getEnemyArray().removeValue(e, true);
+                        bullets.removeValue(b, true);
+                        e = null;
+                        b = null;
+                    }
                 }
             }
-        }
 
-        handleInput();
+            handleInput();
+        }
     }
 
 
