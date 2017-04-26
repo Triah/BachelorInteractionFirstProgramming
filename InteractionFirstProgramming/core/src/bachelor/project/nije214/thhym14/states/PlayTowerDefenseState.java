@@ -237,9 +237,9 @@ public class PlayTowerDefenseState extends State {
         for (Bullet b : bullets) {
             for (Enemy e : wp.getEnemyArray()) {
                 if (cl.isColliding(b.getSprite().getBoundingRectangle(), e.getSprite().getBoundingRectangle())) {
-                    if ((e.getHealth()-b.getDmg()) > 0) {
+                    if ((e.getHealth()-b.getDamage()) > 0) {
                         //subtract bullet damage from enemy health
-                        e.setHealth(e.getHealth()-b.getDmg());
+                        e.setHealth(e.getHealth()-b.getDamage());
                     } else {
                         /**
                          * remove from array
