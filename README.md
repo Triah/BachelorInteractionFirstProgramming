@@ -35,7 +35,7 @@ Mor, far og hund
 
 ## License
 
-TODO: Write license
+Licensed to NASA hihi xD
 ]]></content>
   <tabTrigger>readme</tabTrigger>
 </snippet>
