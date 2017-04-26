@@ -18,21 +18,9 @@ public class Waypoint {
     private ShapeRenderer sr;
     private Array<Enemy> enemies;
     private Sprite sprite;
-    private Enemy enemy;
     Array<Vector2> path;
 
-    public void drawRouteFromEnemy(){
-        getShapeRenderer().setAutoShapeType(true);
-        setShapeRendererColor(Color.CYAN);
-        getShapeRenderer().begin();
-        for(int i = 0; i<getEnemyArray().size; i++){
-            getShapeRenderer().line(new Vector2(
-                    getEnemyArray().get(i).getX() + getEnemyArray().get(i).getWidth()/2,
-                    getEnemyArray().get(i).getY() + getEnemyArray().get(i).getHeight()/2),
-                    getPath().get(getEnemyArray().get(i).getWaypoint()));
-        }
-        getShapeRenderer().end();
-    }
+
 
     public void drawRoute(){
         setShapeRendererColor(Color.WHITE);
@@ -65,9 +53,6 @@ public class Waypoint {
         getShapeRenderer().setColor(color);
     }
 
-    public Enemy getEnemy(){
-        return this.enemy;
-    }
 
     public void createSprite(Sprite sprite){
         this.sprite = sprite;
