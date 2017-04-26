@@ -51,10 +51,6 @@ public class Enemy {
         this.path = path;
     }
 
-    public void updateHealth(float health,float damage){
-        health -= damage;
-    }
-
     public void setSpeed(float speed){
         this.speed = speed;
     }

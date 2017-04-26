@@ -106,8 +106,8 @@ public class PlayTowerDefenseState extends State {
                 tower.setType(Tower.Type.FROST);
             } else if (towerPrefs.getString(towerTypePref) == "BASIC") {
                 tower.setType(Tower.Type.BASIC);
-            } else if (towerPrefs.getString(towerTypePref) == "LASER") {
-                tower.setType(Tower.Type.LASER);
+            } else if (towerPrefs.getString(towerTypePref) == "PENETRATION") {
+                tower.setType(Tower.Type.PENETRATION);
             }
             inactiveTowers.add(tower);
         }
@@ -240,7 +240,11 @@ public class PlayTowerDefenseState extends State {
                     if ((e.getHealth()-b.getDamage()) > 0) {
                         //subtract bullet damage from enemy health
                         e.setHealth(e.getHealth()-b.getDamage());
+                        System.out.println(e.getHealth());
                         bullets.removeValue(b, true);
+                        if(towers.get(0).getType() == Tower.Type.FROST){
+                            e.setSpeed(e.getSpeed()*0.8f);
+                        }
                     } else {
                         /**
                          * remove from array

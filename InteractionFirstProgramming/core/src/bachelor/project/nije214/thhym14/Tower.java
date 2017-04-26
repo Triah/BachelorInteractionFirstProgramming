@@ -25,7 +25,7 @@ public class Tower {
 
     public enum Type {
         BASIC, //standard tower
-        LASER, //laser projectiles
+        PENETRATION, //laser projectiles
         FROST //slows movement speed of enemy
     }
 
