@@ -240,6 +240,7 @@ public class PlayTowerDefenseState extends State {
                     if ((e.getHealth()-b.getDamage()) > 0) {
                         //subtract bullet damage from enemy health
                         e.setHealth(e.getHealth()-b.getDamage());
+                        bullets.removeValue(b, true);
                     } else {
                         /**
                          * remove from array
@@ -247,14 +248,13 @@ public class PlayTowerDefenseState extends State {
                          */
                         wp.getEnemyArray().removeValue(e, true);
                         bullets.removeValue(b, true);
-                        e = null;
-                        b = null;
                     }
                 }
+                e = null;
             }
-
-            handleInput();
+            b = null;
         }
+        handleInput();
     }
 
 
@@ -278,6 +278,7 @@ public class PlayTowerDefenseState extends State {
         enemy.setCenter(mapPrefs.getFloat("firstWpX"), mapPrefs.getFloat("firstWpY"));
         enemy.setSpeed(enemyPrefs.getFloat("enemySpeed"));
         enemy.setPath(this.wp.getPath());
+        enemy.setHealth(enemyPrefs.getFloat("enemyHealth"));
         enemy.setVelocity(enemy.getAngle(), enemy.getSpeed());
         enemy.getSprite().setSize(this.enemy.getSprite().getWidth(), this.enemy.getSprite().getHeight());
         wp.getEnemyArray().add(enemy);
@@ -288,6 +289,7 @@ public class PlayTowerDefenseState extends State {
     public void cloneAndAddToListBullet(Enemy ex, Tower tx) {
         Bullet b = new Bullet();
         b.createBullet(bulletPrefs.getString("bulletSprite"));
+        b.setDamage(bulletPrefs.getFloat("bulletDamage"));
         b.getSprite().setSize(100, 100);
         b.setCenter(tx.getX() + tx.getSprite().getWidth() / 2, tx.getY() + tx.getSprite().getHeight() / 2);
         b.setSpeed(bulletPrefs.getFloat("bulletSpeed"));

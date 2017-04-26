@@ -189,7 +189,7 @@ public class AssembleBullet extends AssembleObject {
             public void changed(ChangeEvent event, Actor actor) {
                 bullet.setDamage(tempValue);
                 labelOptions(damageLabel, tempString);
-                bulletPrefs.putFloat(bulletDamagePref, bullet.getSpeed());
+                bulletPrefs.putFloat(bulletDamagePref, bullet.getDamage());
             }
         });
         textButtons.add(textButton);
