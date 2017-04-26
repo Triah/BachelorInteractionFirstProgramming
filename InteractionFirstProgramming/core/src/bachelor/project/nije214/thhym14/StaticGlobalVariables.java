@@ -17,6 +17,7 @@ public class StaticGlobalVariables {
     public static final String towerFireRatePref = "towerFireRate";
     public static final String towerHealthPref = "towerHealth";
     public static final String towerTypePref = "towerType";
+    public static final String bulletDamagePref = "bulletDamage";
 
 
 }

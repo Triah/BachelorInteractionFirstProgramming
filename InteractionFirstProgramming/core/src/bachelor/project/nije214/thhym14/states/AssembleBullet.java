@@ -29,6 +29,7 @@ import bachelor.project.nije214.thhym14.GestureController;
 
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletDamagePref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletSpeedPref;
 
 /**
@@ -39,7 +40,7 @@ public class AssembleBullet extends AssembleObject {
 
     private Bullet bullet;
     private Label speedLabel;
-    private Label healthLabel;
+    private Label damageLabel;
     private GestureController gc;
     private Array<Texture> avaliableTextures;
     private Vector3 touchPoint;
@@ -50,8 +51,8 @@ public class AssembleBullet extends AssembleObject {
         bullet = new Bullet();
         speedLabel = new Label("",skin);
         speedLabel.setFontScale(2.5f);
-        healthLabel = new Label("", skin);
-        healthLabel.setFontScale(2.5f);
+        damageLabel = new Label("", skin);
+        damageLabel.setFontScale(2.5f);
         createButtons();
         i = 0;
         avaliableTextures = new Array<Texture>();
@@ -155,6 +156,9 @@ public class AssembleBullet extends AssembleObject {
         setBulletSpeedButtons("Low Speed",250);
         setBulletSpeedButtons("Medium Speed",500);
         setBulletSpeedButtons("High Speed",1000);
+        setBulletDamageButtons("Low Damage", 1);
+        setBulletDamageButtons("Medium Damage",3);
+        setBulletDamageButtons("High Damage",7);
     }
 
     public void setBulletSpeedButtons(String text, float value) {
@@ -168,7 +172,24 @@ public class AssembleBullet extends AssembleObject {
             public void changed(ChangeEvent event, Actor actor) {
                 bullet.setSpeed(tempValue);
                 labelOptions(speedLabel, tempString);
-                towerPrefs.putFloat(bulletSpeedPref, bullet.getSpeed());
+                bulletPrefs.putFloat(bulletSpeedPref, bullet.getSpeed());
+            }
+        });
+        textButtons.add(textButton);
+    }
+
+    public void setBulletDamageButtons(String text, float value) {
+        TextButton textButton = new TextButton(text, skin);
+        textButton.setHeight(HEIGHT * 0.1f);
+        textButton.getLabel().setFontScale(2.5f);
+        final float tempValue = value;
+        final String tempString = text;
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                bullet.setDamage(tempValue);
+                labelOptions(damageLabel, tempString);
+                bulletPrefs.putFloat(bulletDamagePref, bullet.getSpeed());
             }
         });
         textButtons.add(textButton);

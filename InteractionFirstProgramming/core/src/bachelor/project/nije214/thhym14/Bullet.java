@@ -19,7 +19,8 @@ public class Bullet {
     private Vector2 velocity = new Vector2();
     private float speed;
     private Sprite sprite;
-    private float dmg;
+    private float damage;
+
 
     public void createBullet(String texture){
     createSprite(new Sprite(new Texture(texture)));
@@ -30,6 +31,14 @@ public class Bullet {
     }
 
     public Sprite getSprite(){return sprite;}
+
+    public void setDamage(float damage){
+        this.damage = damage;
+    }
+
+    public float getDamage(){
+        return damage;
+    }
 
     public void setCenter(float x, float y){getSprite().setCenter(x,y);}
 
