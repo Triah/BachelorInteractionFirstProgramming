@@ -59,6 +59,7 @@ public class PlayTowerDefenseState extends State {
     private Vector3 touchPoint;
     private ArrayList<Tower> inactiveTowers;
     private Collision cl;
+    private float lives;
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
@@ -89,6 +90,7 @@ public class PlayTowerDefenseState extends State {
         ray = new Raycast();
         sr = new ShapeRenderer();
         cl = new Collision();
+        lives = 10;
     }
 
     public void createTower() {
@@ -177,6 +179,22 @@ public class PlayTowerDefenseState extends State {
 
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
                 wp.getEnemyArray().removeValue(enemy, false);
+                lives--;
+                if(lives == 0){
+                    Thread t = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Gdx.app.postRunnable(new Runnable() {
+                                @Override
+                                public void run() {
+                                    gsm.set(new GameOverState(gsm));
+                                }
+                            });
+                        }
+                    });
+                    t.start();
+                }
+
             }
             if (enemy.isWaypointReached() && !(enemy.getWaypoint() == wp.getPath().size - 1)) {
                 enemy.incrementWaypoint();
@@ -240,7 +258,6 @@ public class PlayTowerDefenseState extends State {
                     if ((e.getHealth()-b.getDamage()) > 0) {
                         //subtract bullet damage from enemy health
                         e.setHealth(e.getHealth()-b.getDamage());
-                        System.out.println(e.getHealth());
                         bullets.removeValue(b, true);
                         if(towers.get(0).getType() == Tower.Type.FROST){
                             e.setSpeed(e.getSpeed()*0.8f);

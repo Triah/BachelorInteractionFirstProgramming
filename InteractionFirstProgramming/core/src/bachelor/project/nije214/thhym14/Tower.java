@@ -69,7 +69,6 @@ public class Tower {
         getSprite().setCenter(x,y);
     }
 
-
     public void createTower(String texture){
         createSprite(new Sprite(new Texture(texture)));
     }
@@ -97,9 +96,6 @@ public class Tower {
     public float getX(){
         return sprite.getX();
     }
-
-
-
 
     public void dispose(){
         this.dispose();
