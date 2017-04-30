@@ -210,7 +210,6 @@ public class PlayTowerDefenseState extends State {
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
                 wp.getEnemyArray().removeValue(enemy, false);
                 lives--;
-                System.out.println(score);
                 livesLabel.setText("Lives remaining: " + lives);
                 if(lives == 0){
                     Thread t = new Thread(new Runnable() {
@@ -302,8 +301,6 @@ public class PlayTowerDefenseState extends State {
                          */
                         wp.getEnemyArray().removeValue(e, true);
                         bullets.removeValue(b, true);
-                        System.out.println(bulletPrefs.getFloat(bulletDamagePref));
-                        System.out.println(bulletPrefs.getFloat(bulletSpeedPref));
                         score = calculateScore();
                         scoreLabel.setText("Score: " + score);
                     }

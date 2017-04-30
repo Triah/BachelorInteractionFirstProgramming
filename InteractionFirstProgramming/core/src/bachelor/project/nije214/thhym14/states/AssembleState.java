@@ -22,6 +22,13 @@ import java.util.LinkedList;
 
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletDamagePref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletSpeedPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemyHealthPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemySpeedPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerFireRatePref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerRangePref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerTypePref;
 
 /**
  * Created by Nicolai on 06-04-2017.
@@ -34,12 +41,17 @@ public class AssembleState extends State {
     private LinkedList<TextButton> textButtons;
     private Label label;
     private Texture background;
+    private Preferences enemyPrefs, bulletPrefs, towerPrefs, mapPrefs;
 
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
+        towerPrefs = Gdx.app.getPreferences("towerPrefs");
+        bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
+        mapPrefs = Gdx.app.getPreferences("mapPrefs");
         background = new Texture("airadventurelevel2.png");
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
@@ -160,19 +172,29 @@ public class AssembleState extends State {
                 textButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        dispose();
-                        Thread t = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Gdx.app.postRunnable(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        gsm.set(new PlayTowerDefenseState(gsm));
-                                    }
-                                });
-                            }
-                        });
-                        t.start();
+                        //avoid nullpointer if it is the first run ever
+                        if (enemyPrefs.getFloat(enemyHealthPref) != 0 &&
+                                enemyPrefs.getFloat(enemySpeedPref) != 0 &&
+                                bulletPrefs.getFloat(bulletDamagePref) != 0 &&
+                                bulletPrefs.getFloat(bulletSpeedPref) != 0 &&
+                                towerPrefs.getFloat(towerFireRatePref) != 0 &&
+                                towerPrefs.getFloat(towerRangePref) != 0 &&
+                                towerPrefs.getString(towerTypePref) != null &&
+                                mapPrefs.getFloat("firstWpX") != 0) {
+                            dispose();
+                            Thread t = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Gdx.app.postRunnable(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            gsm.set(new PlayTowerDefenseState(gsm));
+                                        }
+                                    });
+                                }
+                            });
+                            t.start();
+                        }
                     }
                 });
             }
