@@ -147,9 +147,6 @@ public class AssembleTower extends AssembleObject {
         setTowerFireRateButtons("Slow Fire Rate",1);
         setTowerFireRateButtons("Medium Fire Rate",4);
         setTowerFireRateButtons("High Fire Rate",8);
-        setTowerHealthButtons("Low Health",1);
-        setTowerHealthButtons("Medium Health",5);
-        setTowerHealthButtons("High Health",10);
         setTowerRangeButtons("Short Range",200);
         setTowerRangeButtons("Medium Range",300);
         setTowerRangeButtons("Long Range",450);
@@ -181,7 +178,6 @@ public class AssembleTower extends AssembleObject {
         }
     }
 
-
     public void setTowerFireRateButtons(String text, float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
@@ -194,23 +190,6 @@ public class AssembleTower extends AssembleObject {
                 tower.setfireRate(tempValue);
                 labelOptions(fireRateLabel, tempString);
                 towerPrefs.putFloat(towerFireRatePref, tower.getFireRate());
-            }
-        });
-        textButtons.add(textButton);
-    }
-
-    public void setTowerHealthButtons(String text, float value) {
-        TextButton textButton = new TextButton(text, skin);
-        textButton.setHeight(HEIGHT * 0.1f);
-        textButton.getLabel().setFontScale(2.5f);
-        final float tempValue = value;
-        final String tempString = text;
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                tower.setHP(tempValue);
-                labelOptions(healthLabel, tempString);
-                towerPrefs.putFloat(towerHealthPref, tower.getHP());
             }
         });
         textButtons.add(textButton);

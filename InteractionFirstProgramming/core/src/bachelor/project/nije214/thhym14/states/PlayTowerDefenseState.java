@@ -17,6 +17,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import bachelor.project.nije214.thhym14.Bullet;
@@ -33,6 +37,12 @@ import bachelor.project.nije214.thhym14.Waypoint;
 
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletDamagePref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletSpeedPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemyHealthPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemySpeedPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerFireRatePref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerRangePref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerTypePref;
 
 /**
@@ -59,12 +69,18 @@ public class PlayTowerDefenseState extends State {
     private Vector3 touchPoint;
     private ArrayList<Tower> inactiveTowers;
     private Collision cl;
-    private float lives;
+    private int lives;
+    private Label livesLabel;
+    private Stage stage;
+    private Label scoreLabel;
+    private Skin skin;
+    private int score;
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        setUpStage();
         touchPoint = new Vector3();
         music = Gdx.audio.newMusic(Gdx.files.internal("music/defensemusic.ogg"));
         music.setVolume(0.5f);
@@ -90,7 +106,21 @@ public class PlayTowerDefenseState extends State {
         ray = new Raycast();
         sr = new ShapeRenderer();
         cl = new Collision();
+    }
+
+    public void setUpStage(){
         lives = 10;
+        score = 0;
+        stage = new Stage();
+        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        livesLabel = new Label("Lives remaining: " + lives, skin);
+        livesLabel.setFontScale(2.5f);
+        livesLabel.setPosition(WIDTH * 0.65f,HEIGHT *0.95f, Align.center);
+        scoreLabel = new Label("Score: " + score, skin);
+        scoreLabel.setFontScale(2.5f);
+        scoreLabel.setPosition(WIDTH * 0.15f, HEIGHT*0.95f, Align.center);
+        stage.addActor(livesLabel);
+        stage.addActor(scoreLabel);
     }
 
     public void createTower() {
@@ -180,6 +210,8 @@ public class PlayTowerDefenseState extends State {
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
                 wp.getEnemyArray().removeValue(enemy, false);
                 lives--;
+                System.out.println(score);
+                livesLabel.setText("Lives remaining: " + lives);
                 if(lives == 0){
                     Thread t = new Thread(new Runnable() {
                         @Override
@@ -193,6 +225,7 @@ public class PlayTowerDefenseState extends State {
                         }
                     });
                     t.start();
+                    music.stop();
                 }
 
             }
@@ -269,6 +302,10 @@ public class PlayTowerDefenseState extends State {
                          */
                         wp.getEnemyArray().removeValue(e, true);
                         bullets.removeValue(b, true);
+                        System.out.println(bulletPrefs.getFloat(bulletDamagePref));
+                        System.out.println(bulletPrefs.getFloat(bulletSpeedPref));
+                        score = calculateScore();
+                        scoreLabel.setText("Score: " + score);
                     }
                 }
                 e = null;
@@ -276,6 +313,53 @@ public class PlayTowerDefenseState extends State {
             b = null;
         }
         handleInput();
+    }
+
+    public int calculateScore(){
+        if(enemyPrefs.getFloat(enemyHealthPref)>=3 && enemyPrefs.getFloat(enemyHealthPref)<=7){
+            score += 3;
+        } else if(enemyPrefs.getFloat(enemyHealthPref)<=2){
+            score += 1;
+        } else if(enemyPrefs.getFloat(enemyHealthPref)>8){
+            score += 5;
+        }
+        if(enemyPrefs.getFloat(enemySpeedPref) <= 150){
+            score += 1;
+        } else if(enemyPrefs.getFloat(enemySpeedPref) > 150 && enemyPrefs.getFloat(enemySpeedPref) <=300){
+            score += 3;
+        } else if(enemyPrefs.getFloat(enemySpeedPref) > 300){
+            score += 5;
+        }
+        if(towerPrefs.getFloat(towerRangePref)>=400){
+            score += 1;
+        } else if(towerPrefs.getFloat(towerRangePref) >=250 && towerPrefs.getFloat(towerRangePref) < 400){
+            score +=3;
+        } else if(towerPrefs.getFloat(towerRangePref) < 250){
+            score += 5;
+        }
+        if(towerPrefs.getFloat(towerFireRatePref) == 1){
+            score +=5;
+        } else if(towerPrefs.getFloat(towerFireRatePref) > 1 && towerPrefs.getFloat(towerFireRatePref) < 5){
+            score +=3;
+        } else if(towerPrefs.getFloat(towerFireRatePref) >= 5){
+            score +=1;
+        }
+        if(bulletPrefs.getFloat(bulletDamagePref) == 1){
+            score += 5;
+        } else if(bulletPrefs.getFloat(bulletDamagePref) > 1 && bulletPrefs.getFloat(bulletDamagePref) <=5){
+            score += 3;
+        } else if(bulletPrefs.getFloat(bulletDamagePref) > 5){
+            score +=1;
+        }
+        if(bulletPrefs.getFloat(bulletSpeedPref) < 300){
+            score += 5;
+        } else if(bulletPrefs.getFloat(bulletSpeedPref) >= 300 && bulletPrefs.getFloat(bulletSpeedPref) <= 800){
+            score +=3;
+        } else if(bulletPrefs.getFloat(bulletSpeedPref) > 800){
+            score += 1;
+        }
+
+        return score;
     }
 
 
@@ -291,6 +375,7 @@ public class PlayTowerDefenseState extends State {
         wp.drawRoute();
         wp.drawWayPoints();
         circleshape();
+        stage.draw();
     }
 
     public void cloneAndAddToList() {
@@ -365,6 +450,9 @@ public class PlayTowerDefenseState extends State {
                 return false;
             }
         };
-        Gdx.input.setInputProcessor(adapter);
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(adapter);
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 }
