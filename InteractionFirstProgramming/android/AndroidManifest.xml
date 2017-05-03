@@ -16,17 +16,11 @@
             android:label="InteractionFirstProgramming"
             android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
-        </activity>
-        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AssembleObjects"/>
-        <activity android:name=".Options"/>
-        <activity android:name=".ImageGallery"/>
-
     </application>
 
 </manifest>
