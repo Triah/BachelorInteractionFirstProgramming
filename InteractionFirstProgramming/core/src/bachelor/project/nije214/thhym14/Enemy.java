@@ -22,6 +22,13 @@ public class Enemy {
     private Array<Vector2> path;
     private int waypoint = 0;
     private float health;
+    private boolean isHit;
+    private float pushTimer;
+
+
+    public boolean isHit(){return this.isHit;}
+
+    public void setHit(boolean isHit){this.isHit = isHit;}
 
     public void createEnemy(String texture){
         createSprite(new Sprite(new Texture(texture)));
@@ -83,6 +90,12 @@ public class Enemy {
         return sprite.getX();
     }
 
+    public void setTimer(float pushTimer){this.pushTimer = pushTimer;}
+
+    public float getTimer(){
+        return pushTimer;
+    }
+
     public float getAngle(){
         return (float) Math.atan2(path.get(waypoint).y - getY() - (sprite.getHeight()/2), path.get(waypoint).x - getX() - (sprite.getWidth()/2));
     }
@@ -96,7 +109,7 @@ public class Enemy {
     }
 
     public void setSpritePosition(float x, float velX, float y, float velY){
-        getSprite().setPosition(x + velX * Gdx.graphics.getDeltaTime(), y + velY * Gdx.graphics.getDeltaTime());
+        getSprite().setPosition(x + velX * Gdx.graphics.getDeltaTime(), y+ + velY * Gdx.graphics.getDeltaTime());
     }
 
     public void setSpriteRotation(float angle){
@@ -113,6 +126,19 @@ public class Enemy {
                 Math.abs(path.get(waypoint).y - getY()-getSprite().getWidth()/2) <=
                         getSpeed() * Gdx.graphics.getDeltaTime();
     }
+
+
+//
+    public void setVelocityHax(float angle, float speed){
+        velocity.set((float) Math.cos(angle+1) * speed, (float) Math.sin(angle+1) * speed);
+    }
+
+    public void pushBackEnemy(float x, float velX, float y, float velY){
+        getSprite().setPosition(x + (velX) * Gdx.graphics.getDeltaTime(), y + (velY) * Gdx.graphics.getDeltaTime());
+    }
+
+//
+
 
     public int getWaypoint() {
         return waypoint;

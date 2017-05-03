@@ -25,7 +25,7 @@ public class Raycast {
     TODO: 14-04-2017  der er lige pt. 2 forskellige 'raycast' 1 legit og 1 hack. Test hvad der virker bedst/er nødvendigt
 
     */
-    public boolean rangeCheckHack(Enemy enemy, Tower tower, int sightRadius) {
+    public boolean simpleRangeCheck(Enemy enemy, Tower tower, int sightRadius) {
         Vector2 enemyvec = new Vector2(enemy.getX(), enemy.getY());
         Vector2 towervec = new Vector2(tower.getX(), tower.getY());
         return enemyvec.dst(towervec)< sightRadius ;

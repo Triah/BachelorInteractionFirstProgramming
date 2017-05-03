@@ -20,7 +20,18 @@ public class Bullet {
     private float speed;
     private Sprite sprite;
     private float damage;
+    private BulletType bulletType;
 
+
+
+    public enum BulletType {
+        BASIC, //standard tower
+        PUSHBACK, //laser projectiles
+    }
+
+    public void setType(Bullet.BulletType bt){ this.bulletType = bt;}
+
+    public Bullet.BulletType getType(){return bulletType;}
 
     public void createBullet(String texture){
     createSprite(new Sprite(new Texture(texture)));
@@ -63,6 +74,7 @@ public class Bullet {
     public float getSpeed(){
         return speed;
     }
+
 
     public void setVelocity(float angle, float speed){
         velocity.set((float) Math.cos(angle) * speed, (float) Math.sin(angle) * speed);

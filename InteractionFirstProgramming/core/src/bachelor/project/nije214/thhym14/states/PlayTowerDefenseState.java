@@ -108,17 +108,17 @@ public class PlayTowerDefenseState extends State {
         cl = new Collision();
     }
 
-    public void setUpStage(){
+    public void setUpStage() {
         lives = 10;
         score = 0;
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         livesLabel = new Label("Lives remaining: " + lives, skin);
         livesLabel.setFontScale(2.5f);
-        livesLabel.setPosition(WIDTH * 0.65f,HEIGHT *0.95f, Align.center);
+        livesLabel.setPosition(WIDTH * 0.65f, HEIGHT * 0.95f, Align.center);
         scoreLabel = new Label("Score: " + score, skin);
         scoreLabel.setFontScale(2.5f);
-        scoreLabel.setPosition(WIDTH * 0.15f, HEIGHT*0.95f, Align.center);
+        scoreLabel.setPosition(WIDTH * 0.15f, HEIGHT * 0.95f, Align.center);
         stage.addActor(livesLabel);
         stage.addActor(scoreLabel);
     }
@@ -156,7 +156,6 @@ public class PlayTowerDefenseState extends State {
                         towers.remove(t);
                         t.getSprite().setTexture(new Texture("stone.png"));
                         t.setActive(false);
-
                     } else {
                         if (!towers.contains(t) && towers.size() <= 2) {
                             towers.add(t);
@@ -195,7 +194,6 @@ public class PlayTowerDefenseState extends State {
         wp.addEnemyToPath(this.enemy);
         enemy.getSprite().setSize(100, 100);
         enemy.getSprite().setOriginCenter();
-
     }
 
     public void processEnemy() {
@@ -211,7 +209,7 @@ public class PlayTowerDefenseState extends State {
                 wp.getEnemyArray().removeValue(enemy, false);
                 lives--;
                 livesLabel.setText("Lives remaining: " + lives);
-                if(lives == 0){
+                if (lives == 0) {
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -264,6 +262,14 @@ public class PlayTowerDefenseState extends State {
             t.setTimer(timer);
         }
 
+        for (Enemy e : wp.getEnemyArray()) {
+            if (e.isHit()) {
+                float eTimer = e.getTimer();
+                eTimer += Gdx.graphics.getDeltaTime();
+                e.setTimer(eTimer);
+            }
+        }
+
         timeSpawn += Gdx.graphics.getDeltaTime();
         if (timeSpawn > 2) {
             cloneAndAddToList();
@@ -272,7 +278,8 @@ public class PlayTowerDefenseState extends State {
         if (!towers.isEmpty()) {
             for (Tower t : towers) {
                 for (Enemy e : wp.getEnemyArray()) {
-                    if (ray.isPlayerInSight(e, t, (int) towerPrefs.getFloat("towerRange"))) {
+                    //  if (ray.isPlayerInSight(e, t, (int) towerPrefs.getFloat("towerRange"))) {
+                    if (ray.simpleRangeCheck(e, t, (int) towerPrefs.getFloat("towerRange"))) {
                         if (t.getTimer() > 5 / towerPrefs.getFloat("towerFireRate")) {
                             cloneAndAddToListBullet(e, t);
                             t.setTimer(0);
@@ -284,16 +291,30 @@ public class PlayTowerDefenseState extends State {
             }
         }
 
+
         for (Bullet b : bullets) {
             for (Enemy e : wp.getEnemyArray()) {
-                if (cl.isColliding(b.getSprite().getBoundingRectangle(), e.getSprite().getBoundingRectangle())) {
-                    if ((e.getHealth()-b.getDamage()) > 0) {
-                        //subtract bullet damage from enemy health
-                        e.setHealth(e.getHealth()-b.getDamage());
-                        bullets.removeValue(b, true);
-                        if(towers.get(0).getType() == Tower.Type.FROST){
-                            e.setSpeed(e.getSpeed()*0.8f);
+                    if (e.isHit()) {
+                        e.pushBackEnemy(e.getX(), bullet.getVelocity().x, e.getY(), b.getVelocity().y);
+                        if (e.getTimer() > 0.5) {
+                            e.setTimer(0);
+                            e.setHit(false);
+                            bullets.removeValue(b, true);
                         }
+
+                    }
+                if (cl.isColliding(b.getSprite().getBoundingRectangle(), e.getSprite().getBoundingRectangle())) {
+                    if ((e.getHealth() - b.getDamage()) > 0) {
+                        //subtract bullet damage from enemy health
+                        if (b.getType() == Bullet.BulletType.PUSHBACK && !e.isHit()) {
+                            e.setHit(true);
+                        }
+                        if (towers.get(0).getType() == Tower.Type.FROST) {
+                            e.setSpeed(e.getSpeed() * 0.8f);
+                        }
+                        e.setHealth(e.getHealth() - b.getDamage());
+                        b.getSprite().setSize(0,0);
+
                     } else {
                         /**
                          * remove from array
@@ -312,47 +333,47 @@ public class PlayTowerDefenseState extends State {
         handleInput();
     }
 
-    public int calculateScore(){
-        if(enemyPrefs.getFloat(enemyHealthPref)>=3 && enemyPrefs.getFloat(enemyHealthPref)<=7){
+    public int calculateScore() {
+        if (enemyPrefs.getFloat(enemyHealthPref) >= 3 && enemyPrefs.getFloat(enemyHealthPref) <= 7) {
             score += 3;
-        } else if(enemyPrefs.getFloat(enemyHealthPref)<=2){
+        } else if (enemyPrefs.getFloat(enemyHealthPref) <= 2) {
             score += 1;
-        } else if(enemyPrefs.getFloat(enemyHealthPref)>8){
+        } else if (enemyPrefs.getFloat(enemyHealthPref) > 8) {
             score += 5;
         }
-        if(enemyPrefs.getFloat(enemySpeedPref) <= 150){
+        if (enemyPrefs.getFloat(enemySpeedPref) <= 150) {
             score += 1;
-        } else if(enemyPrefs.getFloat(enemySpeedPref) > 150 && enemyPrefs.getFloat(enemySpeedPref) <=300){
+        } else if (enemyPrefs.getFloat(enemySpeedPref) > 150 && enemyPrefs.getFloat(enemySpeedPref) <= 300) {
             score += 3;
-        } else if(enemyPrefs.getFloat(enemySpeedPref) > 300){
+        } else if (enemyPrefs.getFloat(enemySpeedPref) > 300) {
             score += 5;
         }
-        if(towerPrefs.getFloat(towerRangePref)>=400){
+        if (towerPrefs.getFloat(towerRangePref) >= 400) {
             score += 1;
-        } else if(towerPrefs.getFloat(towerRangePref) >=250 && towerPrefs.getFloat(towerRangePref) < 400){
-            score +=3;
-        } else if(towerPrefs.getFloat(towerRangePref) < 250){
-            score += 5;
-        }
-        if(towerPrefs.getFloat(towerFireRatePref) == 1){
-            score +=5;
-        } else if(towerPrefs.getFloat(towerFireRatePref) > 1 && towerPrefs.getFloat(towerFireRatePref) < 5){
-            score +=3;
-        } else if(towerPrefs.getFloat(towerFireRatePref) >= 5){
-            score +=1;
-        }
-        if(bulletPrefs.getFloat(bulletDamagePref) == 1){
-            score += 5;
-        } else if(bulletPrefs.getFloat(bulletDamagePref) > 1 && bulletPrefs.getFloat(bulletDamagePref) <=5){
+        } else if (towerPrefs.getFloat(towerRangePref) >= 250 && towerPrefs.getFloat(towerRangePref) < 400) {
             score += 3;
-        } else if(bulletPrefs.getFloat(bulletDamagePref) > 5){
-            score +=1;
-        }
-        if(bulletPrefs.getFloat(bulletSpeedPref) < 300){
+        } else if (towerPrefs.getFloat(towerRangePref) < 250) {
             score += 5;
-        } else if(bulletPrefs.getFloat(bulletSpeedPref) >= 300 && bulletPrefs.getFloat(bulletSpeedPref) <= 800){
-            score +=3;
-        } else if(bulletPrefs.getFloat(bulletSpeedPref) > 800){
+        }
+        if (towerPrefs.getFloat(towerFireRatePref) == 1) {
+            score += 5;
+        } else if (towerPrefs.getFloat(towerFireRatePref) > 1 && towerPrefs.getFloat(towerFireRatePref) < 5) {
+            score += 3;
+        } else if (towerPrefs.getFloat(towerFireRatePref) >= 5) {
+            score += 1;
+        }
+        if (bulletPrefs.getFloat(bulletDamagePref) == 1) {
+            score += 5;
+        } else if (bulletPrefs.getFloat(bulletDamagePref) > 1 && bulletPrefs.getFloat(bulletDamagePref) <= 5) {
+            score += 3;
+        } else if (bulletPrefs.getFloat(bulletDamagePref) > 5) {
+            score += 1;
+        }
+        if (bulletPrefs.getFloat(bulletSpeedPref) < 300) {
+            score += 5;
+        } else if (bulletPrefs.getFloat(bulletSpeedPref) >= 300 && bulletPrefs.getFloat(bulletSpeedPref) <= 800) {
+            score += 3;
+        } else if (bulletPrefs.getFloat(bulletSpeedPref) > 800) {
             score += 1;
         }
 
@@ -399,6 +420,7 @@ public class PlayTowerDefenseState extends State {
         b.setVelocity(b.getTowerToEnemyAngle(ex, tx), b.getSpeed());
         b.getSprite().rotate((180 / (float) Math.PI * (float) Math.atan2(ex.getY() - tx.getY(), ex.getX() - tx.getX())) + 90);
         b.getSprite().setOriginCenter();
+        b.setType(Bullet.BulletType.PUSHBACK);
         bullets.add(b);
     }
 
