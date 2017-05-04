@@ -33,6 +33,7 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemyHealthPref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemySpeedPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemyTypePref;
 
 /**
  * Created by Nicolai on 12-04-2017.
@@ -47,12 +48,15 @@ public class AssembleEnemy extends AssembleObject {
     private GestureController gc;
     private Vector3 touchPoint;
     private int i;
+    private Label typeLabel;
 
     public AssembleEnemy(GameStateManager gsm) {
         super(gsm);
         enemy = new Enemy();
         speedLabel = new Label("",skin);
         speedLabel.setFontScale(2.5f);
+        typeLabel = new Label("",skin);
+        typeLabel.setFontScale(2.5f);
         healthLabel = new Label("", skin);
         healthLabel.setFontScale(2.5f);
         touchPoint = new Vector3();
@@ -89,7 +93,8 @@ public class AssembleEnemy extends AssembleObject {
         setEnemyHealthButtons("Low Health",1);
         setEnemyHealthButtons("Medium Health",5);
         setEnemyHealthButtons("High Health",10);
-
+        setEnemyTypeButtons("Basic type", "BASIC");
+        setEnemyTypeButtons("Silly type", "SILLY");
     }
 
     public void saveTexture(){
@@ -168,6 +173,23 @@ public class AssembleEnemy extends AssembleObject {
                 enemy.setSpeed(tempValue);
                 labelOptions(speedLabel, tempString);
                 enemyPrefs.putFloat(enemySpeedPref, enemy.getSpeed());
+            }
+        });
+        textButtons.add(textButton);
+    }
+
+    public void setEnemyTypeButtons(String text, String value) {
+        TextButton textButton = new TextButton(text, skin);
+        textButton.setHeight(HEIGHT * 0.1f);
+        textButton.getLabel().setFontScale(2.5f);
+        final String tempValue = value;
+        final String tempString = text;
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //will be assigned a type in play mode based on the preference
+                labelOptions(typeLabel, tempString);
+                enemyPrefs.putString(enemyTypePref, tempValue);
             }
         });
         textButtons.add(textButton);

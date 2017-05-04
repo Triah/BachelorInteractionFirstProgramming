@@ -21,10 +21,24 @@ public class Enemy {
     private Sprite sprite;
     private Array<Vector2> path;
     private int waypoint = 0;
+    private Type type;
     private float health;
     private boolean isHit;
     private float pushTimer;
 
+
+    public enum Type {
+        BASIC, //standard tower
+        SILLY //
+    }
+
+    public void setType(Type type){
+        this.type = type;
+    }
+
+    public Type getType(){
+        return this.type;
+    }
 
     public boolean isHit(){return this.isHit;}
 
@@ -129,12 +143,12 @@ public class Enemy {
 
 
 //
-    public void setVelocityHax(float angle, float speed){
+    public void setVelocitySilly(float angle, float speed){
         velocity.set((float) Math.cos(angle+1) * speed, (float) Math.sin(angle+1) * speed);
     }
 
     public void pushBackEnemy(float x, float velX, float y, float velY){
-        getSprite().setPosition(x + (velX) * Gdx.graphics.getDeltaTime(), y + (velY) * Gdx.graphics.getDeltaTime());
+            getSprite().setPosition(x + (velX) * Gdx.graphics.getDeltaTime(), y + (velY) * Gdx.graphics.getDeltaTime());
     }
 
 //

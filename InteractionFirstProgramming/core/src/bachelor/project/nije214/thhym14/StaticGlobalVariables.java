@@ -12,7 +12,9 @@ public class StaticGlobalVariables {
     public static final float WIDTH = Gdx.app.getGraphics().getWidth();
     public static final String enemySpeedPref = "enemySpeed";
     public static final String enemyHealthPref = "enemyHealth";
+    public static final String enemyTypePref = "enemyType";
     public static final String bulletSpeedPref = "bulletSpeed";
+    public static final String bulletTypePref = "bulletType";
     public static final String towerRangePref = "towerRange";
     public static final String towerFireRatePref = "towerFireRate";
     public static final String towerHealthPref = "towerHealth";

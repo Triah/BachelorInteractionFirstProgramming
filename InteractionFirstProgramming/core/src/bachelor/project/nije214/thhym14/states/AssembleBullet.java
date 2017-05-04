@@ -31,6 +31,7 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletDamagePref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletSpeedPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletTypePref;
 
 /**
  * Created by Nicolai on 12-04-2017.
@@ -41,6 +42,7 @@ public class AssembleBullet extends AssembleObject {
     private Bullet bullet;
     private Label speedLabel;
     private Label damageLabel;
+    private Label typeLabel;
     private GestureController gc;
     private Array<Texture> avaliableTextures;
     private Vector3 touchPoint;
@@ -53,6 +55,8 @@ public class AssembleBullet extends AssembleObject {
         speedLabel.setFontScale(2.5f);
         damageLabel = new Label("", skin);
         damageLabel.setFontScale(2.5f);
+        typeLabel = new Label("", skin);
+        typeLabel.setFontScale(2.5f);
         createButtons();
         i = 0;
         avaliableTextures = new Array<Texture>();
@@ -159,6 +163,8 @@ public class AssembleBullet extends AssembleObject {
         setBulletDamageButtons("Low Damage", 1);
         setBulletDamageButtons("Medium Damage",3);
         setBulletDamageButtons("High Damage",7);
+        setBulletTypeButtons("Basic type", "BASIC");
+        setBulletTypeButtons("Pushing type", "PUSHBACK");
     }
 
     public void setBulletSpeedButtons(String text, float value) {
@@ -173,6 +179,23 @@ public class AssembleBullet extends AssembleObject {
                 bullet.setSpeed(tempValue);
                 labelOptions(speedLabel, tempString);
                 bulletPrefs.putFloat(bulletSpeedPref, bullet.getSpeed());
+            }
+        });
+        textButtons.add(textButton);
+    }
+
+    public void setBulletTypeButtons(String text, String value) {
+        TextButton textButton = new TextButton(text, skin);
+        textButton.setHeight(HEIGHT * 0.1f);
+        textButton.getLabel().setFontScale(2.5f);
+        final String tempValue = value;
+        final String tempString = text;
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //will be assigned a type in play mode based on the preference
+                labelOptions(typeLabel, tempString);
+                bulletPrefs.putString(bulletTypePref, tempValue);
             }
         });
         textButtons.add(textButton);

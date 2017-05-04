@@ -25,8 +25,8 @@ public class Bullet {
 
 
     public enum BulletType {
-        BASIC, //standard tower
-        PUSHBACK, //laser projectiles
+        BASIC,
+        PUSHBACK,
     }
 
     public void setType(Bullet.BulletType bt){ this.bulletType = bt;}
