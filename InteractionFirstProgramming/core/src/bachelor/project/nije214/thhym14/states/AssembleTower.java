@@ -152,7 +152,6 @@ public class AssembleTower extends AssembleObject {
         setTowerRangeButtons("Long Range",450);
         setTowerTypeButtons("Frost Type","FROST");
         setTowerTypeButtons("Basic Type", "BASIC");
-        setTowerTypeButtons("Penetration Type", "PENETRATION");
     }
     public void setTowerRangeButtons(String text, float value) {
         TextButton textButton = new TextButton(text, skin);
