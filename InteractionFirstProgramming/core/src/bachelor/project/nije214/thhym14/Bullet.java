@@ -21,6 +21,7 @@ public class Bullet {
     private Sprite sprite;
     private float damage;
     private BulletType bulletType;
+    private boolean isHit;
 
 
 
@@ -28,6 +29,10 @@ public class Bullet {
         BASIC,
         PUSHBACK,
     }
+
+    public boolean isHit(){return this.isHit;}
+
+    public void setHit(boolean isHit){this.isHit = isHit;}
 
     public void setType(Bullet.BulletType bt){ this.bulletType = bt;}
 
