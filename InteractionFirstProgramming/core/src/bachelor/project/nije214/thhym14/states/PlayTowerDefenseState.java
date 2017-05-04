@@ -323,8 +323,13 @@ public class PlayTowerDefenseState extends State {
                 if (cl.isColliding(b.getSprite().getBoundingRectangle(), e.getSprite().getBoundingRectangle())) {
                     if ((e.getHealth() - b.getDamage()) > 0) {
                         //subtract bullet damage from enemy health
-                        if(!e.isHit()) {
+                        if(!e.isHit() && !b.isHit()) {
+                            System.out.println("REEE");
                             e.setHealth(e.getHealth() - b.getDamage());
+                            b.setHit(true);
+                        }
+                        if(b.isHit()){
+                            b.setDamage(0);
                         }
                         if (b.getType() == Bullet.BulletType.PUSHBACK && !e.isHit()) {
                             e.setHit(true);
@@ -441,6 +446,7 @@ public class PlayTowerDefenseState extends State {
         b.setVelocity(b.getTowerToEnemyAngle(ex, tx), b.getSpeed());
         b.getSprite().rotate((180 / (float) Math.PI * (float) Math.atan2(ex.getY() - tx.getY(), ex.getX() - tx.getX())) + 90);
         b.getSprite().setOriginCenter();
+        b.setHit(false);
         if(bulletPrefs.getString(bulletTypePref).equals("BASIC")){
             b.setType(Bullet.BulletType.BASIC);
         }
