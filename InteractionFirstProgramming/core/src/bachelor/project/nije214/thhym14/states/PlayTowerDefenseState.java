@@ -39,8 +39,10 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletDamagePref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletSpeedPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletTypePref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemyHealthPref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemySpeedPref;
+import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemyTypePref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerFireRatePref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerRangePref;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerTypePref;
@@ -75,6 +77,7 @@ public class PlayTowerDefenseState extends State {
     private Label scoreLabel;
     private Skin skin;
     private int score;
+    private Preferences scorePrefs;
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
@@ -91,6 +94,7 @@ public class PlayTowerDefenseState extends State {
         enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
         bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
         towerPrefs = Gdx.app.getPreferences("towerPrefs");
+        scorePrefs = Gdx.app.getPreferences("scorePrefs");
         timeSpawn = 0;
         bullets = new Array<Bullet>();
         this.enemy = new Enemy();
@@ -134,11 +138,11 @@ public class PlayTowerDefenseState extends State {
             tower.getSprite().setSize(100, 100);
             tower.setCenter(mapPrefs.getFloat("towerX" + i), mapPrefs.getFloat("towerY" + i));
             tower.setTimer(0);
-            if (towerPrefs.getString(towerTypePref) == "FROST") {
+            if (towerPrefs.getString(towerTypePref).equals("FROST")) {
                 tower.setType(Tower.Type.FROST);
-            } else if (towerPrefs.getString(towerTypePref) == "BASIC") {
+            } else if (towerPrefs.getString(towerTypePref).equals("BASIC")) {
                 tower.setType(Tower.Type.BASIC);
-            } else if (towerPrefs.getString(towerTypePref) == "PENETRATION") {
+            } else if (towerPrefs.getString(towerTypePref).equals("PENETRATION")) {
                 tower.setType(Tower.Type.PENETRATION);
             }
             inactiveTowers.add(tower);
@@ -171,7 +175,6 @@ public class PlayTowerDefenseState extends State {
     public void createBullet() {
         bullet = new Bullet();
         bullet.createBullet(bulletPrefs.getString("bulletSprite"));
-
     }
 
     public void createWaypoint() {
@@ -188,6 +191,12 @@ public class PlayTowerDefenseState extends State {
         enemy.setSpeed(enemyPrefs.getFloat("enemySpeed"));
         enemy.setPath(wp.getPath());
         enemy.setHealth(enemyPrefs.getFloat("enemyHealth"));
+        if(enemyPrefs.getString(enemyTypePref).equals("BASIC")){
+            enemy.setType(Enemy.Type.BASIC);
+        }
+        if(enemyPrefs.getString(enemyTypePref).equals("SILLY")){
+            enemy.setType(Enemy.Type.SILLY);
+        }
         wp.createEnemyArray();
         wp.createSprite(enemy.getSprite());
         wp.createShapeRenderer();
@@ -201,15 +210,23 @@ public class PlayTowerDefenseState extends State {
             b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
         }
         for (Enemy enemy : wp.getEnemyArray()) {
-            enemy.setVelocity(enemy.getAngle(), enemy.getSpeed());
-            enemy.setSpritePosition(enemy.getX(), enemy.getVelocity().x, enemy.getY(), enemy.getVelocity().y);
-            enemy.setSpriteRotation(enemy.getAngle());
+            if(enemy.getType() == Enemy.Type.BASIC) {
+                enemy.setVelocity(enemy.getAngle(), enemy.getSpeed());
+                enemy.setSpritePosition(enemy.getX(), enemy.getVelocity().x, enemy.getY(), enemy.getVelocity().y);
+                enemy.setSpriteRotation(enemy.getAngle());
+            }
+            if(enemy.getType() == Enemy.Type.SILLY){
+                enemy.setVelocitySilly(enemy.getAngle(), enemy.getSpeed());
+                enemy.setSpritePosition(enemy.getX(), enemy.getVelocity().x, enemy.getY(), enemy.getVelocity().y);
+                enemy.setSpriteRotation(enemy.getAngle());
+            }
 
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
                 wp.getEnemyArray().removeValue(enemy, false);
                 lives--;
                 livesLabel.setText("Lives remaining: " + lives);
                 if (lives == 0) {
+                    scorePrefs.putInteger("finalScore",calculateScore());
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -295,7 +312,7 @@ public class PlayTowerDefenseState extends State {
         for (Bullet b : bullets) {
             for (Enemy e : wp.getEnemyArray()) {
                     if (e.isHit()) {
-                        e.pushBackEnemy(e.getX(), bullet.getVelocity().x, e.getY(), b.getVelocity().y);
+                        e.pushBackEnemy(e.getX(), b.getVelocity().x, e.getY(), b.getVelocity().y);
                         if (e.getTimer() > 0.5) {
                             e.setTimer(0);
                             e.setHit(false);
@@ -306,13 +323,16 @@ public class PlayTowerDefenseState extends State {
                 if (cl.isColliding(b.getSprite().getBoundingRectangle(), e.getSprite().getBoundingRectangle())) {
                     if ((e.getHealth() - b.getDamage()) > 0) {
                         //subtract bullet damage from enemy health
+                        if(!e.isHit()) {
+                            e.setHealth(e.getHealth() - b.getDamage());
+                        }
                         if (b.getType() == Bullet.BulletType.PUSHBACK && !e.isHit()) {
                             e.setHit(true);
                         }
-                        if (towers.get(0).getType() == Tower.Type.FROST) {
+                        if (towers.get(0).getType() == Tower.Type.FROST && !e.isHit()) {
                             e.setSpeed(e.getSpeed() * 0.8f);
                         }
-                        e.setHealth(e.getHealth() - b.getDamage());
+
                         b.getSprite().setSize(0,0);
 
                     } else {
@@ -403,6 +423,7 @@ public class PlayTowerDefenseState extends State {
         enemy.setSpeed(enemyPrefs.getFloat("enemySpeed"));
         enemy.setPath(this.wp.getPath());
         enemy.setHealth(enemyPrefs.getFloat("enemyHealth"));
+        enemy.setType(this.enemy.getType());
         enemy.setVelocity(enemy.getAngle(), enemy.getSpeed());
         enemy.getSprite().setSize(this.enemy.getSprite().getWidth(), this.enemy.getSprite().getHeight());
         wp.getEnemyArray().add(enemy);
@@ -420,7 +441,13 @@ public class PlayTowerDefenseState extends State {
         b.setVelocity(b.getTowerToEnemyAngle(ex, tx), b.getSpeed());
         b.getSprite().rotate((180 / (float) Math.PI * (float) Math.atan2(ex.getY() - tx.getY(), ex.getX() - tx.getX())) + 90);
         b.getSprite().setOriginCenter();
-        b.setType(Bullet.BulletType.PUSHBACK);
+        if(bulletPrefs.getString(bulletTypePref).equals("BASIC")){
+            b.setType(Bullet.BulletType.BASIC);
+        }
+        if(bulletPrefs.getString(bulletTypePref).equals("PUSHBACK")){
+            b.setType(Bullet.BulletType.PUSHBACK);
+        }
+        System.out.println(bulletPrefs.getString(bulletTypePref));
         bullets.add(b);
     }
 

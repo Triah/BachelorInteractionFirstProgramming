@@ -1,6 +1,7 @@
 package bachelor.project.nije214.thhym14.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -26,12 +27,16 @@ public class GameOverState extends State{
     private TextButton goToAssemblyButton;
     private Texture background;
     private Label label;
+    private Preferences scorePrefs;
+    private Label scoreLabel;
 
 
     public GameOverState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        scorePrefs = Gdx.app.getPreferences("scorePrefs");
+        int score = scorePrefs.getInteger("finalScore");
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         background = new Texture("airadventurelevel2.png");
@@ -40,6 +45,11 @@ public class GameOverState extends State{
         label.setSize(WIDTH,200);
         label.setFontScale(3.5f);
         label.setAlignment(Align.center);
+        scoreLabel = new Label("Final Score: " + score, skin);
+        scoreLabel.setPosition(0, HEIGHT-label.getHeight()-600);
+        scoreLabel.setSize(WIDTH,200);
+        scoreLabel.setFontScale(3.5f);
+        scoreLabel.setAlignment(Align.center);
         goToAssemblyButton = new TextButton("Return",skin);
         goToAssemblyButton.setWidth(WIDTH*0.40f);
         goToAssemblyButton.setHeight(HEIGHT*0.1f);
@@ -48,6 +58,7 @@ public class GameOverState extends State{
                 HEIGHT/2-goToAssemblyButton.getHeight()/2);
         stage.addActor(goToAssemblyButton);
         stage.addActor(label);
+        stage.addActor(scoreLabel);
         Gdx.input.setInputProcessor(stage);
         addListenerToReturn();
     }
@@ -86,7 +97,7 @@ public class GameOverState extends State{
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
-        sb.draw(background,0,0,WIDTH,HEIGHT);
+        sb.draw(background,0,0,background.getWidth(),HEIGHT);
         sb.end();
         stage.draw();
     }
