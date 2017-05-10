@@ -90,8 +90,8 @@ public class Bullet {
     }
 
     public float getTowerToEnemyAngle(Enemy e, Tower t) {
-        return (float) Math.atan2(e.getY() - t.getY() + e.getSprite().getHeight()/2,
-                e.getX() - t.getX()+e.getSprite().getWidth()/2);
+       return (float) Math.atan2(e.getY() + e.getSprite().getHeight()/2 - t.getY() + t.getSprite().getHeight()/2,
+                e.getX()+ e.getSprite().getHeight()/2 - t.getX()+t.getSprite().getWidth()/2);
     }
 
 
