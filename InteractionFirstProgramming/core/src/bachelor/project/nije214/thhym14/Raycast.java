@@ -67,7 +67,7 @@ public class Raycast {
      * @param sightRadius The distance, the enemy can see
      * @return true if the enemy can see the player, false otherwise
      */
-    public boolean isPlayerInSight(Enemy enemy, Tower tower, int sightRadius) {
+    public boolean isEnemyInSight(Enemy enemy, Tower tower, int sightRadius) {
         setTower(tower);
         setEnemy(enemy);
         return makeRays(0, 360, sightRadius);

@@ -97,8 +97,5 @@ public class Tower {
         return sprite.getX();
     }
 
-    public void dispose(){
-        this.dispose();
-    }
 }
 

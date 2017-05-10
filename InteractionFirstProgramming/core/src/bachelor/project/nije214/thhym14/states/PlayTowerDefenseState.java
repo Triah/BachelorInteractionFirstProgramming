@@ -453,7 +453,6 @@ public class PlayTowerDefenseState extends State {
         if(bulletPrefs.getString(bulletTypePref).equals("PUSHBACK")){
             b.setType(Bullet.BulletType.PUSHBACK);
         }
-        System.out.println(bulletPrefs.getString(bulletTypePref));
         bullets.add(b);
     }
 
