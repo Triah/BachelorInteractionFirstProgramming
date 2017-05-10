@@ -28,7 +28,7 @@ public class Raycast {
     public boolean simpleRangeCheck(Enemy enemy, Tower tower, int sightRadius) {
         Vector2 enemyvec = new Vector2(enemy.getX(), enemy.getY());
         Vector2 towervec = new Vector2(tower.getX(), tower.getY());
-        return enemyvec.dst(towervec)< sightRadius ;
+        return enemyvec.dst(towervec)< sightRadius;
     }
     /**
      * Set the player as a Point based on the given Entity's position.
