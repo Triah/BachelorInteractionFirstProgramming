@@ -362,13 +362,13 @@ public class PlayTowerDefenseState extends State {
                         bullets.removeValue(b, true);
                         score = calculateScore();
                         scoreLabel.setText("Score: " + score);
+                        e = null;
                     }
                 }
-                e = null;
             }
-            b = null;
         }
         handleInput();
+        disposeEntities();
     }
 
     public int calculateScore() {
@@ -425,7 +425,6 @@ public class PlayTowerDefenseState extends State {
         sb.setProjectionMatrix(camera.combined);
         sb.draw(background, 0, 0, WIDTH, HEIGHT);
         processEnemy();
-        disposeEntities();
         draw(sb);
         sb.end();
         wp.drawRoute();
@@ -470,9 +469,12 @@ public class PlayTowerDefenseState extends State {
     }
 
     public void disposeEntities() {
-        if (enemy.getWaypoint() == wp.getPath().size) {
-            enemy.dispose();
+        for(Enemy e : wp.getEnemyArray()){
+            if (e.getWaypoint() == wp.getPath().size || e.getHealth() == 0) {
+                e.dispose();
+            }
         }
+
         for (Bullet b : bullets) {
             if (b.getSprite().getBoundingRectangle().x > WIDTH ||
                     b.getSprite().getBoundingRectangle().x + b.getSprite().getWidth() < 0 ||

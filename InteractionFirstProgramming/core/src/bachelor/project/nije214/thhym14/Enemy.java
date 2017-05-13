@@ -159,7 +159,7 @@ public class Enemy {
     }
 
     public void dispose(){
-        this.dispose();
+        this.getSprite().getTexture().dispose();
     }
 }
 
