@@ -84,8 +84,6 @@ public class PlayTowerDefenseState extends State {
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
-        camera.setToOrtho(false, WIDTH, HEIGHT);
-        camera.update();
         waveTimer = 0;
         currentWave = 1;
         setUpStage();

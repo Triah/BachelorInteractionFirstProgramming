@@ -47,8 +47,6 @@ public class GameTypeMenuState extends State {
 
     public GameTypeMenuState(GameStateManager gsm) {
         super(gsm);
-        camera.setToOrtho(false, WIDTH, HEIGHT);
-        camera.update();
         background = new Texture("airadventurelevel2.png");
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();

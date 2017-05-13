@@ -33,8 +33,6 @@ public class GameOverState extends State{
 
     public GameOverState(GameStateManager gsm) {
         super(gsm);
-        camera.setToOrtho(false, WIDTH, HEIGHT);
-        camera.update();
         scorePrefs = Gdx.app.getPreferences("scorePrefs");
         int score = scorePrefs.getInteger("finalScore");
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
