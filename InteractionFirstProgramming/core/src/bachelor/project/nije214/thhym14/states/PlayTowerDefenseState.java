@@ -78,11 +78,16 @@ public class PlayTowerDefenseState extends State {
     private Skin skin;
     private int score;
     private Preferences scorePrefs;
+    private float waveTimer;
+    private Label waveLabel;
+    private int currentWave;
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
         camera.setToOrtho(false, WIDTH, HEIGHT);
         camera.update();
+        waveTimer = 0;
+        currentWave = 1;
         setUpStage();
         touchPoint = new Vector3();
         music = Gdx.audio.newMusic(Gdx.files.internal("music/defensemusic.ogg"));
@@ -123,6 +128,10 @@ public class PlayTowerDefenseState extends State {
         scoreLabel = new Label("Score: " + score, skin);
         scoreLabel.setFontScale(2.5f);
         scoreLabel.setPosition(WIDTH * 0.15f, HEIGHT * 0.95f, Align.center);
+        waveLabel = new Label("Wave: " + currentWave, skin);
+        waveLabel.setFontScale(2.5f);
+        waveLabel.setPosition(WIDTH*0.35f, HEIGHT * 0.95f, Align.center);
+        stage.addActor(waveLabel);
         stage.addActor(livesLabel);
         stage.addActor(scoreLabel);
     }
@@ -200,7 +209,6 @@ public class PlayTowerDefenseState extends State {
         wp.createEnemyArray();
         wp.createSprite(enemy.getSprite());
         wp.createShapeRenderer();
-        wp.addEnemyToPath(this.enemy);
         enemy.getSprite().setSize(100, 100);
         enemy.getSprite().setOriginCenter();
     }
@@ -227,6 +235,7 @@ public class PlayTowerDefenseState extends State {
                 livesLabel.setText("Lives remaining: " + lives);
                 if (lives == 0) {
                     scorePrefs.putInteger("finalScore",calculateScore());
+                    scorePrefs.flush();
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -250,11 +259,11 @@ public class PlayTowerDefenseState extends State {
     }
 
     public void draw(SpriteBatch batch) {
-        for (Enemy enemy : wp.getEnemyArray()) {
-            enemy.getSprite().draw(batch);
-        }
         for (Bullet b : bullets) {
             b.getSprite().draw(batch);
+        }
+        for (Enemy enemy : wp.getEnemyArray()) {
+            enemy.getSprite().draw(batch);
         }
         for (Tower t : towers) {
             t.getSprite().draw(batch);
@@ -287,6 +296,14 @@ public class PlayTowerDefenseState extends State {
             }
         }
 
+        waveTimer += Gdx.graphics.getDeltaTime();
+        if(waveTimer > 15){
+            this.enemy.setHealth(enemy.getHealth() +1);
+            currentWave++;
+            waveLabel.setText("Wave: " + currentWave);
+            waveTimer = 0;
+        }
+
         timeSpawn += Gdx.graphics.getDeltaTime();
         if (timeSpawn > 2) {
             cloneAndAddToList();
@@ -295,7 +312,6 @@ public class PlayTowerDefenseState extends State {
         if (!towers.isEmpty()) {
             for (Tower t : towers) {
                 for (Enemy e : wp.getEnemyArray()) {
-                    //  if (ray.isPlayerInSight(e, t, (int) towerPrefs.getFloat("towerRange"))) {
                     if (ray.simpleRangeCheck(e, t, (int) towerPrefs.getFloat("towerRange"))) {
                         if (t.getTimer() > 5 / towerPrefs.getFloat("towerFireRate")) {
                             cloneAndAddToListBullet(e, t);
@@ -324,7 +340,6 @@ public class PlayTowerDefenseState extends State {
                     if ((e.getHealth() - b.getDamage()) > 0) {
                         //subtract bullet damage from enemy health
                         if(!e.isHit() && !b.isHit()) {
-                            System.out.println("REEE");
                             e.setHealth(e.getHealth() - b.getDamage());
                             b.setHit(true);
                         }
@@ -427,7 +442,7 @@ public class PlayTowerDefenseState extends State {
         enemy.setCenter(mapPrefs.getFloat("firstWpX"), mapPrefs.getFloat("firstWpY"));
         enemy.setSpeed(enemyPrefs.getFloat("enemySpeed"));
         enemy.setPath(this.wp.getPath());
-        enemy.setHealth(enemyPrefs.getFloat("enemyHealth"));
+        enemy.setHealth(this.enemy.getHealth());
         enemy.setType(this.enemy.getType());
         enemy.setVelocity(enemy.getAngle(), enemy.getSpeed());
         enemy.getSprite().setSize(this.enemy.getSprite().getWidth(), this.enemy.getSprite().getHeight());
