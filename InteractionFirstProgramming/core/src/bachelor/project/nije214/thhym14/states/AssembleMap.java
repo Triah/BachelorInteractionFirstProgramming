@@ -48,8 +48,6 @@ public class AssembleMap extends State {
 
     public AssembleMap(GameStateManager gsm) {
         super(gsm);
-        camera.setToOrtho(false, WIDTH, HEIGHT);
-        camera.update();
         towerPrefs = Gdx.app.getPreferences("towerPrefs");
         background = new Texture("grass_template2.jpg");
         towerMode = false;

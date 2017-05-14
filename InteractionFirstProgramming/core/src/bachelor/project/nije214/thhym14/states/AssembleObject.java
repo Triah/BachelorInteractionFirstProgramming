@@ -47,8 +47,6 @@ public abstract class AssembleObject extends State {
 
     public AssembleObject(GameStateManager gsm) {
         super(gsm);
-        camera.setToOrtho(false, WIDTH, HEIGHT);
-        camera.update();
         background = new Texture("airadventurelevel2.png");
         enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
         towerPrefs = Gdx.app.getPreferences("towerPrefs");

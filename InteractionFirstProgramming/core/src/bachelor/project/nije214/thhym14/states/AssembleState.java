@@ -46,8 +46,6 @@ public class AssembleState extends State {
 
     public AssembleState(GameStateManager gsm) {
         super(gsm);
-        camera.setToOrtho(false, WIDTH, HEIGHT);
-        camera.update();
         enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
         towerPrefs = Gdx.app.getPreferences("towerPrefs");
         bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
