@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -81,6 +82,7 @@ public class PlayTowerDefenseState extends State {
     private float waveTimer;
     private Label waveLabel;
     private int currentWave;
+    private InputProcessor inputProcessor;
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
@@ -110,6 +112,7 @@ public class PlayTowerDefenseState extends State {
         createTower();
         createBullet();
         handleBackAction();
+        registerInputProcessors();
         ray = new Raycast();
         sr = new ShapeRenderer();
         cl = new Collision();
@@ -362,13 +365,13 @@ public class PlayTowerDefenseState extends State {
                         bullets.removeValue(b, true);
                         score = calculateScore();
                         scoreLabel.setText("Score: " + score);
+                        e = null;
                     }
                 }
-                e = null;
             }
-            b = null;
         }
         handleInput();
+        disposeEntities();
     }
 
     public int calculateScore() {
@@ -425,7 +428,6 @@ public class PlayTowerDefenseState extends State {
         sb.setProjectionMatrix(camera.combined);
         sb.draw(background, 0, 0, WIDTH, HEIGHT);
         processEnemy();
-        disposeEntities();
         draw(sb);
         sb.end();
         wp.drawRoute();
@@ -470,9 +472,12 @@ public class PlayTowerDefenseState extends State {
     }
 
     public void disposeEntities() {
-        if (enemy.getWaypoint() == wp.getPath().size) {
-            enemy.dispose();
+        for(Enemy e : wp.getEnemyArray()){
+            if (e.getWaypoint() == wp.getPath().size || e.getHealth() == 0) {
+                e.dispose();
+            }
         }
+
         for (Bullet b : bullets) {
             if (b.getSprite().getBoundingRectangle().x > WIDTH ||
                     b.getSprite().getBoundingRectangle().x + b.getSprite().getWidth() < 0 ||
@@ -503,7 +508,7 @@ public class PlayTowerDefenseState extends State {
     }
 
     public void handleBackAction() {
-        InputProcessor adapter = new InputAdapter() {
+         inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if (keycode == Input.Keys.BACK) {
@@ -514,8 +519,11 @@ public class PlayTowerDefenseState extends State {
                 return false;
             }
         };
+    }
+
+    public void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(adapter);
+        multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
     }

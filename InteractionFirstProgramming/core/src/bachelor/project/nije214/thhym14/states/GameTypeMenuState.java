@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -43,6 +44,7 @@ public class GameTypeMenuState extends State {
     private LinkedList<TextButton> textButtons;
     private Label label;
     private Texture background;
+    private InputProcessor inputProcessor;
 
 
     public GameTypeMenuState(GameStateManager gsm) {
@@ -51,6 +53,7 @@ public class GameTypeMenuState extends State {
         textButtons = new LinkedList<TextButton>();
         createInitialUIElements();
         handleBackAction();
+        registerInputProcessors();
     }
 
     public void createInitialUIElements(){
@@ -135,8 +138,7 @@ public class GameTypeMenuState extends State {
     }
 
     public void handleBackAction() {
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        InputProcessor adapter = new InputAdapter() {
+        inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if(keycode == Input.Keys.BACK) {
@@ -147,7 +149,12 @@ public class GameTypeMenuState extends State {
                 return false;
             }
         };
-        multiplexer.addProcessor(adapter);
+
+    }
+
+    public void registerInputProcessors(){
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
     }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -45,6 +46,7 @@ public class AssembleMap extends State {
     private ArrayList<Float> yTowerPos;
     private ArrayList<Sprite> towerSprites;
     private Texture background;
+    private InputProcessor inputProcessor;
 
     public AssembleMap(GameStateManager gsm) {
         super(gsm);
@@ -66,6 +68,7 @@ public class AssembleMap extends State {
         towerSprites = new ArrayList<Sprite>();
         create();
         handleBackAction();
+        registerInputProcessors();
     }
 
     public void create(){
@@ -76,8 +79,8 @@ public class AssembleMap extends State {
         mapPrefs.putFloat("firstWpY",wp.getPath().first().y);
         finishSprite.setSize(100,100);
         finishSprite.setPosition(WIDTH-finishSprite.getWidth(),0);
-        modeSprite.setSize(75,75);
-        modeSprite.setPosition(WIDTH-modeSprite.getWidth(),HEIGHT-modeSprite.getHeight());
+        modeSprite.setSize(100,100);
+        modeSprite.setPosition(WIDTH*0.95f-modeSprite.getWidth(),HEIGHT*0.98f-modeSprite.getHeight());
     }
 
     @Override
@@ -125,8 +128,8 @@ public class AssembleMap extends State {
 
     public void createTowerSpriteAtPosition(float x, float y){
         Sprite towerSprite = new Sprite(new Texture(towerPrefs.getString("towerSprite")));
-        towerSprite.setPosition(x,y);
-        towerSprite.setSize(75,75);
+        towerSprite.setPosition(x - towerSprite.getWidth()/2,y - towerSprite.getHeight()/2);
+        towerSprite.setSize(100,100);
         towerSprites.add(towerSprite);
     }
 
@@ -171,7 +174,7 @@ public class AssembleMap extends State {
     }
 
     public void handleBackAction(){
-        InputProcessor adapter = new InputAdapter(){
+        inputProcessor = new InputAdapter(){
             @Override
             public boolean keyDown(int keycode){
                 if(keycode == Input.Keys.BACK) {
@@ -182,6 +185,11 @@ public class AssembleMap extends State {
                 return false;
             }
         };
-        Gdx.input.setInputProcessor(adapter);
+    }
+
+    public void registerInputProcessors(){
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(inputProcessor);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 }

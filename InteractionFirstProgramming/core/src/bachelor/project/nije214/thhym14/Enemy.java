@@ -25,6 +25,7 @@ public class Enemy {
     private float health;
     private boolean isHit;
     private float pushTimer;
+    private int rand;
 
 
     public enum Type {
@@ -131,6 +132,9 @@ public class Enemy {
     }
 
     public void incrementWaypoint(){
+        if(isWaypointReached()){
+            rand = (int)(Math.random()*10)+1;
+        }
         this.waypoint++;
     }
 
@@ -144,7 +148,13 @@ public class Enemy {
 
 //
     public void setVelocitySilly(float angle, float speed){
-        velocity.set((float) Math.cos(angle+1) * speed, (float) Math.sin(angle+1) * speed);
+        if(rand>5){
+            velocity.set((float) Math.cos(angle+1) * speed, (float) Math.sin(angle+1) * speed);
+        }
+        else{
+            velocity.set((float) Math.cos(angle-1) * speed, (float) Math.sin(angle-1) * speed);
+        }
+
     }
 
     public void pushBackEnemy(float x, float velX, float y, float velY){
@@ -159,7 +169,7 @@ public class Enemy {
     }
 
     public void dispose(){
-        this.dispose();
+        this.getSprite().getTexture().dispose();
     }
 }
 

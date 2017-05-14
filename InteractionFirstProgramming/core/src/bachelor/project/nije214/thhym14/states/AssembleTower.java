@@ -39,6 +39,7 @@ public class AssembleTower extends AssembleObject {
     private int i;
     private GestureController gc;
     private Vector3 touchPoint;
+    private InputProcessor inputProcessor;
 
     public AssembleTower(GameStateManager gsm) {
         super(gsm);
@@ -63,6 +64,7 @@ public class AssembleTower extends AssembleObject {
         createSprite(avaliableTextures.get(i));
         createGestureControls();
         handleBackAction();
+        registerInputProcessors();
         finish();
     }
 
@@ -153,17 +155,15 @@ public class AssembleTower extends AssembleObject {
         setTowerTypeButtons("Frost Type","FROST");
         setTowerTypeButtons("Basic Type", "BASIC");
     }
-    public void setTowerRangeButtons(String text, float value) {
+    public void setTowerRangeButtons(final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final float tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                tower.setRange(tempValue);
-                labelOptions(rangeLabel, tempString);
+                tower.setRange(value);
+                labelOptions(rangeLabel, text);
                 towerPrefs.putFloat(towerRangePref, tower.getRange());
             }
         });
@@ -177,35 +177,31 @@ public class AssembleTower extends AssembleObject {
         }
     }
 
-    public void setTowerFireRateButtons(String text, float value) {
+    public void setTowerFireRateButtons(final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final float tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                tower.setfireRate(tempValue);
-                labelOptions(fireRateLabel, tempString);
+                tower.setfireRate(value);
+                labelOptions(fireRateLabel, text);
                 towerPrefs.putFloat(towerFireRatePref, tower.getFireRate());
             }
         });
         textButtons.add(textButton);
     }
 
-    public void setTowerTypeButtons(String text, String value) {
+    public void setTowerTypeButtons(final String text, final String value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final String tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //will be assigned a type in play mode based on the preference
-                labelOptions(typeLabel, tempString);
-                towerPrefs.putString(towerTypePref, tempValue);
+                labelOptions(typeLabel, text);
+                towerPrefs.putString(towerTypePref, value);
             }
         });
         textButtons.add(textButton);
@@ -226,8 +222,7 @@ public class AssembleTower extends AssembleObject {
     }
 
     public void handleBackAction() {
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        InputProcessor adapter = new InputAdapter() {
+        inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if(keycode == Input.Keys.BACK) {
@@ -238,7 +233,11 @@ public class AssembleTower extends AssembleObject {
                 return true;
             }
         };
-        multiplexer.addProcessor(adapter);
+    }
+
+    public void registerInputProcessors(){
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new GestureDetector(gc));
         Gdx.input.setInputProcessor(multiplexer);

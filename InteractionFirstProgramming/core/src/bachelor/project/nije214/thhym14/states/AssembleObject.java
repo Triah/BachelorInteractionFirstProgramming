@@ -51,13 +51,13 @@ public abstract class AssembleObject extends State {
         enemyPrefs = Gdx.app.getPreferences("enemyPrefs");
         towerPrefs = Gdx.app.getPreferences("towerPrefs");
         bulletPrefs = Gdx.app.getPreferences("bulletPrefs");
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        table = new Table(skin);
         setUpStage();
     }
 
     protected void setUpStage(){
+        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        table = new Table(skin);
         scrollPane = new ScrollPane(table,skin);
         this.textButtons = new LinkedList<TextButton>();
         Label avaliableLabel = new Label("Avaliable Attributes", skin);

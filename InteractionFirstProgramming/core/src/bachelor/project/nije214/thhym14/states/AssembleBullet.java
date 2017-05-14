@@ -47,6 +47,7 @@ public class AssembleBullet extends AssembleObject {
     private Array<Texture> avaliableTextures;
     private Vector3 touchPoint;
     private int i;
+    private InputProcessor inputProcessor;
 
     public AssembleBullet(GameStateManager gsm) {
         super(gsm);
@@ -69,6 +70,7 @@ public class AssembleBullet extends AssembleObject {
         createSprite(avaliableTextures.get(i));
         createGestureControls();
         handleBackAction();
+        registerInputProcessors();
         finish();
     }
 
@@ -167,51 +169,45 @@ public class AssembleBullet extends AssembleObject {
         setBulletTypeButtons("Pushing type", "PUSHBACK");
     }
 
-    public void setBulletSpeedButtons(String text, float value) {
+    public void setBulletSpeedButtons(final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final float tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                bullet.setSpeed(tempValue);
-                labelOptions(speedLabel, tempString);
+                bullet.setSpeed(value);
+                labelOptions(speedLabel, text);
                 bulletPrefs.putFloat(bulletSpeedPref, bullet.getSpeed());
             }
         });
         textButtons.add(textButton);
     }
 
-    public void setBulletTypeButtons(String text, String value) {
+    public void setBulletTypeButtons(final String text, final String value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final String tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //will be assigned a type in play mode based on the preference
-                labelOptions(typeLabel, tempString);
-                bulletPrefs.putString(bulletTypePref, tempValue);
+                labelOptions(typeLabel, text);
+                bulletPrefs.putString(bulletTypePref, value);
             }
         });
         textButtons.add(textButton);
     }
 
-    public void setBulletDamageButtons(String text, float value) {
+    public void setBulletDamageButtons(final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final float tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                bullet.setDamage(tempValue);
-                labelOptions(damageLabel, tempString);
+                bullet.setDamage(value);
+                labelOptions(damageLabel, text);
                 bulletPrefs.putFloat(bulletDamagePref, bullet.getDamage());
             }
         });
@@ -233,8 +229,7 @@ public class AssembleBullet extends AssembleObject {
     }
 
     public void handleBackAction() {
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        InputProcessor adapter = new InputAdapter() {
+        inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if(keycode == Input.Keys.BACK) {
@@ -245,7 +240,11 @@ public class AssembleBullet extends AssembleObject {
                 return true;
             }
         };
-        multiplexer.addProcessor(adapter);
+    }
+
+    public void registerInputProcessors(){
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new GestureDetector(gc));
         Gdx.input.setInputProcessor(multiplexer);
