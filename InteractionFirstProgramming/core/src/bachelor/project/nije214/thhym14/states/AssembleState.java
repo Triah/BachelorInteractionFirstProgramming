@@ -9,6 +9,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -42,6 +43,7 @@ public class AssembleState extends State {
     private Label label;
     private Texture background;
     private Preferences enemyPrefs, bulletPrefs, towerPrefs, mapPrefs;
+    private InputProcessor inputProcessor;
 
 
     public AssembleState(GameStateManager gsm) {
@@ -75,6 +77,7 @@ public class AssembleState extends State {
         }
         buttonActions();
         handleBackAction();
+        registerInputProcessors();
     }
 
     public void addActorToStage(Actor actor){
@@ -234,8 +237,7 @@ public class AssembleState extends State {
     }
 
     public void handleBackAction() {
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        InputProcessor adapter = new InputAdapter() {
+        inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if(keycode == Input.Keys.BACK) {
@@ -246,7 +248,11 @@ public class AssembleState extends State {
                 return true;
             }
         };
-        multiplexer.addProcessor(adapter);
+    }
+
+    public void registerInputProcessors(){
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
     }

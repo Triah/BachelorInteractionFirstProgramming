@@ -49,6 +49,7 @@ public class AssembleEnemy extends AssembleObject {
     private Vector3 touchPoint;
     private int i;
     private Label typeLabel;
+    private InputProcessor inputProcessor;
 
     public AssembleEnemy(GameStateManager gsm) {
         super(gsm);
@@ -71,6 +72,7 @@ public class AssembleEnemy extends AssembleObject {
         createSprite(avaliableTextures.get(i));
         createGestureControls();
         handleBackAction();
+        registerInputProcessors();
         finish();
     }
 
@@ -161,51 +163,45 @@ public class AssembleEnemy extends AssembleObject {
         });
     }
 
-    public void setEnemySpeedButtons(String text, float value) {
+    public void setEnemySpeedButtons(final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final float tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                enemy.setSpeed(tempValue);
-                labelOptions(speedLabel, tempString);
+                enemy.setSpeed(value);
+                labelOptions(speedLabel, text);
                 enemyPrefs.putFloat(enemySpeedPref, enemy.getSpeed());
             }
         });
         textButtons.add(textButton);
     }
 
-    public void setEnemyTypeButtons(String text, String value) {
+    public void setEnemyTypeButtons(final String text, final String value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final String tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //will be assigned a type in play mode based on the preference
-                labelOptions(typeLabel, tempString);
-                enemyPrefs.putString(enemyTypePref, tempValue);
+                labelOptions(typeLabel, text);
+                enemyPrefs.putString(enemyTypePref, value);
             }
         });
         textButtons.add(textButton);
     }
 
-    public void setEnemyHealthButtons(String text, float value) {
+    public void setEnemyHealthButtons(final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
-        final float tempValue = value;
-        final String tempString = text;
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                enemy.setHealth(tempValue);
-                labelOptions(healthLabel, tempString);
+                enemy.setHealth(value);
+                labelOptions(healthLabel, text);
                 enemyPrefs.putFloat(enemyHealthPref, enemy.getHealth());
             }
         });
@@ -234,8 +230,8 @@ public class AssembleEnemy extends AssembleObject {
     }
 
     public void handleBackAction() {
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        InputProcessor adapter = new InputAdapter() {
+
+        inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if(keycode == Input.Keys.BACK) {
@@ -246,7 +242,12 @@ public class AssembleEnemy extends AssembleObject {
                 return true;
             }
         };
-        multiplexer.addProcessor(adapter);
+
+    }
+
+    public void registerInputProcessors(){
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new GestureDetector(gc));
         Gdx.input.setInputProcessor(multiplexer);

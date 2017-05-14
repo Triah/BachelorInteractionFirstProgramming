@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -81,6 +82,7 @@ public class PlayTowerDefenseState extends State {
     private float waveTimer;
     private Label waveLabel;
     private int currentWave;
+    private InputProcessor inputProcessor;
 
     public PlayTowerDefenseState(GameStateManager gsm) {
         super(gsm);
@@ -110,6 +112,7 @@ public class PlayTowerDefenseState extends State {
         createTower();
         createBullet();
         handleBackAction();
+        registerInputProcessors();
         ray = new Raycast();
         sr = new ShapeRenderer();
         cl = new Collision();
@@ -505,7 +508,7 @@ public class PlayTowerDefenseState extends State {
     }
 
     public void handleBackAction() {
-        InputProcessor adapter = new InputAdapter() {
+         inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if (keycode == Input.Keys.BACK) {
@@ -516,8 +519,11 @@ public class PlayTowerDefenseState extends State {
                 return false;
             }
         };
+    }
+
+    public void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(adapter);
+        multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
     }
