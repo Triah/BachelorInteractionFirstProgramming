@@ -128,8 +128,8 @@ public class AssembleMap extends State {
 
     public void createTowerSpriteAtPosition(float x, float y){
         Sprite towerSprite = new Sprite(new Texture(towerPrefs.getString("towerSprite")));
-        towerSprite.setPosition(x - towerSprite.getWidth()/2,y - towerSprite.getHeight()/2);
         towerSprite.setSize(100,100);
+        towerSprite.setPosition(x - towerSprite.getWidth()/2,y - towerSprite.getHeight()/2);
         towerSprites.add(towerSprite);
     }
 

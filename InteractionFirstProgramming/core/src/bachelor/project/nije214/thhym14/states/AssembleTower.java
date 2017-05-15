@@ -146,25 +146,39 @@ public class AssembleTower extends AssembleObject {
 
 
     public void createButtons(){
-        setTowerFireRateButtons("Slow Fire Rate",1);
-        setTowerFireRateButtons("Medium Fire Rate",4);
-        setTowerFireRateButtons("High Fire Rate",8);
-        setTowerRangeButtons("Short Range",200);
-        setTowerRangeButtons("Medium Range",300);
-        setTowerRangeButtons("Long Range",450);
-        setTowerTypeButtons("Frost Type","FROST");
-        setTowerTypeButtons("Basic Type", "BASIC");
+        setTowerValueButtons(towerFireRatePref, fireRateLabel, "Slow Fire Rate",1);
+        setTowerValueButtons(towerFireRatePref, fireRateLabel,"Medium Fire Rate",4);
+        setTowerValueButtons(towerFireRatePref, fireRateLabel,"High Fire Rate",8);
+        setTowerValueButtons(towerRangePref, rangeLabel,"Short Range",200);
+        setTowerValueButtons(towerRangePref, rangeLabel,"Medium Range",300);
+        setTowerValueButtons(towerRangePref, rangeLabel,"Long Range",450);
+        setTowerTypeButtons(towerTypePref, typeLabel, "Frost Type","FROST");
+        setTowerTypeButtons(towerTypePref, typeLabel, "Basic Type", "BASIC");
     }
-    public void setTowerRangeButtons(final String text, final float value) {
+    public void setTowerValueButtons(final String pref, final Label labelType, final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                tower.setRange(value);
-                labelOptions(rangeLabel, text);
-                towerPrefs.putFloat(towerRangePref, tower.getRange());
+                labelOptions(labelType, text);
+                towerPrefs.putFloat(pref, value);
+            }
+        });
+        textButtons.add(textButton);
+    }
+
+    public void setTowerTypeButtons(final String pref, final Label labelType, final String text, final String value) {
+        TextButton textButton = new TextButton(text, skin);
+        textButton.setHeight(HEIGHT * 0.1f);
+        textButton.getLabel().setFontScale(2.5f);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //will be assigned a type in play mode based on the preference
+                labelOptions(labelType, text);
+                towerPrefs.putString(pref, value);
             }
         });
         textButtons.add(textButton);
@@ -174,44 +188,6 @@ public class AssembleTower extends AssembleObject {
     public void handleInput(){
         if(Gdx.input.justTouched()){
             camera.unproject(touchPoint.set(Gdx.input.getX(),Gdx.input.getY(),0));
-        }
-    }
-
-    public void setTowerFireRateButtons(final String text, final float value) {
-        TextButton textButton = new TextButton(text, skin);
-        textButton.setHeight(HEIGHT * 0.1f);
-        textButton.getLabel().setFontScale(2.5f);
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                tower.setfireRate(value);
-                labelOptions(fireRateLabel, text);
-                towerPrefs.putFloat(towerFireRatePref, tower.getFireRate());
-            }
-        });
-        textButtons.add(textButton);
-    }
-
-    public void setTowerTypeButtons(final String text, final String value) {
-        TextButton textButton = new TextButton(text, skin);
-        textButton.setHeight(HEIGHT * 0.1f);
-        textButton.getLabel().setFontScale(2.5f);
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //will be assigned a type in play mode based on the preference
-                labelOptions(typeLabel, text);
-                towerPrefs.putString(towerTypePref, value);
-            }
-        });
-        textButtons.add(textButton);
-    }
-
-    private void labelOptions(Label label, String text){
-        label.setText(text);
-        if(!chosenTable.getChildren().contains(label,true)){
-            chosenTable.add(label);
-            chosenTable.row();
         }
     }
 

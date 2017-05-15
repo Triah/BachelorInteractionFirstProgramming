@@ -342,16 +342,16 @@ public class PlayTowerDefenseState extends State {
                         //subtract bullet damage from enemy health
                         if(!e.isHit() && !b.isHit()) {
                             e.setHealth(e.getHealth() - b.getDamage());
+                            if (b.getType() == Bullet.BulletType.PUSHBACK && !e.isHit() && !b.isHit()) {
+                                e.setHit(true);
+                            }
+                            if (towers.get(0).getType() == Tower.Type.FROST && !e.isHit() && !b.isHit()) {
+                                e.setSpeed(e.getSpeed() * 0.8f);
+                            }
                             b.setHit(true);
                         }
                         if(b.isHit()){
                             b.setDamage(0);
-                        }
-                        if (b.getType() == Bullet.BulletType.PUSHBACK && !e.isHit()) {
-                            e.setHit(true);
-                        }
-                        if (towers.get(0).getType() == Tower.Type.FROST && !e.isHit()) {
-                            e.setSpeed(e.getSpeed() * 0.8f);
                         }
 
                         b.getSprite().setSize(0,0);
