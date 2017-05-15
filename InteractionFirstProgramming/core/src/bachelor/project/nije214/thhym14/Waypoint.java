@@ -18,9 +18,7 @@ public class Waypoint {
     private ShapeRenderer sr;
     private Array<Enemy> enemies;
     private Sprite sprite;
-    Array<Vector2> path;
-
-
+    private Array<Vector2> path;
 
     public void drawRoute(){
         setShapeRendererColor(Color.WHITE);
@@ -45,14 +43,13 @@ public class Waypoint {
         this.sr = new ShapeRenderer();
     }
 
-    public ShapeRenderer getShapeRenderer(){
+    private ShapeRenderer getShapeRenderer(){
         return this.sr;
     }
 
-    public void setShapeRendererColor(Color color){
+    private void setShapeRendererColor(Color color){
         getShapeRenderer().setColor(color);
     }
-
 
     public void createSprite(Sprite sprite){
         this.sprite = sprite;

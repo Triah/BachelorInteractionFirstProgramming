@@ -23,32 +23,28 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 public class GameOverState extends State{
 
     private Stage stage;
-    private Skin skin;
     private TextButton goToAssemblyButton;
     private Texture background;
-    private Label label;
-    private Preferences scorePrefs;
-    private Label scoreLabel;
 
 
     public GameOverState(GameStateManager gsm) {
         super(gsm);
-        scorePrefs = Gdx.app.getPreferences("scorePrefs");
+        Preferences scorePrefs = Gdx.app.getPreferences("scorePrefs");
         int score = scorePrefs.getInteger("finalScore");
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         background = new Texture("airadventurelevel2.png");
-        label = new Label("Game Over", skin);
-        label.setPosition(0, HEIGHT-label.getHeight()-300);
+        Label label = new Label("Game Over", skin);
+        label.setPosition(0, HEIGHT- label.getHeight()-300);
         label.setSize(WIDTH,200);
         label.setFontScale(3.5f);
         label.setAlignment(Align.center);
-        scoreLabel = new Label("Final Score: " + score, skin);
-        scoreLabel.setPosition(0, HEIGHT-label.getHeight()-600);
+        Label scoreLabel = new Label("Final Score: " + score, skin);
+        scoreLabel.setPosition(0, HEIGHT- label.getHeight()-600);
         scoreLabel.setSize(WIDTH,200);
         scoreLabel.setFontScale(3.5f);
         scoreLabel.setAlignment(Align.center);
-        goToAssemblyButton = new TextButton("Return",skin);
+        goToAssemblyButton = new TextButton("Return", skin);
         goToAssemblyButton.setWidth(WIDTH*0.40f);
         goToAssemblyButton.setHeight(HEIGHT*0.1f);
         goToAssemblyButton.getLabel().setFontScale(2.5f);
@@ -61,7 +57,7 @@ public class GameOverState extends State{
         addListenerToReturn();
     }
 
-    public void addListenerToReturn(){
+    private void addListenerToReturn(){
         goToAssemblyButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

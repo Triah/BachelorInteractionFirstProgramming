@@ -76,7 +76,6 @@ public class PlayTowerDefenseState extends State {
     private Label livesLabel;
     private Stage stage;
     private Label scoreLabel;
-    private Skin skin;
     private int score;
     private Preferences scorePrefs;
     private float waveTimer;
@@ -118,11 +117,11 @@ public class PlayTowerDefenseState extends State {
         cl = new Collision();
     }
 
-    public void setUpStage() {
+    private void setUpStage() {
         lives = 10;
         score = 0;
         stage = new Stage();
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         livesLabel = new Label("Lives remaining: " + lives, skin);
         livesLabel.setFontScale(2.5f);
         livesLabel.setPosition(WIDTH * 0.65f, HEIGHT * 0.95f, Align.center);
@@ -137,7 +136,7 @@ public class PlayTowerDefenseState extends State {
         stage.addActor(scoreLabel);
     }
 
-    public void createTower() {
+    private void createTower() {
         for (int i = 0; i < mapPrefs.getFloat("towerSize"); i++) {
             Tower tower = new Tower();
             tower.setActive(false);
@@ -161,7 +160,7 @@ public class PlayTowerDefenseState extends State {
     }
 
 
-    public void activateTower() {
+    private void activateTower() {
         if (Gdx.input.justTouched()) {
             camera.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
             for (Tower t : inactiveTowers) {
@@ -182,12 +181,12 @@ public class PlayTowerDefenseState extends State {
         }
     }
 
-    public void createBullet() {
+    private void createBullet() {
         bullet = new Bullet();
         bullet.createBullet(bulletPrefs.getString("bulletSprite"));
     }
 
-    public void createWaypoint() {
+    private void createWaypoint() {
         wp.createPath(new Array<Vector2>());
         wp.addPathNode(new Vector2(mapPrefs.getFloat("firstWpX"), mapPrefs.getFloat("firstWpY")));
         for (int i = 0; i < mapPrefs.getFloat("wpSize"); i++) {
@@ -195,7 +194,7 @@ public class PlayTowerDefenseState extends State {
         }
     }
 
-    public void createEnemy() {
+    private void createEnemy() {
         enemy.createEnemy(enemyPrefs.getString("enemySprite"));
         enemy.getSprite().setCenter(mapPrefs.getFloat("firstWpX"), mapPrefs.getFloat("firstWpY"));
         enemy.setSpeed(enemyPrefs.getFloat("enemySpeed"));
@@ -214,7 +213,7 @@ public class PlayTowerDefenseState extends State {
         enemy.getSprite().setOriginCenter();
     }
 
-    public void processEnemy() {
+    private void processEnemy() {
         for (Bullet b : bullets) {
             b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
         }
@@ -259,7 +258,7 @@ public class PlayTowerDefenseState extends State {
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    private void draw(SpriteBatch batch) {
         for (Bullet b : bullets) {
             b.getSprite().draw(batch);
         }
@@ -374,7 +373,7 @@ public class PlayTowerDefenseState extends State {
         disposeEntities();
     }
 
-    public int calculateScore() {
+    private int calculateScore() {
         if (enemyPrefs.getFloat(enemyHealthPref) >= 3 && enemyPrefs.getFloat(enemyHealthPref) <= 7) {
             score += 3;
         } else if (enemyPrefs.getFloat(enemyHealthPref) <= 2) {
@@ -436,7 +435,7 @@ public class PlayTowerDefenseState extends State {
         stage.draw();
     }
 
-    public void cloneAndAddToList() {
+    private void cloneAndAddToList() {
         Enemy enemy = new Enemy();
         enemy.createEnemy(enemyPrefs.getString("enemySprite"));
         enemy.setCenter(mapPrefs.getFloat("firstWpX"), mapPrefs.getFloat("firstWpY"));
@@ -451,7 +450,7 @@ public class PlayTowerDefenseState extends State {
     }
 
 
-    public void cloneAndAddToListBullet(Enemy ex, Tower tx) {
+    private void cloneAndAddToListBullet(Enemy ex, Tower tx) {
         Bullet b = new Bullet();
         b.createBullet(bulletPrefs.getString("bulletSprite"));
         b.setDamage(bulletPrefs.getFloat("bulletDamage"));
@@ -471,7 +470,7 @@ public class PlayTowerDefenseState extends State {
         bullets.add(b);
     }
 
-    public void disposeEntities() {
+    private void disposeEntities() {
         for(Enemy e : wp.getEnemyArray()){
             if (e.getWaypoint() == wp.getPath().size || e.getHealth() == 0) {
                 e.dispose();
@@ -490,7 +489,7 @@ public class PlayTowerDefenseState extends State {
     }
 
 
-    public void circleshape() {
+    private void circleshape() {
         sr.setAutoShapeType(true);
         sr.setColor(Color.CYAN);
         sr.begin();
@@ -507,7 +506,7 @@ public class PlayTowerDefenseState extends State {
         music.dispose();
     }
 
-    public void handleBackAction() {
+    private void handleBackAction() {
          inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -521,7 +520,7 @@ public class PlayTowerDefenseState extends State {
         };
     }
 
-    public void registerInputProcessors(){
+    private void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);

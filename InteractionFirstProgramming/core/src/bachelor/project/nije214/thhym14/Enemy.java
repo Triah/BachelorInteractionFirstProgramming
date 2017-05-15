@@ -81,7 +81,7 @@ public class Enemy {
         return speed;
     }
 
-    public void createSprite(Sprite sprite){
+    private void createSprite(Sprite sprite){
         this.sprite = sprite;
     }
 

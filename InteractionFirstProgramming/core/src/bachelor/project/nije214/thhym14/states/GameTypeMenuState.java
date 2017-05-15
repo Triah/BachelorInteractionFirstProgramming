@@ -56,7 +56,7 @@ public class GameTypeMenuState extends State {
         registerInputProcessors();
     }
 
-    public void createInitialUIElements(){
+    private void createInitialUIElements(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         setButtonAttributes("Tower Defense");
@@ -72,11 +72,11 @@ public class GameTypeMenuState extends State {
         buttonActions();
     }
 
-    public void addActorToStage(Actor actor){
+    private void addActorToStage(Actor actor){
         stage.addActor(actor);
     }
 
-    public void buttonActions(){
+    private void buttonActions(){
         for(TextButton textButton : textButtons){
             if(textButton.getLabel().getText().toString().matches("Tower Defense")){
                 textButton.addListener(new ChangeListener() {
@@ -102,7 +102,7 @@ public class GameTypeMenuState extends State {
         }
     }
 
-    public void setButtonAttributes(String buttonText){
+    private void setButtonAttributes(String buttonText){
         TextButton textButton = new TextButton(buttonText,skin);
         textButton.setWidth(WIDTH*0.40f);
         textButton.setHeight(HEIGHT*0.1f);
@@ -137,7 +137,7 @@ public class GameTypeMenuState extends State {
         }
     }
 
-    public void handleBackAction() {
+    private void handleBackAction() {
         inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -152,7 +152,7 @@ public class GameTypeMenuState extends State {
 
     }
 
-    public void registerInputProcessors(){
+    private void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);

@@ -72,27 +72,27 @@ public class AssembleBullet extends AssembleObject {
         finish();
     }
 
-    public void createTextures(){
+    private void createTextures(){
         addTextureToList("Cannon_Ball.png");
         addTextureToList("projectile1.png");
         addTextureToList("projectile2.png");
         addTextureToList("frostbolt.png");
     }
 
-    public void addTextureToList(String textureText){
+    private void addTextureToList(String textureText){
         Texture texture = new Texture(textureText);
         avaliableTextures.add(texture);
     }
 
-    public void saveTexture(){
+    private void saveTexture(){
         bulletPrefs.putString("bulletSprite",((FileTextureData)getCurrentTexture().getTextureData()).getFileHandle().path().toString());
     }
 
-    public Texture getCurrentTexture(){
+    private Texture getCurrentTexture(){
         return getSprite().getTexture();
     }
 
-    public void createGestureControls(){
+    private void createGestureControls(){
         gc = new GestureController(){
             @Override
             public boolean fling(float velocityX, float velocityY, int button) {
@@ -125,7 +125,7 @@ public class AssembleBullet extends AssembleObject {
         };
     }
 
-    public void finish(){
+    private void finish(){
         finishButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -156,7 +156,7 @@ public class AssembleBullet extends AssembleObject {
     }
 
 
-    public void createButtons(){
+    private void createButtons(){
         setBulletValueButtons(bulletSpeedPref, speedLabel, "Low Speed",250);
         setBulletValueButtons(bulletSpeedPref, speedLabel, "Medium Speed",500);
         setBulletValueButtons(bulletSpeedPref, speedLabel, "High Speed",1000);
@@ -167,7 +167,7 @@ public class AssembleBullet extends AssembleObject {
         setBulletTypeButtons(bulletTypePref, typeLabel, "Pushing type", "PUSHBACK");
     }
 
-    public void setBulletValueButtons(final String pref, final Label labelType, final String text, final float value) {
+    private void setBulletValueButtons(final String pref, final Label labelType, final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
@@ -181,7 +181,7 @@ public class AssembleBullet extends AssembleObject {
         textButtons.add(textButton);
     }
 
-    public void setBulletTypeButtons(final String pref, final Label labelType, final String text, final String value) {
+    private void setBulletTypeButtons(final String pref, final Label labelType, final String text, final String value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
@@ -202,7 +202,7 @@ public class AssembleBullet extends AssembleObject {
         skin.dispose();
     }
 
-    public void handleBackAction() {
+    private void handleBackAction() {
         inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -216,7 +216,7 @@ public class AssembleBullet extends AssembleObject {
         };
     }
 
-    public void registerInputProcessors(){
+    private void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);

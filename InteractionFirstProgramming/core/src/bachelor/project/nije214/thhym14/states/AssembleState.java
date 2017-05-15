@@ -40,7 +40,6 @@ public class AssembleState extends State {
     private Stage stage;
     private Skin skin;
     private LinkedList<TextButton> textButtons;
-    private Label label;
     private Texture background;
     private Preferences enemyPrefs, bulletPrefs, towerPrefs, mapPrefs;
     private InputProcessor inputProcessor;
@@ -58,7 +57,7 @@ public class AssembleState extends State {
         handleBackAction();
     }
 
-    public void createInitialUIElements(){
+    private void createInitialUIElements(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         setButtonAttributes("Bullet",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.25f,HEIGHT*0.57f);
@@ -66,8 +65,8 @@ public class AssembleState extends State {
         setButtonAttributes("Enemy",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.55f,HEIGHT*0.57f);
         setButtonAttributes("Map",WIDTH*0.25f,HEIGHT*0.1f,2.5f,WIDTH*0.55f,HEIGHT*0.43f);
         setButtonAttributes("Play Game", WIDTH*0.55f,HEIGHT*0.1f,2.5f,WIDTH*0.25f,HEIGHT*0.25f);
-        label = new Label("Tower Defense Assembly Hub",skin);
-        label.setPosition(0, HEIGHT-label.getHeight()-300);
+        Label label = new Label("Tower Defense Assembly Hub", skin);
+        label.setPosition(0, HEIGHT- label.getHeight()-300);
         label.setSize(WIDTH,200);
         label.setFontScale(2.5f);
         label.setAlignment(Align.center);
@@ -80,11 +79,11 @@ public class AssembleState extends State {
         registerInputProcessors();
     }
 
-    public void addActorToStage(Actor actor){
+    private void addActorToStage(Actor actor){
         stage.addActor(actor);
     }
 
-    public void buttonActions(){
+    private void buttonActions(){
         for(TextButton textButton : textButtons){
             if(textButton.getLabel().getText().toString().matches("Enemy")){
                 textButton.addListener(new ChangeListener() {
@@ -202,7 +201,7 @@ public class AssembleState extends State {
         }
     }
 
-    public void setButtonAttributes(String buttonText, float width, float height, float fontScale, float x, float y){
+    private void setButtonAttributes(String buttonText, float width, float height, float fontScale, float x, float y){
         TextButton textButton = new TextButton(buttonText,skin);
         textButton.setWidth(width);
         textButton.setHeight(height);
@@ -236,7 +235,7 @@ public class AssembleState extends State {
         stage.dispose();
     }
 
-    public void handleBackAction() {
+    private void handleBackAction() {
         inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -250,7 +249,7 @@ public class AssembleState extends State {
         };
     }
 
-    public void registerInputProcessors(){
+    private void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);

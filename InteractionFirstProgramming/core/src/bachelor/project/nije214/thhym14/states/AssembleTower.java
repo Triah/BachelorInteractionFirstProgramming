@@ -30,7 +30,6 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerTypePr
 
 public class AssembleTower extends AssembleObject {
 
-    private Tower tower;
     private Label fireRateLabel;
     private Label healthLabel;
     private Label rangeLabel;
@@ -43,7 +42,6 @@ public class AssembleTower extends AssembleObject {
 
     public AssembleTower(GameStateManager gsm) {
         super(gsm);
-        tower = new Tower();
         avaliableTextures = new Array<Texture>();
         touchPoint = new Vector3();
         i = 0;
@@ -68,27 +66,27 @@ public class AssembleTower extends AssembleObject {
         finish();
     }
 
-    public void createTextures(){
+    private void createTextures(){
         addTextureToList("tower_grass.png");
         addTextureToList("tower_round.png");
         addTextureToList("tower_square.png");
         addTextureToList("towermedieval.png");
     }
 
-    public void addTextureToList(String textureText){
+    private void addTextureToList(String textureText){
         Texture texture = new Texture(textureText);
         avaliableTextures.add(texture);
     }
 
-    public void saveTexture(){
+    private void saveTexture(){
         towerPrefs.putString("towerSprite",((FileTextureData)getCurrentTexture().getTextureData()).getFileHandle().path().toString());
     }
 
-    public Texture getCurrentTexture(){
+    private Texture getCurrentTexture(){
         return getSprite().getTexture();
     }
 
-    public void createGestureControls(){
+    private void createGestureControls(){
         gc = new GestureController(){
             @Override
             public boolean fling(float velocityX, float velocityY, int button) {
@@ -121,7 +119,7 @@ public class AssembleTower extends AssembleObject {
         };
     }
 
-    public void finish(){
+    private void finish(){
         finishButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -145,7 +143,7 @@ public class AssembleTower extends AssembleObject {
     }
 
 
-    public void createButtons(){
+    private void createButtons(){
         setTowerValueButtons(towerFireRatePref, fireRateLabel, "Slow Fire Rate",1);
         setTowerValueButtons(towerFireRatePref, fireRateLabel,"Medium Fire Rate",4);
         setTowerValueButtons(towerFireRatePref, fireRateLabel,"High Fire Rate",8);
@@ -155,7 +153,7 @@ public class AssembleTower extends AssembleObject {
         setTowerTypeButtons(towerTypePref, typeLabel, "Frost Type","FROST");
         setTowerTypeButtons(towerTypePref, typeLabel, "Basic Type", "BASIC");
     }
-    public void setTowerValueButtons(final String pref, final Label labelType, final String text, final float value) {
+    private void setTowerValueButtons(final String pref, final Label labelType, final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
@@ -169,7 +167,7 @@ public class AssembleTower extends AssembleObject {
         textButtons.add(textButton);
     }
 
-    public void setTowerTypeButtons(final String pref, final Label labelType, final String text, final String value) {
+    private void setTowerTypeButtons(final String pref, final Label labelType, final String text, final String value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
@@ -197,7 +195,7 @@ public class AssembleTower extends AssembleObject {
         skin.dispose();
     }
 
-    public void handleBackAction() {
+    private void handleBackAction() {
         inputProcessor = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -211,7 +209,7 @@ public class AssembleTower extends AssembleObject {
         };
     }
 
-    public void registerInputProcessors(){
+    private void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);

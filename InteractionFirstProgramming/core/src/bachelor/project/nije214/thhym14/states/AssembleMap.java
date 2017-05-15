@@ -71,7 +71,7 @@ public class AssembleMap extends State {
         registerInputProcessors();
     }
 
-    public void create(){
+    private void create(){
         wp.createPath(new Array<Vector2>());
         wp.createShapeRenderer();
         wp.addPathNode(new Vector2(250,0));
@@ -105,7 +105,7 @@ public class AssembleMap extends State {
                 gsm.set(new AssembleState(gsm));
 
             } else if(modeSprite.getBoundingRectangle().contains(touchPoint.x,touchPoint.y)){
-                if(towerMode == false){
+                if(!towerMode){
                     towerMode = true;
                     modeSprite.setTexture(towerModeTexture);
                 } else{
@@ -113,12 +113,12 @@ public class AssembleMap extends State {
                     modeSprite.setTexture(roadModeTexture);
                 }
 
-            } else if(towerMode == false){
+            } else if(!towerMode){
                 wp.addPathNode(new Vector2(touchPoint.x, touchPoint.y));
                 xPathNodes.add(touchPoint.x);
                 yPathNodes.add(touchPoint.y);
 
-            } else if(towerMode == true){
+            } else {
                 xTowerPos.add(touchPoint.x);
                 yTowerPos.add(touchPoint.y);
                 createTowerSpriteAtPosition(touchPoint.x,touchPoint.y);
@@ -126,7 +126,7 @@ public class AssembleMap extends State {
         }
     }
 
-    public void createTowerSpriteAtPosition(float x, float y){
+    private void createTowerSpriteAtPosition(float x, float y){
         Sprite towerSprite = new Sprite(new Texture(towerPrefs.getString("towerSprite")));
         towerSprite.setSize(100,100);
         towerSprite.setPosition(x - towerSprite.getWidth()/2,y - towerSprite.getHeight()/2);
@@ -173,7 +173,7 @@ public class AssembleMap extends State {
         finishSprite.getTexture().dispose();
     }
 
-    public void handleBackAction(){
+    private void handleBackAction(){
         inputProcessor = new InputAdapter(){
             @Override
             public boolean keyDown(int keycode){
@@ -187,7 +187,7 @@ public class AssembleMap extends State {
         };
     }
 
-    public void registerInputProcessors(){
+    private void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(inputProcessor);
         Gdx.input.setInputProcessor(multiplexer);
