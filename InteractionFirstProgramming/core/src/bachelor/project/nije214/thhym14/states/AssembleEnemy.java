@@ -41,7 +41,6 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.enemyTypePr
 
 public class AssembleEnemy extends AssembleObject {
 
-    private Enemy enemy;
     private Label speedLabel;
     private Label healthLabel;
     private Array<Texture> avaliableTextures;
@@ -53,7 +52,6 @@ public class AssembleEnemy extends AssembleObject {
 
     public AssembleEnemy(GameStateManager gsm) {
         super(gsm);
-        enemy = new Enemy();
         speedLabel = new Label("",skin);
         speedLabel.setFontScale(2.5f);
         typeLabel = new Label("",skin);
@@ -76,19 +74,19 @@ public class AssembleEnemy extends AssembleObject {
         finish();
     }
 
-    public void createTextures(){
+    private void createTextures(){
         addTextureToList("rock_enemy_game_character.png");
         addTextureToList("monsterenemy.png");
         addTextureToList("spider.png");
         addTextureToList("rocketenemy.png");
     }
 
-    public void addTextureToList(String textureText){
+    private void addTextureToList(String textureText){
         Texture texture = new Texture(textureText);
         avaliableTextures.add(texture);
     }
 
-    public void createButtons(){
+    private void createButtons(){
         setEnemyValueButtons(enemySpeedPref, speedLabel, "Low Speed",100);
         setEnemyValueButtons(enemySpeedPref, speedLabel,"Medium Speed",250);
         setEnemyValueButtons(enemySpeedPref, speedLabel,"High Speed",500);
@@ -99,15 +97,15 @@ public class AssembleEnemy extends AssembleObject {
         setEnemyTypeButtons(enemyTypePref, typeLabel, "Silly type", "SILLY");
     }
 
-    public void saveTexture(){
+    private void saveTexture(){
         enemyPrefs.putString("enemySprite",((FileTextureData)getCurrentTexture().getTextureData()).getFileHandle().path().toString());
     }
 
-    public Texture getCurrentTexture(){
+    private Texture getCurrentTexture(){
         return getSprite().getTexture();
     }
 
-    public void createGestureControls(){
+    private void createGestureControls(){
         gc = new GestureController(){
             @Override
             public boolean fling(float velocityX, float velocityY, int button) {
@@ -140,7 +138,7 @@ public class AssembleEnemy extends AssembleObject {
         };
     }
 
-    public void finish(){
+    private void finish(){
         finishButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -163,7 +161,7 @@ public class AssembleEnemy extends AssembleObject {
         });
     }
 
-    public void setEnemyValueButtons(final String pref, final Label labelType, final String text, final float value) {
+    private void setEnemyValueButtons(final String pref, final Label labelType, final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
@@ -177,7 +175,7 @@ public class AssembleEnemy extends AssembleObject {
         textButtons.add(textButton);
     }
 
-    public void setEnemyTypeButtons(final String pref, final Label labelType, final String text, final String value) {
+    private void setEnemyTypeButtons(final String pref, final Label labelType, final String text, final String value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
@@ -205,7 +203,7 @@ public class AssembleEnemy extends AssembleObject {
         skin.dispose();
     }
 
-    public void handleBackAction() {
+    private void handleBackAction() {
 
         inputProcessor = new InputAdapter() {
             @Override
@@ -221,7 +219,7 @@ public class AssembleEnemy extends AssembleObject {
 
     }
 
-    public void registerInputProcessors(){
+    private void registerInputProcessors(){
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(inputProcessor);
         multiplexer.addProcessor(stage);

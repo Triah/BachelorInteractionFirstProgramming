@@ -18,7 +18,7 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 public class InteractionFirstProgramming extends Game {
 	private SpriteBatch batch;
 	private GameStateManager gsm;
-	public Music music;
+	private Music music;
 	private Texture background;
 
 	@Override

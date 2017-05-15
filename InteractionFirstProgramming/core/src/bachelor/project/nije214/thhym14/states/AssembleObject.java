@@ -90,7 +90,7 @@ public abstract class AssembleObject extends State {
         finishButton();
     }
 
-    public void finishButton(){
+    private void finishButton(){
         finishButton = new TextButton("Finish",skin);
         finishButton.setHeight(HEIGHT*0.1f);
         finishButton.setWidth(WIDTH*0.40f);

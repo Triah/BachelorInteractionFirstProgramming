@@ -73,7 +73,7 @@ public class Tower {
         createSprite(new Sprite(new Texture(texture)));
     }
 
-    public void createSprite(Sprite sprite){
+    private void createSprite(Sprite sprite){
         this.sprite = sprite;
     }
 
