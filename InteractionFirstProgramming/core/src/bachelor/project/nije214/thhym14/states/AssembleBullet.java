@@ -39,7 +39,6 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletTypeP
 
 public class AssembleBullet extends AssembleObject {
 
-    private Bullet bullet;
     private Label speedLabel;
     private Label damageLabel;
     private Label typeLabel;
@@ -51,7 +50,6 @@ public class AssembleBullet extends AssembleObject {
 
     public AssembleBullet(GameStateManager gsm) {
         super(gsm);
-        bullet = new Bullet();
         speedLabel = new Label("",skin);
         speedLabel.setFontScale(2.5f);
         damageLabel = new Label("", skin);
@@ -159,32 +157,31 @@ public class AssembleBullet extends AssembleObject {
 
 
     public void createButtons(){
-        setBulletSpeedButtons("Low Speed",250);
-        setBulletSpeedButtons("Medium Speed",500);
-        setBulletSpeedButtons("High Speed",1000);
-        setBulletDamageButtons("Low Damage", 1);
-        setBulletDamageButtons("Medium Damage",3);
-        setBulletDamageButtons("High Damage",7);
-        setBulletTypeButtons("Basic type", "BASIC");
-        setBulletTypeButtons("Pushing type", "PUSHBACK");
+        setBulletValueButtons(bulletSpeedPref, speedLabel, "Low Speed",250);
+        setBulletValueButtons(bulletSpeedPref, speedLabel, "Medium Speed",500);
+        setBulletValueButtons(bulletSpeedPref, speedLabel, "High Speed",1000);
+        setBulletValueButtons(bulletDamagePref, damageLabel, "Low Damage", 1);
+        setBulletValueButtons(bulletDamagePref, damageLabel, "Medium Damage",3);
+        setBulletValueButtons(bulletDamagePref, damageLabel, "High Damage",7);
+        setBulletTypeButtons(bulletTypePref, typeLabel, "Basic type", "BASIC");
+        setBulletTypeButtons(bulletTypePref, typeLabel, "Pushing type", "PUSHBACK");
     }
 
-    public void setBulletSpeedButtons(final String text, final float value) {
+    public void setBulletValueButtons(final String pref, final Label labelType, final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                bullet.setSpeed(value);
-                labelOptions(speedLabel, text);
-                bulletPrefs.putFloat(bulletSpeedPref, bullet.getSpeed());
+                labelOptions(labelType, text);
+                bulletPrefs.putFloat(pref, value);
             }
         });
         textButtons.add(textButton);
     }
 
-    public void setBulletTypeButtons(final String text, final String value) {
+    public void setBulletTypeButtons(final String pref, final Label labelType, final String text, final String value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
@@ -192,34 +189,11 @@ public class AssembleBullet extends AssembleObject {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //will be assigned a type in play mode based on the preference
-                labelOptions(typeLabel, text);
-                bulletPrefs.putString(bulletTypePref, value);
+                labelOptions(labelType, text);
+                bulletPrefs.putString(pref, value);
             }
         });
         textButtons.add(textButton);
-    }
-
-    public void setBulletDamageButtons(final String text, final float value) {
-        TextButton textButton = new TextButton(text, skin);
-        textButton.setHeight(HEIGHT * 0.1f);
-        textButton.getLabel().setFontScale(2.5f);
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                bullet.setDamage(value);
-                labelOptions(damageLabel, text);
-                bulletPrefs.putFloat(bulletDamagePref, bullet.getDamage());
-            }
-        });
-        textButtons.add(textButton);
-    }
-
-    private void labelOptions(Label label, String text){
-        label.setText(text);
-        if(!chosenTable.getChildren().contains(label,true)){
-            chosenTable.add(label);
-            chosenTable.row();
-        }
     }
 
     @Override

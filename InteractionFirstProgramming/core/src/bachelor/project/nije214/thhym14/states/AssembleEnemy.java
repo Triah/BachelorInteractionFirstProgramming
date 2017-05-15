@@ -89,14 +89,14 @@ public class AssembleEnemy extends AssembleObject {
     }
 
     public void createButtons(){
-        setEnemySpeedButtons("Low Speed",100);
-        setEnemySpeedButtons("Medium Speed",250);
-        setEnemySpeedButtons("High Speed",500);
-        setEnemyHealthButtons("Low Health",1);
-        setEnemyHealthButtons("Medium Health",5);
-        setEnemyHealthButtons("High Health",10);
-        setEnemyTypeButtons("Basic type", "BASIC");
-        setEnemyTypeButtons("Silly type", "SILLY");
+        setEnemyValueButtons(enemySpeedPref, speedLabel, "Low Speed",100);
+        setEnemyValueButtons(enemySpeedPref, speedLabel,"Medium Speed",250);
+        setEnemyValueButtons(enemySpeedPref, speedLabel,"High Speed",500);
+        setEnemyValueButtons(enemyHealthPref, healthLabel,"Low Health",1);
+        setEnemyValueButtons(enemyHealthPref, healthLabel,"Medium Health",5);
+        setEnemyValueButtons(enemyHealthPref, healthLabel,"High Health",10);
+        setEnemyTypeButtons(enemyTypePref, typeLabel, "Basic type", "BASIC");
+        setEnemyTypeButtons(enemyTypePref, typeLabel, "Silly type", "SILLY");
     }
 
     public void saveTexture(){
@@ -163,22 +163,21 @@ public class AssembleEnemy extends AssembleObject {
         });
     }
 
-    public void setEnemySpeedButtons(final String text, final float value) {
+    public void setEnemyValueButtons(final String pref, final Label labelType, final String text, final float value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                enemy.setSpeed(value);
-                labelOptions(speedLabel, text);
-                enemyPrefs.putFloat(enemySpeedPref, enemy.getSpeed());
+                labelOptions(labelType, text);
+                enemyPrefs.putFloat(pref, value);
             }
         });
         textButtons.add(textButton);
     }
 
-    public void setEnemyTypeButtons(final String text, final String value) {
+    public void setEnemyTypeButtons(final String pref, final Label labelType, final String text, final String value) {
         TextButton textButton = new TextButton(text, skin);
         textButton.setHeight(HEIGHT * 0.1f);
         textButton.getLabel().setFontScale(2.5f);
@@ -186,34 +185,11 @@ public class AssembleEnemy extends AssembleObject {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //will be assigned a type in play mode based on the preference
-                labelOptions(typeLabel, text);
-                enemyPrefs.putString(enemyTypePref, value);
+                labelOptions(labelType, text);
+                enemyPrefs.putString(pref, value);
             }
         });
         textButtons.add(textButton);
-    }
-
-    public void setEnemyHealthButtons(final String text, final float value) {
-        TextButton textButton = new TextButton(text, skin);
-        textButton.setHeight(HEIGHT * 0.1f);
-        textButton.getLabel().setFontScale(2.5f);
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                enemy.setHealth(value);
-                labelOptions(healthLabel, text);
-                enemyPrefs.putFloat(enemyHealthPref, enemy.getHealth());
-            }
-        });
-        textButtons.add(textButton);
-    }
-
-    private void labelOptions(Label label, String text){
-        label.setText(text);
-        if(!chosenTable.getChildren().contains(label,true)){
-            chosenTable.add(label);
-            chosenTable.row();
-        }
     }
 
     @Override

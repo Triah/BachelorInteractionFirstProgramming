@@ -105,6 +105,15 @@ public abstract class AssembleObject extends State {
         sprite.setPosition(WIDTH*0.1f,HEIGHT-(getSprite().getHeight()+100));
     }
 
+    protected void labelOptions(Label label, String text){
+        label.setText(text);
+        if(!chosenTable.getChildren().contains(label,true)){
+            chosenTable.add(label);
+            chosenTable.row();
+        }
+    }
+
+
     protected Sprite getSprite(){
         return sprite;
     }
