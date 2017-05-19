@@ -85,7 +85,7 @@ public class AssembleBullet extends AssembleObject {
     }
 
     private void saveTexture(){
-        bulletPrefs.putString("bulletSprite",((FileTextureData)getCurrentTexture().getTextureData()).getFileHandle().path().toString());
+        bulletPrefs.putString("bulletSprite", ((FileTextureData) getCurrentTexture().getTextureData()).getFileHandle().path());
     }
 
     private Texture getCurrentTexture(){

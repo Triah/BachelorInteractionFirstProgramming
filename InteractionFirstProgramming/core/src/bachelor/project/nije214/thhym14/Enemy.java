@@ -124,7 +124,7 @@ public class Enemy {
     }
 
     public void setSpritePosition(float x, float velX, float y, float velY){
-        getSprite().setPosition(x + velX * Gdx.graphics.getDeltaTime(), y+ + velY * Gdx.graphics.getDeltaTime());
+        getSprite().setPosition(x + velX * Gdx.graphics.getDeltaTime(), y + velY * Gdx.graphics.getDeltaTime());
     }
 
     public void setSpriteRotation(float angle){
@@ -132,9 +132,6 @@ public class Enemy {
     }
 
     public void incrementWaypoint(){
-        if(isWaypointReached()){
-            rand = (int)(Math.random()*10)+1;
-        }
         this.waypoint++;
     }
 
@@ -145,8 +142,10 @@ public class Enemy {
                         getSpeed() * Gdx.graphics.getDeltaTime();
     }
 
+    public void setRand(){
+        this.rand = (int)(Math.random()*10)+1;
+    }
 
-//
     public void setVelocitySilly(float angle, float speed){
         if(rand>5){
             velocity.set((float) Math.cos(angle+1) * speed, (float) Math.sin(angle+1) * speed);
@@ -156,13 +155,6 @@ public class Enemy {
         }
 
     }
-
-    public void pushBackEnemy(float x, float velX, float y, float velY){
-            getSprite().setPosition(x + (velX) * Gdx.graphics.getDeltaTime(), y + (velY) * Gdx.graphics.getDeltaTime());
-    }
-
-//
-
 
     public int getWaypoint() {
         return waypoint;
