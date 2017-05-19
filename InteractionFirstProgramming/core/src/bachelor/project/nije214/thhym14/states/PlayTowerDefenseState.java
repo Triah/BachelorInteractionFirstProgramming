@@ -9,13 +9,11 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -27,12 +25,10 @@ import com.badlogic.gdx.utils.Array;
 import bachelor.project.nije214.thhym14.Bullet;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import bachelor.project.nije214.thhym14.Collision;
 import bachelor.project.nije214.thhym14.Enemy;
-import bachelor.project.nije214.thhym14.InteractionFirstProgramming;
-import bachelor.project.nije214.thhym14.Raycast;
+import bachelor.project.nije214.thhym14.RangeDetection;
 import bachelor.project.nije214.thhym14.Tower;
 import bachelor.project.nije214.thhym14.Waypoint;
 
@@ -66,7 +62,7 @@ public class PlayTowerDefenseState extends State {
     private Sound normalShot;
     private Texture background;
     private Array<Bullet> bullets;
-    private Raycast ray;
+    private RangeDetection rd;
     private ShapeRenderer sr;
     private int i = 0;
     private Vector3 touchPoint;
@@ -112,7 +108,7 @@ public class PlayTowerDefenseState extends State {
         createBullet();
         handleBackAction();
         registerInputProcessors();
-        ray = new Raycast();
+        rd = new RangeDetection();
         sr = new ShapeRenderer();
         cl = new Collision();
     }
@@ -136,54 +132,18 @@ public class PlayTowerDefenseState extends State {
         stage.addActor(scoreLabel);
     }
 
-    private void createTower() {
-        for (int i = 0; i < mapPrefs.getFloat("towerSize"); i++) {
-            Tower tower = new Tower();
-            tower.setActive(false);
-            tower.createTower("stone.png");
-            tower.setHP(towerPrefs.getFloat("towerHealth"));
-            tower.setfireRate(towerPrefs.getFloat("towerFireRate"));
-            tower.setRange(towerPrefs.getFloat("towerRange"));
-            tower.getSprite().setSize(100, 100);
-            tower.setCenter(mapPrefs.getFloat("towerX" + i), mapPrefs.getFloat("towerY" + i));
-            tower.setTimer(0);
-            if (towerPrefs.getString(towerTypePref).equals("FROST")) {
-                tower.setType(Tower.Type.FROST);
-            } else if (towerPrefs.getString(towerTypePref).equals("BASIC")) {
-                tower.setType(Tower.Type.BASIC);
-            } else if (towerPrefs.getString(towerTypePref).equals("PENETRATION")) {
-                tower.setType(Tower.Type.PENETRATION);
-            }
-            inactiveTowers.add(tower);
-        }
-
-    }
-
-
-    private void activateTower() {
-        if (Gdx.input.justTouched()) {
-            camera.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-            for (Tower t : inactiveTowers) {
-                if (t.getSprite().getBoundingRectangle().contains(touchPoint.x, touchPoint.y)) {
-                    if (towers.contains(t) && t.getActive()) {
-                        towers.remove(t);
-                        t.getSprite().setTexture(new Texture("stone.png"));
-                        t.setActive(false);
-                    } else {
-                        if (!towers.contains(t) && towers.size() <= 2) {
-                            towers.add(t);
-                            t.getSprite().setTexture(new Texture(towerPrefs.getString("towerSprite")));
-                            t.setActive(true);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private void createBullet() {
         bullet = new Bullet();
         bullet.createBullet(bulletPrefs.getString("bulletSprite"));
+        bullet.setDamage(bulletPrefs.getFloat("bulletDamage"));
+        bullet.getSprite().setSize(100, 100);
+        bullet.setSpeed(bulletPrefs.getFloat("bulletSpeed"));
+        if(bulletPrefs.getString(bulletTypePref).equals("BASIC")){
+            bullet.setType(Bullet.BulletType.BASIC);
+        }
+        if(bulletPrefs.getString(bulletTypePref).equals("PUSHBACK")){
+            bullet.setType(Bullet.BulletType.PUSHBACK);
+        }
     }
 
     private void createWaypoint() {
@@ -213,21 +173,99 @@ public class PlayTowerDefenseState extends State {
         enemy.getSprite().setOriginCenter();
     }
 
-    private void processEnemy() {
+    private void createTower() {
+        for (int i = 0; i < mapPrefs.getFloat("towerSize"); i++) {
+            Tower tower = new Tower();
+            tower.setActive(false);
+            tower.createTower("stone.png");
+            tower.setHP(towerPrefs.getFloat("towerHealth"));
+            tower.setfireRate(towerPrefs.getFloat("towerFireRate"));
+            tower.setRange(towerPrefs.getFloat("towerRange"));
+            tower.getSprite().setSize(100, 100);
+            tower.setCenter(mapPrefs.getFloat("towerX" + i), mapPrefs.getFloat("towerY" + i));
+            tower.setTimer(0);
+            if (towerPrefs.getString(towerTypePref).equals("FROST")) {
+                tower.setType(Tower.Type.FROST);
+            } else if (towerPrefs.getString(towerTypePref).equals("BASIC")) {
+                tower.setType(Tower.Type.BASIC);
+                inactiveTowers.add(tower);
+            }
+        }
+    }
+
+    private void cloneAndAddToList() {
+        Enemy enemy = new Enemy();
+        enemy.createEnemy(((FileTextureData)this.enemy.getSprite().getTexture().getTextureData()).getFileHandle().path().toString());
+        enemy.setCenter(this.enemy.getX(),this.enemy.getY());
+        enemy.setSpeed(this.enemy.getSpeed());
+        enemy.setPath(this.wp.getPath());
+        enemy.setHealth(this.enemy.getHealth());
+        enemy.setType(this.enemy.getType());
+        enemy.getSprite().setSize(this.enemy.getSprite().getWidth(), this.enemy.getSprite().getHeight());
+        wp.getEnemyArray().add(enemy);
+        enemy.getSprite().setOriginCenter();
+    }
+
+    private void cloneAndAddToListBullet(Enemy ex, Tower tx) {
+        Bullet b = new Bullet();
+        b.createBullet(((FileTextureData)this.bullet.getSprite().getTexture().getTextureData()).getFileHandle().path().toString());
+        b.setDamage(this.bullet.getDamage());
+        b.getSprite().setSize(100, 100);
+        b.setCenter(tx.getX() + tx.getSprite().getWidth() / 2, tx.getY() + tx.getSprite().getHeight() / 2);
+        b.setSpeed(this.bullet.getSpeed());
+        b.setVelocity(b.getTowerToEnemyAngle(ex, tx), b.getSpeed());
+        b.getSprite().rotate((180 / (float) Math.PI * (float) Math.atan2(ex.getY() - tx.getY(), ex.getX() - tx.getX())) + 90);
+        b.getSprite().setOriginCenter();
+        b.setHit(false);
+        long id = normalShot.play();
+        normalShot.setVolume(id, 0.25f);
+        if(this.bullet.getType().equals("BASIC")){
+            b.setType(Bullet.BulletType.BASIC);
+        }
+        if(this.bullet.getType().equals("PUSHBACK")){
+            b.setType(Bullet.BulletType.PUSHBACK);
+        }
+        bullets.add(b);
+    }
+
+
+    private void activateTower() {
+        if (Gdx.input.justTouched()) {
+            camera.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+            for (Tower t : inactiveTowers) {
+                if (t.getSprite().getBoundingRectangle().contains(touchPoint.x, touchPoint.y)) {
+                    if (towers.contains(t) && t.getActive()) {
+                        towers.remove(t);
+                        t.getSprite().setTexture(new Texture("stone.png"));
+                        t.setActive(false);
+                    } else {
+                        if (!towers.contains(t) && towers.size() <= 2) {
+                            towers.add(t);
+                            t.getSprite().setTexture(new Texture(towerPrefs.getString("towerSprite")));
+                            t.setActive(true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void processBullet(){
         for (Bullet b : bullets) {
             b.setBulletPosition(b.getX(), b.getVelocity().x, b.getY(), b.getVelocity().y);
         }
+    }
+
+    private void processEnemy() {
         for (Enemy enemy : wp.getEnemyArray()) {
             if(enemy.getType() == Enemy.Type.BASIC) {
                 enemy.setVelocity(enemy.getAngle(), enemy.getSpeed());
-                enemy.setSpritePosition(enemy.getX(), enemy.getVelocity().x, enemy.getY(), enemy.getVelocity().y);
-                enemy.setSpriteRotation(enemy.getAngle());
             }
             if(enemy.getType() == Enemy.Type.SILLY){
                 enemy.setVelocitySilly(enemy.getAngle(), enemy.getSpeed());
-                enemy.setSpritePosition(enemy.getX(), enemy.getVelocity().x, enemy.getY(), enemy.getVelocity().y);
-                enemy.setSpriteRotation(enemy.getAngle());
             }
+            enemy.setSpritePosition(enemy.getX(), enemy.getVelocity().x, enemy.getY(), enemy.getVelocity().y);
+            enemy.setSpriteRotation(enemy.getAngle());
 
             if (enemy.isWaypointReached() && enemy.getWaypoint() == wp.getPath().size - 1) {
                 wp.getEnemyArray().removeValue(enemy, false);
@@ -254,6 +292,7 @@ public class PlayTowerDefenseState extends State {
             }
             if (enemy.isWaypointReached() && !(enemy.getWaypoint() == wp.getPath().size - 1)) {
                 enemy.incrementWaypoint();
+                enemy.setRand();
             }
         }
     }
@@ -312,12 +351,10 @@ public class PlayTowerDefenseState extends State {
         if (!towers.isEmpty()) {
             for (Tower t : towers) {
                 for (Enemy e : wp.getEnemyArray()) {
-                    if (ray.simpleRangeCheck(e, t, (int) towerPrefs.getFloat("towerRange"))) {
-                        if (t.getTimer() > 5 / towerPrefs.getFloat("towerFireRate")) {
+                    if (rd.simpleRangeCheck(e, t, (int) t.getRange())) {
+                        if (t.getTimer() > 5 / t.getFireRate()) {
                             cloneAndAddToListBullet(e, t);
                             t.setTimer(0);
-                            long id = normalShot.play();
-                            normalShot.setVolume(id, 0.25f);
                         }
                     }
                 }
@@ -327,15 +364,16 @@ public class PlayTowerDefenseState extends State {
 
         for (Bullet b : bullets) {
             for (Enemy e : wp.getEnemyArray()) {
-                    if (e.isHit()) {
-                        e.pushBackEnemy(e.getX(), b.getVelocity().x, e.getY(), b.getVelocity().y);
-                        if (e.getTimer() > 0.5) {
-                            e.setTimer(0);
-                            e.setHit(false);
-                            bullets.removeValue(b, true);
-                        }
-
+                if (e.isHit() && b.getType() == Bullet.BulletType.PUSHBACK) {
+                    //pushes back the enemy based on the velocity of the bullet
+                    e.setSpritePosition(e.getX(), b.getVelocity().x, e.getY(), b.getVelocity().y);
+                    if (e.getTimer() > 0.5) {
+                        e.setTimer(0);
+                        e.setHit(false);
+                        bullets.removeValue(b, true);
                     }
+
+                }
                 if (cl.isColliding(b.getSprite().getBoundingRectangle(), e.getSprite().getBoundingRectangle())) {
                     if ((e.getHealth() - b.getDamage()) > 0) {
                         //subtract bullet damage from enemy health
@@ -356,15 +394,10 @@ public class PlayTowerDefenseState extends State {
                         b.getSprite().setSize(0,0);
 
                     } else {
-                        /**
-                         * remove from array
-                         * set null for garbagecollection
-                         */
                         wp.getEnemyArray().removeValue(e, true);
                         bullets.removeValue(b, true);
                         score = calculateScore();
                         scoreLabel.setText("Score: " + score);
-                        e = null;
                     }
                 }
             }
@@ -426,6 +459,7 @@ public class PlayTowerDefenseState extends State {
         sb.begin();
         sb.setProjectionMatrix(camera.combined);
         sb.draw(background, 0, 0, WIDTH, HEIGHT);
+        processBullet();
         processEnemy();
         draw(sb);
         sb.end();
@@ -433,41 +467,6 @@ public class PlayTowerDefenseState extends State {
         wp.drawWayPoints();
         circleshape();
         stage.draw();
-    }
-
-    private void cloneAndAddToList() {
-        Enemy enemy = new Enemy();
-        enemy.createEnemy(enemyPrefs.getString("enemySprite"));
-        enemy.setCenter(mapPrefs.getFloat("firstWpX"), mapPrefs.getFloat("firstWpY"));
-        enemy.setSpeed(enemyPrefs.getFloat("enemySpeed"));
-        enemy.setPath(this.wp.getPath());
-        enemy.setHealth(this.enemy.getHealth());
-        enemy.setType(this.enemy.getType());
-        enemy.setVelocity(enemy.getAngle(), enemy.getSpeed());
-        enemy.getSprite().setSize(this.enemy.getSprite().getWidth(), this.enemy.getSprite().getHeight());
-        wp.getEnemyArray().add(enemy);
-        enemy.getSprite().setOriginCenter();
-    }
-
-
-    private void cloneAndAddToListBullet(Enemy ex, Tower tx) {
-        Bullet b = new Bullet();
-        b.createBullet(bulletPrefs.getString("bulletSprite"));
-        b.setDamage(bulletPrefs.getFloat("bulletDamage"));
-        b.getSprite().setSize(100, 100);
-        b.setCenter(tx.getX() + tx.getSprite().getWidth() / 2, tx.getY() + tx.getSprite().getHeight() / 2);
-        b.setSpeed(bulletPrefs.getFloat("bulletSpeed"));
-        b.setVelocity(b.getTowerToEnemyAngle(ex, tx), b.getSpeed());
-        b.getSprite().rotate((180 / (float) Math.PI * (float) Math.atan2(ex.getY() - tx.getY(), ex.getX() - tx.getX())) + 90);
-        b.getSprite().setOriginCenter();
-        b.setHit(false);
-        if(bulletPrefs.getString(bulletTypePref).equals("BASIC")){
-            b.setType(Bullet.BulletType.BASIC);
-        }
-        if(bulletPrefs.getString(bulletTypePref).equals("PUSHBACK")){
-            b.setType(Bullet.BulletType.PUSHBACK);
-        }
-        bullets.add(b);
     }
 
     private void disposeEntities() {
@@ -488,22 +487,17 @@ public class PlayTowerDefenseState extends State {
         }
     }
 
-
     private void circleshape() {
-        sr.setAutoShapeType(true);
-        sr.setColor(Color.CYAN);
-        sr.begin();
-
         for (Tower t : towers) {
-            sr.circle(t.getX() + t.getSprite().getWidth() / 2, t.getY() + t.getSprite().getHeight() / 2, towerPrefs.getFloat("towerRange"));
+            t.setCircle(sr);
         }
-        sr.end();
     }
 
 
     @Override
     public void dispose() {
         music.dispose();
+        stage.dispose();
     }
 
     private void handleBackAction() {

@@ -11,9 +11,8 @@ public class Collision {
 
     private Rectangle bounds;
 
-    public boolean isColliding(Rectangle enemy, Rectangle bullet){
-        bounds = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight());
-
-        return enemy.overlaps(bounds);
+    public boolean isColliding(Rectangle rect1, Rectangle rect2){
+        bounds = new Rectangle(rect2.getX(), rect2.getY(), rect2.getWidth(), rect2.getHeight());
+        return rect1.overlaps(bounds);
     }
 }

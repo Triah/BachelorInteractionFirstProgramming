@@ -2,6 +2,8 @@ package bachelor.project.nije214.thhym14;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
@@ -20,12 +22,8 @@ public class Tower {
     private float timer;
     private boolean active;
 
-
-
-
     public enum Type {
         BASIC, //standard tower
-        PENETRATION, //laser projectiles
         FROST //slows movement speed of enemy
     }
 
@@ -95,6 +93,13 @@ public class Tower {
 
     public float getX(){
         return sprite.getX();
+    }
+
+    public void setCircle(ShapeRenderer sr){
+        sr.setAutoShapeType(true);
+        sr.begin();
+        sr.circle(this.getX() + this.getSprite().getWidth() / 2, this.getY() + this.getSprite().getHeight() / 2, this.getRange());
+        sr.end();
     }
 
 }
