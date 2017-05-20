@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
- * Created by Nicolai on 21-03-2017.
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
  */
 
 public class StaticGlobalVariables {

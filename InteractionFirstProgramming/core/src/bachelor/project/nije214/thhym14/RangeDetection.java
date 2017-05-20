@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 
 
 /**
- * Created by Administrator on 14-04-2017.
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
  */
 
 public class RangeDetection {

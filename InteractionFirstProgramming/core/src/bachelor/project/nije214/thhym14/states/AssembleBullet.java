@@ -34,7 +34,9 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletSpeed
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.bulletTypePref;
 
 /**
- * Created by Nicolai on 12-04-2017.
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
  */
 
 public class AssembleBullet extends AssembleObject {

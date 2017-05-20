@@ -32,7 +32,9 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerRangeP
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.towerTypePref;
 
 /**
- * Created by Nicolai on 06-04-2017.
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
  */
 
 public class AssembleState extends State {

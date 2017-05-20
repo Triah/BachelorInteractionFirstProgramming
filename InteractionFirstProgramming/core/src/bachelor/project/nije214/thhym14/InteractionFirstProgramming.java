@@ -15,6 +15,12 @@ import bachelor.project.nije214.thhym14.states.PlayTowerDefenseState;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 
+/**
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
+ */
+
 public class InteractionFirstProgramming extends Game {
 	private SpriteBatch batch;
 	private GameStateManager gsm;

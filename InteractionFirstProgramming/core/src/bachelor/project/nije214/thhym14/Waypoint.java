@@ -13,6 +13,12 @@ import com.badlogic.gdx.utils.Array;
 
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 
+/**
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
+ */
+
 public class Waypoint {
 
     private ShapeRenderer sr;
