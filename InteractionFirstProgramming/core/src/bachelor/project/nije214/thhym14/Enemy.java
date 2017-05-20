@@ -12,7 +12,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-
+/**
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
+ */
 
 public class Enemy {
 

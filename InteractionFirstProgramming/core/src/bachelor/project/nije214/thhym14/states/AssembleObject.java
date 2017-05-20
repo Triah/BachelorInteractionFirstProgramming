@@ -26,7 +26,9 @@ import static bachelor.project.nije214.thhym14.StaticGlobalVariables.HEIGHT;
 import static bachelor.project.nije214.thhym14.StaticGlobalVariables.WIDTH;
 
 /**
- * Created by Nicolai on 12-04-2017.
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
  */
 
 public abstract class AssembleObject extends State {

@@ -4,9 +4,10 @@ package bachelor.project.nije214.thhym14;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
- * Created by Administrator on 14-04-2017.
+ * Authors:
+ * Nicolai Hedegaard Jensen <nije214@student.sdu.dk>
+ * Thor Skou Hymøller <thhym14@student.sdu.dk>
  */
-
 public class Collision {
 
     private Rectangle bounds;
