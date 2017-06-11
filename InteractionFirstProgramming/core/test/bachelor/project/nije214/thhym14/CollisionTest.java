@@ -14,11 +14,11 @@ public class CollisionTest extends GameTest {
         Bullet b = new Bullet();
         Collision c = new Collision();
 
-        e.createEnemy("playButton.jpg");
+        e.createEnemy("badlogic.jpg");
         e.setX(100);
         e.setY(100);
 
-        b.createBullet("playButton.jpg");
+        b.createBullet("badlogic.jpg");
         b.setX(100);
         b.setY(100);
 

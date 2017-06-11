@@ -18,7 +18,7 @@ public class EnemyTest extends GameTest {
     @Test
     public void getAngle() throws Exception {
         Enemy e = new Enemy();
-        e.createEnemy("playButton.jpg");
+        e.createEnemy("badlogic.jpg");
         e.setCenter(50, 100);
 
         Waypoint wp = new Waypoint();
@@ -33,7 +33,7 @@ public class EnemyTest extends GameTest {
     @Test
     public void getVelocity() throws Exception {
         Enemy e = new Enemy();
-        e.createEnemy("playButton.jpg");
+        e.createEnemy("badlogic.jpg");
         e.setSpeed(100);
         e.setX(50);
         e.setY(100);
