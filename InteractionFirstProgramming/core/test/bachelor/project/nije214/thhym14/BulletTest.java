@@ -18,18 +18,18 @@ public class BulletTest extends GameTest {
     @Test
     public void setVelocity() throws Exception {
         Bullet b = new Bullet();
-        b.createBullet("playButton.jpg");
+        b.createBullet("badlogic.jpg");
         b.setSpeed(100);
         b.setX(100);
         b.setY(100);
 
         Enemy e = new Enemy();
-        e.createEnemy("playButton.jpg");
+        e.createEnemy("badlogic.jpg");
         e.setSpeed(100);
         e.setCenter(100,100);
 
         Tower t = new Tower();
-        t.createTower("playButton.jpg");
+        t.createTower("badlogic.jpg");
         t.setCenter(200,200);
 
         float angle = (float) Math.atan2(e.getY() - t.getY() + e.getSprite().getHeight()/2,

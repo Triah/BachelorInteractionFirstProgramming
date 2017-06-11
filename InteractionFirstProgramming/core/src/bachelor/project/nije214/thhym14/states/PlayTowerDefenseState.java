@@ -221,12 +221,7 @@ public class PlayTowerDefenseState extends State {
         b.setHit(false);
         long id = normalShot.play();
         normalShot.setVolume(id, 0.25f);
-        if(this.bullet.getType().equals("BASIC")){
-            b.setType(Bullet.BulletType.BASIC);
-        }
-        if(this.bullet.getType().equals("PUSHBACK")){
-            b.setType(Bullet.BulletType.PUSHBACK);
-        }
+        b.setType(this.bullet.getType());
         bullets.add(b);
     }
 
@@ -368,6 +363,7 @@ public class PlayTowerDefenseState extends State {
             for (Enemy e : wp.getEnemyArray()) {
                 if (e.isHit() && b.getType() == Bullet.BulletType.PUSHBACK) {
                     //pushes back the enemy based on the velocity of the bullet
+                    System.out.println("hest");
                     e.setSpritePosition(e.getX(), b.getVelocity().x, e.getY(), b.getVelocity().y);
                     if (e.getTimer() > 0.5) {
                         e.setTimer(0);
